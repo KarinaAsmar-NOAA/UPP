@@ -51,6 +51,7 @@
 !> 2024-03-15 | Wen Meng      | Add option to read 3D soil-related variables
 !> 2024-03-25 | Eric James    | Enabling reading of snow melt and surface albedo from RRFS
 !> 2024-04-23 | Eric James    | Updating smoke emissions to be 3D variable (ebu_smoke)
+!> 2024-05-01 | Karina Asmar  | Read in and store idrt in gridspec_mod
 !>
 !> @author Hui-Ya Chuang @date 2016-03-04
 !----------------------------------------------------------------------
@@ -119,7 +120,7 @@
       use gridspec_mod, only: maptype, gridtype, latstart, latlast, lonstart, lonlast, cenlon,  &
               dxval, dyval, truelat2, truelat1, psmapf, cenlat,lonstartv, lonlastv, cenlonv,    &
               latstartv, latlastv,cenlatv,latstart_r,latlast_r,lonstart_r,lonlast_r, STANDLON,  &
-              latse,lonse,latnw,lonnw
+              latse,lonse,latnw,lonnw,idrt
       use upp_physics, only: fpvsnew
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
       implicit none
@@ -186,7 +187,7 @@
 !jw
       integer ii,jj,js,je,iyear,imn,iday,itmp,ioutcount,istatus,       &
               I,J,L,ll,k,k1,kf,irtn,igdout,n,Index,nframe,                &
-              nframed2,iunitd3d,ierr,idum,iret,nrec,idrt
+              nframed2,iunitd3d,ierr,idum,iret,nrec
       integer ncid3d,ncid2d,varid,nhcas,varid_bl,iret_bl
       real    TSTART,TLMH,TSPH,ES,FACT,soilayert,soilayerb,zhour,dum,  &
               tvll,pmll,tv, tx1, tx2, zpbltop
