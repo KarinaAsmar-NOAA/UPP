@@ -39,6 +39,7 @@
 !> 2023-08-24 | Y Mao           | Add gtg_on option for GTG interpolation
 !> 2023-09-12 | J Kenyon        | Prevent spurious supercooled rain and cloud water
 !> 2024-04-23 | E James         | Adding smoke emissions (ebb) from RRFS
+!> 2024-05-01 | K Asmar		| Add velocity potential and streamfunction from wind vectors
 !>
 !> @author T Black W/NP2 @date 1999-09-23
 !--------------------------------------------------------------------------------------
@@ -74,7 +75,7 @@
                             imp_physics, ISTA, IEND, ISTA_M, IEND_M, ISTA_2L,  &
                             IEND_2U, slrutah_on, gtg_on
       use rqstfld_mod, only: IGET, LVLS, ID, IAVBLFLD, LVLSXML
-      use gridspec_mod, only: GRIDTYPE, MAPTYPE, DXVAL
+      use gridspec_mod, only: GRIDTYPE, MAPTYPE, DXVAL, IDRT
       use upp_physics, only: FPVSNEW, CALRH, CALVOR, CALSLR_ROEBBER, CALSLR_UUTAH
 
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -107,6 +108,10 @@
       INTEGER, dimension(ista_2l:iend_2u,jsta_2l:jend_2u)  :: NL1X, NL1XF
       real, dimension(ISTA_2L:IEND_2U,JSTA_2L:JEND_2U,LSM) :: TPRS, QPRS, FPRS
       real, dimension(ISTA_2L:IEND_2U,JSTA_2L:JEND_2U,LSM) :: RHPRS
+
+      integer :: JCAP, LW 
+      real, dimension(IM,JM,LSM) :: IN_UWIND, IN_VWIND, OUT_UWIND, OUT_VWIND, DIV, ZO, CHI, PSI
+      real, dimension(IM,JM) :: COL_UWIND, COL_VWIND
 !
       INTEGER K, NSMOOTH
 !
@@ -225,6 +230,7 @@
          (IGET(257) > 0) .OR. (IGET(258) > 0) .OR.      &
          (IGET(294) > 0) .OR. (IGET(268) > 0) .OR.      &
          (IGET(331) > 0) .OR. (IGET(326) > 0) .OR.      &
+	 (IGET(1018) > 0) .OR. (IGET(1019) > 0) .OR.	&
 ! add D3D fields
          (IGET(354) > 0) .OR. (IGET(355) > 0) .OR.      &
          (IGET(356) > 0) .OR. (IGET(357) > 0) .OR.      &
@@ -261,6 +267,37 @@
 
         if(gridtype == 'B' .or. gridtype == 'E')                         &
           call exch(PINT(ISTA_2L:IEND_2U,JSTA_2L:JEND_2U,LP1)) 
+
+!---------------------------------------------------------------------
+!*** SPECTRALLY TRUNCATE WIND VECTOR FIELDS ON GLOBAL CYLINDRICAL GRID
+!*** TO COMPUTE VELOCITY POTENTIAL AND STREAMFUNCTION.
+!---------------------------------------------------------------------
+!
+	IF (IGET(1018) > 0 .OR. IGET(1019) > 0) THEN
+	  DO LW=1,LSM
+            CALL COLLECT_ALL(UH(ISTA:IEND,JSTA:JEND,LW),COL_UWIND)
+            CALL COLLECT_ALL(VH(ISTA:IEND,JSTA:JEND,LW),COL_VWIND)
+  	    DO J=1,JM
+    	      DO I=1,IM
+	        IN_UWIND(I,J,LW)=COL_UWIND(I,J)
+      	        IN_VWIND(I,J,LW)=COL_VWIND(I,J)
+	      ENDDO
+     	    ENDDO
+	  ENDDO												! END OF VERTICAL LOOP FOR MPI GATHER OF WINDS IN IM,JM
+          IF(IDRT == 0)THEN
+	    JCAP = (JM-3)/2
+	  ELSE
+	    JCAP = JM-1
+	  ENDIF
+          CALL SPTRUNV(0,JCAP,IDRT,IM,JM,								&
+                        IDRT,IM,JM,LSM,									&
+                        0,0,0,0,									&
+                        0,0,0,0,									&
+	         	IN_UWIND(1,1,1),IN_VWIND(1,1,1),						&
+                        .FALSE.,OUT_UWIND(1,1,1),OUT_VWIND(1,1,1),					&
+	  		.FALSE.,DIV,ZO,									&
+                        .TRUE.,CHI(1,1,1),PSI(1,1,1))
+ 	ENDIF												! END OF IF BLOCK OF SPECTRAL TRUNCATION FOR VPOT AND STRM
  
         DO LP=1,LSM
 
@@ -3807,6 +3844,67 @@
             ENDIF
            ENDIF
          END IF ! end of d3d output
+
+!     
+!***  K. ASMAR: VELOCITY POTENTIAL
+!
+            IF(IGET(1018) > 0) THEN
+              IF(LVLS(LP,IGET(1018)) > 0)THEN
+!$omp  parallel do private(i,j)
+                DO J=JSTA_2L,JEND_2U
+                  DO I=ISTA_2L,IEND_2U
+		    IF(CHI(I,J,LP) < SPVAL) THEN
+                	GRID1(I,J) = CHI(I,J,LP)
+              	    ELSE
+                	GRID1(I,J) = SPVAL
+              	    ENDIF
+                  ENDDO
+                ENDDO
+                if(grib == 'grib2')then
+                  cfld = cfld + 1
+                  fld_info(cfld)%ifld = IAVBLFLD(IGET(1018))
+                  fld_info(cfld)%lvl  = LVLSXML(LP,IGET(1018))
+!$omp parallel do private(i,j,ii,jj)
+                  do j=1,jend-jsta+1
+                    jj = jsta+j-1
+                    do i=1,iend-ista+1
+                      ii=ista+i-1
+                      datapd(i,j,cfld) = GRID1(ii,jj)
+                    enddo
+                  enddo
+                endif
+              ENDIF
+            ENDIF
+!     
+!***  K. ASMAR: STREAMFUNCTION
+!
+            IF(IGET(1019) > 0) THEN
+              IF(LVLS(LP,IGET(1019)) > 0)THEN
+!$omp  parallel do private(i,j)
+                DO J=JSTA_2L,JEND_2U
+                  DO I=ISTA_2L,IEND_2U
+		    IF(PSI(I,J,LP) < SPVAL) THEN
+                	GRID1(I,J) = PSI(I,J,LP)
+              	    ELSE
+                	GRID1(I,J) = SPVAL
+              	    ENDIF                  
+		   ENDDO
+                ENDDO
+                if(grib == 'grib2')then
+                  cfld = cfld + 1
+                  fld_info(cfld)%ifld = IAVBLFLD(IGET(1019))
+                  fld_info(cfld)%lvl  = LVLSXML(LP,IGET(1019))
+!$omp parallel do private(i,j,ii,jj)
+                  do j=1,jend-jsta+1
+                    jj = jsta+j-1
+                    do i=1,iend-ista+1
+                      ii=ista+i-1
+                      datapd(i,j,cfld) = GRID1(ii,jj)
+                    enddo
+                  enddo
+                endif
+              ENDIF
+            ENDIF
 
 !   CHUANG:   COMPUTE HAINES INDEX 
          IF (IGET(455) > 0) THEN
