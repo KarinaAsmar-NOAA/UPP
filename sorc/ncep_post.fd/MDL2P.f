@@ -278,7 +278,7 @@
 !*** TO COMPUTE VELOCITY POTENTIAL AND STREAMFUNCTION.
 !---------------------------------------------------------------------
 !
-	IF (IGET(1018) > 0 .OR. IGET(1019) > 0) THEN
+	IF (IGET(1021) > 0 .OR. IGET(1022) > 0) THEN
 	  DO LW=1,LSM
             CALL COLLECT_ALL(UH(ISTA:IEND,JSTA:JEND,LW),COL_UWIND)
             CALL COLLECT_ALL(VH(ISTA:IEND,JSTA:JEND,LW),COL_VWIND)
@@ -3934,8 +3934,8 @@
 !     
 !***  K. ASMAR: VELOCITY POTENTIAL
 !
-            IF(IGET(1018) > 0) THEN
-              IF(LVLS(LP,IGET(1018)) > 0)THEN
+            IF(IGET(1021) > 0) THEN
+              IF(LVLS(LP,IGET(1021)) > 0)THEN
 !$omp  parallel do private(i,j)
                 DO J=JSTA_2L,JEND_2U
                   DO I=ISTA_2L,IEND_2U
@@ -3948,8 +3948,8 @@
                 ENDDO
                 if(grib == 'grib2')then
                   cfld = cfld + 1
-                  fld_info(cfld)%ifld = IAVBLFLD(IGET(1018))
-                  fld_info(cfld)%lvl  = LVLSXML(LP,IGET(1018))
+                  fld_info(cfld)%ifld = IAVBLFLD(IGET(1021))
+                  fld_info(cfld)%lvl  = LVLSXML(LP,IGET(1021))
 !$omp parallel do private(i,j,ii,jj)
                   do j=1,jend-jsta+1
                     jj = jsta+j-1
@@ -3964,8 +3964,8 @@
 !     
 !***  K. ASMAR: STREAMFUNCTION
 !
-            IF(IGET(1019) > 0) THEN
-              IF(LVLS(LP,IGET(1019)) > 0)THEN
+            IF(IGET(1022) > 0) THEN
+              IF(LVLS(LP,IGET(1022)) > 0)THEN
 !$omp  parallel do private(i,j)
                 DO J=JSTA_2L,JEND_2U
                   DO I=ISTA_2L,IEND_2U
@@ -3978,8 +3978,8 @@
                 ENDDO
                 if(grib == 'grib2')then
                   cfld = cfld + 1
-                  fld_info(cfld)%ifld = IAVBLFLD(IGET(1019))
-                  fld_info(cfld)%lvl  = LVLSXML(LP,IGET(1019))
+                  fld_info(cfld)%ifld = IAVBLFLD(IGET(1022))
+                  fld_info(cfld)%lvl  = LVLSXML(LP,IGET(1022))
 !$omp parallel do private(i,j,ii,jj)
                   do j=1,jend-jsta+1
                     jj = jsta+j-1
