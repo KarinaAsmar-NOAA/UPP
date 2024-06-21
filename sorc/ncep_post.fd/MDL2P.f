@@ -233,7 +233,7 @@
          (IGET(257) > 0) .OR. (IGET(258) > 0) .OR.      &
          (IGET(294) > 0) .OR. (IGET(268) > 0) .OR.      &
          (IGET(331) > 0) .OR. (IGET(326) > 0) .OR.      &
-	 (IGET(1018) > 0) .OR. (IGET(1019) > 0) .OR.	&
+	 (IGET(1021) > 0) .OR. (IGET(1022) > 0) .OR.	&
 ! add D3D fields
          (IGET(354) > 0) .OR. (IGET(355) > 0) .OR.      &
          (IGET(356) > 0) .OR. (IGET(357) > 0) .OR.      &
@@ -250,7 +250,7 @@
          (IGET(393) > 0) .OR. (IGET(394) > 0) .OR.      &
          (IGET(395) > 0) .OR. (IGET(379) > 0) .OR.      &
          IGET(1018) > 0  .OR. IGET(1019) > 0  .OR.      &
-         IGET(1020) > 0  .OR.                           &
+         IGET(1020) > 0  .OR.    		        &
 ! ADD DUST FIELDS
          (IGET(455) > 0) .OR.      &
 ! Add WAFS hazard fields: Icing and GTG turbulence
