@@ -78,11 +78,11 @@
 ! FILL CHI/PSI VALUES
       DO L=1,LSM
         DO J=1,JM
-	        DO I=1,IM
-     	      CHI(I,J,L)= SPVAL
-	          PSI(I,J,L)= SPVAL
-     	    ENDDO
-	      ENDDO
+	  DO I=1,IM
+     	    CHI(I,J,L)= SPVAL
+	    PSI(I,J,L)= SPVAL
+     	   ENDDO
+	ENDDO
       ENDDO
 
       IF (ME==0) THEN 
@@ -95,13 +95,13 @@
 	      ENDIF
 
 	      ! COMPUTE CHI/PSI FROM WIND VECTORS IN SPECTRAL SPACE
- 	      CALL SPTRUNV(0,JCAP,IDRT,IM,						                      &
-  		               JM,IDRT,IM,JM,LSM,						                    &
-	                   0,0,0,0,							                            &
-	                   0,0,0,0,							                            &
-	                   IN_UWIND(1,1,1),IN_VWIND(1,1,1),				          &
-	      	           .FALSE.,OUT_UWIND(1,1,1),OUT_VWIND(1,1,1),			  &
-	                   .FALSE.,DIV,ZO,						                      &
+ 	      CALL SPTRUNV(0,JCAP,IDRT,IM,						             &
+  		           JM,IDRT,IM,JM,LSM,						             &
+	                   0,0,0,0,							             &
+	                   0,0,0,0,							             &
+	                   IN_UWIND(1,1,1),IN_VWIND(1,1,1),				             &
+	      	           .FALSE.,OUT_UWIND(1,1,1),OUT_VWIND(1,1,1),			  	     &
+	                   .FALSE.,DIV,ZO,						             &
 	                   .TRUE.,CHI_OUT(1,1,1),PSI_OUT(1,1,1))
 
       ENDIF                             ! END OF ME=0 BLOCK
