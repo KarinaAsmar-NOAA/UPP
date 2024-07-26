@@ -69,7 +69,7 @@
         CALL COLLECT_ALL(VISO(ISTA:IEND,JSTA:JEND,L),COL_VWIND)
         DO J=1,JM
           DO I=1,IM
-	          IN_UWIND(I,J,L)=COL_UWIND(I,J)
+	    IN_UWIND(I,J,L)=COL_UWIND(I,J)
       	    IN_VWIND(I,J,L)=COL_VWIND(I,J)
           ENDDO
         ENDDO
