@@ -159,7 +159,7 @@
 
         jtem = jm / 18 + 1
       
-        call fullpole(uwnd(ista_2l:iend_2u,jsta_2l:jend_2u),upoles)
+        call fullpole(UP(ista_2l:iend_2u,jsta_2l:jend_2u),upoles)
 
 !$omp  parallel do private(i,j,ip1,im1,ii,jj,tx1,tx2)
         DO J=JSTA,JEND
