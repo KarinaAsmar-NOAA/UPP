@@ -74,7 +74,6 @@
       CALL EXCH(UP)
       CALL EXCH(VP)
 !
-      IF (MODELNAME == 'GFS' .or. global) THEN
         CALL EXCH(GDLAT(ISTA_2L,JSTA_2L))
         CALL EXCH(GDLON(ISTA_2L,JSTA_2L))
 
@@ -295,7 +294,7 @@
         cosltemp=spval
         if(jsta== 1) cosltemp(1:im, 1)=coslpoles(1:im,1)
         if(jend==jm) cosltemp(1:im,jm)=coslpoles(1:im,2)
-        avtemp=spval
+        psitemp=spval
         if(jsta== 1) psitemp(1:im, 1)=psipoles(1:im,1)
         if(jend==jm) psitemp(1:im,jm)=psipoles(1:im,2)
         
