@@ -50,8 +50,8 @@
 !     
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(in)    :: UP, VP
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(out) :: CHI, PSI
-      REAL, dimension(IM,2) :: GLATPOLES, COSLPOLES, UPOLES, PSIPOLES
-      REAL, dimension(IM,JSTA:JEND) :: COSLTEMP, PSITEMP
+      REAL, dimension(IM,2) :: GLATPOLES, COSLPOLES, UPOLES, VPOLES, PSIPOLES, CHIPOLES
+      REAL, dimension(IM,JSTA:JEND) :: COSLTEMP, PSITEMP, CHITEMP
 !
       real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
       INTEGER, allocatable ::  IHE(:),IHW(:), IE(:),IW(:)
@@ -161,7 +161,7 @@
         jtem = jm / 18 + 1
       
         call fullpole(UP(ista_2l:iend_2u,jsta_2l:jend_2u),upoles)
-
+        call fullpole(VP(ista_2l:iend_2u,jsta_2l:jend_2u),vpoles)
 !$omp  parallel do private(i,j,ip1,im1,ii,jj,tx1,tx2)
         DO J=JSTA,JEND
           IF(J == 1) then                            ! Near North or South pole
@@ -175,7 +175,7 @@
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                      UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                   PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j) +  (upoles(II,1)*coslpoles(II,1)))  
-                  CHI(I,J) = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) +  (upoles(II,1)*coslpoles(II,1)))  
+                  CHI(I,J) = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) +  (vpoles(II,1)*coslpoles(II,1)))  
                 enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
@@ -185,7 +185,7 @@
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
                   PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj) -  (UP(I,J)*COSL(I,J)))
-                  CHI(I,J) = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) -  (UP(I,J)*COSL(I,J)))  
+                  CHI(I,J) = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) -  (VP(I,J)*COSL(I,J)))  
                 enddo
               ENDIF
             else
@@ -223,7 +223,7 @@
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                      UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
                   PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j) -  (UP(I,J-1)*COSL(I,J-1)))      
-                  CHI(I,J) = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) -  (UP(I,J-1)*COSL(I,J-1)))      
+                  CHI(I,J) = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) -  (VP(I,J-1)*COSL(I,J-1)))      
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
@@ -233,7 +233,7 @@
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj) -  (UP(I,jj-1)*COSL(I,Jj-1))) 
-                  CHI(I,J) = ((VP(ip1,JJ)-VP(im1,JJ))*wrk3(i,jj) -  (UP(I,jj-1)*COSL(I,Jj-1))) 
+                  CHI(I,J) = ((VP(ip1,JJ)-VP(im1,JJ))*wrk3(i,jj) -  (VP(I,jj-1)*COSL(I,Jj-1))) 
                 enddo
               ENDIF
             else
@@ -246,7 +246,7 @@
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                      UP(I,J-1)==SPVAL .or. UP(II,2)==SPVAL) cycle
                   PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j) +  (UP(I,J-1)*COSL(I,J-1)))         
-                  CHI(I,J) = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) +  (UP(I,J-1)*COSL(I,J-1)))         
+                  CHI(I,J) = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) +  (VP(I,J-1)*COSL(I,J-1)))         
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
@@ -256,7 +256,7 @@
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj) +  (UP(I,jj-1)*COSL(I,Jj-1))) 
-                  CHI(I,J) = ((VP(ip1,JJ)-VP(im1,JJ))*wrk3(i,jj) +  (UP(I,jj-1)*COSL(I,Jj-1))) 
+                  CHI(I,J) = ((VP(ip1,JJ)-VP(im1,JJ))*wrk3(i,jj) +  (VP(I,jj-1)*COSL(I,Jj-1))) 
                 enddo
               ENDIF
             endif
@@ -267,7 +267,7 @@
               if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                  UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
               PSI(I,J)   = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j) -  (UP(I,J-1)*COSL(I,J-1)))
-              CHI(I,J)   = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) -  (UP(I,J-1)*COSL(I,J-1)))
+              CHI(I,J)   = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) -  (VP(I,J-1)*COSL(I,J-1)))
             ENDDO
           END IF
           if (npass > 0) then
@@ -286,6 +286,7 @@
             enddo
             do i=ista,iend
               psi(i,j) = tx1(i)
+              chi(i,j) = txt1(i)
             enddo
           endif
         END DO                               ! end of J loop
@@ -296,19 +297,26 @@
       ! call poleavg(IM,JM,JSTA,JEND,SMALL,COSL(1,jsta),SPVAL,psi(1,jsta))
 
         call exch(psi(ista_2l:iend_2u,jsta_2l:jend_2u))
-        call fullpole(psi(ista_2l:iend_2u,jsta_2l:jend_2u),psipoles)     
+        call fullpole(psi(ista_2l:iend_2u,jsta_2l:jend_2u),psipoles)  
+        call fullpole(chi(ista_2l:iend_2u,jsta_2l:jend_2u),chipoles)
 
         cosltemp=spval
         if(jsta== 1) cosltemp(1:im, 1)=coslpoles(1:im,1)
         if(jend==jm) cosltemp(1:im,jm)=coslpoles(1:im,2)
         psitemp=spval
+        chitemp=spval
         if(jsta== 1) psitemp(1:im, 1)=psipoles(1:im,1)
         if(jend==jm) psitemp(1:im,jm)=psipoles(1:im,2)
+        if(jsta== 1) chitemp(1:im, 1)=chipoles(1:im,1)
+        if(jend==jm) chitemp(1:im,jm)=chipoles(1:im,2)
         
         call poleavg(IM,JM,JSTA,JEND,SMALL,cosltemp(1,jsta),SPVAL,psitemp(1,jsta))
+        call poleavg(IM,JM,JSTA,JEND,SMALL,cosltemp(1,jsta),SPVAL,chitemp(1,jsta))
 
         if(jsta== 1) psi(ista:iend, 1)=psitemp(ista:iend, 1)
         if(jend==jm) psi(ista:iend,jm)=psitemp(ista:iend,jm)
+        if(jsta== 1) chi(ista:iend, 1)=chitemp(ista:iend, 1)
+        if(jend==jm) chi(ista:iend,jm)=chitemp(ista:iend,jm)
     
         deallocate (wrk1, wrk2, wrk3, cosl, iw, ie)
 !     
