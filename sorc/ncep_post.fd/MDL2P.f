@@ -39,6 +39,7 @@
 !> 2023-08-24 | Y Mao           | Add gtg_on option for GTG interpolation
 !> 2023-09-12 | J Kenyon        | Prevent spurious supercooled rain and cloud water
 !> 2024-04-23 | E James         | Adding smoke emissions (ebb) from RRFS
+!> 2024-08-30 | K Asmar		| Add streamfunction and velocity potential from wind vectors
 !>
 !> @author T Black W/NP2 @date 1999-09-23
 !--------------------------------------------------------------------------------------
@@ -98,7 +99,7 @@
      &,                                      EGRID1,  EGRID2                   &
      &,                                      FSL_OLD, USL_OLD, VSL_OLD         &
      &,                                      OSL_OLD, OSL995                   &
-     &,                                      ICINGFSL, ICINGVSL
+     &,                                      ICINGFSL, ICINGVSL, CHI, PSI
       REAL, allocatable  ::  D3DSL(:,:,:),  SMOKESL(:,:,:),  FV3DUSTSL(:,:,:)      &
      &,                                      COARSEPMSL(:,:,:),  EBBSL(:,:,:)
       REAL, allocatable :: GTGSL(:,:),CATSL(:,:),MWTSL(:,:)
@@ -244,7 +245,8 @@
          (IGET(393) > 0) .OR. (IGET(394) > 0) .OR.      &
          (IGET(395) > 0) .OR. (IGET(379) > 0) .OR.      &
          IGET(1018) > 0  .OR. IGET(1019) > 0  .OR.      &
-         IGET(1020) > 0  .OR.                           &
+         IGET(1020) > 0  .OR. IGET(1021) > 0  .OR.      &
+	 IGET(1022) > 0	 .OR.	                          &
 ! ADD DUST FIELDS
          (IGET(455) > 0) .OR.      &
 ! Add WAFS hazard fields: Icing and GTG turbulence
@@ -1510,6 +1512,68 @@
               ENDDO
             ENDDO                            
         ENDIF
+!
+! VELOCITY POTENTIAL AND STREAMFUNCTION
+!
+      IF (IGET(1021) > 0 .OR. IGET(1022) > 0) THEN     
+        CALL CALCHIPSI(USL,VSL,CHI,PSI)
+	! VELOCITY POTENTIAL
+            IF(IGET(1021) > 0) THEN
+              IF(LVLS(LP,IGET(1021)) > 0)THEN
+!$omp  parallel do private(i,j)
+                DO J=JSTA,JEND
+                  DO I=ISTA,IEND
+		    IF(CHI(I,J) < SPVAL) THEN
+                	GRID1(I,J) = CHI(I,J)
+              	    ELSE
+                	GRID1(I,J) = SPVAL
+              	    ENDIF
+                  ENDDO
+                ENDDO
+                if(grib == 'grib2')then
+                  cfld = cfld + 1
+                  fld_info(cfld)%ifld = IAVBLFLD(IGET(1021))
+                  fld_info(cfld)%lvl  = LVLSXML(LP,IGET(1021))
+!$omp parallel do private(i,j,ii,jj)
+                  do j=1,jend-jsta+1
+                    jj = jsta+j-1
+                    do i=1,iend-ista+1
+                      ii=ista+i-1
+                      datapd(i,j,cfld) = GRID1(ii,jj)
+                    enddo
+                  enddo
+                endif
+              ENDIF
+            ENDIF     
+	!STREAMFUNCTION
+            IF(IGET(1022) > 0) THEN
+              IF(LVLS(LP,IGET(1022)) > 0)THEN
+!$omp  parallel do private(i,j)
+                DO J=JSTA,JEND
+                  DO I=ISTA,IEND
+		    IF(PSI(I,J) < SPVAL) THEN
+                	GRID1(I,J) = PSI(I,J)
+              	    ELSE
+                	GRID1(I,J) = SPVAL
+              	    ENDIF                  
+		   ENDDO
+                ENDDO
+                if(grib == 'grib2')then
+                  cfld = cfld + 1
+                  fld_info(cfld)%ifld = IAVBLFLD(IGET(1022))
+                  fld_info(cfld)%lvl  = LVLSXML(LP,IGET(1022))
+!$omp parallel do private(i,j,ii,jj)
+                  do j=1,jend-jsta+1
+                    jj = jsta+j-1
+                    do i=1,iend-ista+1
+                      ii=ista+i-1
+                      datapd(i,j,cfld) = GRID1(ii,jj)
+                    enddo
+                  enddo
+                endif
+              ENDIF
+            ENDIF
+      ENDIF			
 !     
 !***  CLOUD FRACTION.
 !
