@@ -145,12 +145,142 @@
           endif
         enddo  
 
-      do j=jsta,jend
-        do i=ista,iend
-          print*, 'strm',
-          print*,'vpot',
-        enddo
-      enddo
+!$omp  parallel do private(i,j,ip1,im1,ii,jj,tx1,tx2)
+        DO J=JSTA,JEND
+!         npass = npass2
+!         if (j > jm-jtem+1 .or. j < jtem) npass = npass3
+          IF(J == 1) then                            ! Near North or South pole
+            if(gdlat(ista,j) > 0.) then ! count from north to south
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+!                    UP(II,J)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                     UPOLES(II,1)==SPVAL .or. UWND(I,J+1)==SPVAL) cycle
+                  ABSV(I,J) = ((VWND(ip1,J)-VWND(im1,J))*wrk2(i,j)               &
+!    &                      +  (UWND(II,J)*COSL(II,J)                            &
+     &                      +  (upoles(II,1)*coslpoles(II,1)                            &
+     &                      +   UWND(I,J+1)*COSL(I,J+1))*wrk3(i,j)) * wrk1(i,j)  &
+     &                      + F(I,J)
+                enddo
+              ELSE                                   !pole point, compute at j=2
+                jj = 2
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  if(VWND(ip1,JJ)==SPVAL .or. VWND(im1,JJ)==SPVAL .or. &
+                     UWND(I,J)==SPVAL .or. UWND(I,jj+1)==SPVAL) cycle
+                  ABSV(I,J) = ((VWND(ip1,JJ)-VWND(im1,JJ))*wrk2(i,jj)               &
+     &                      -  (UWND(I,J)*COSL(I,J)                                 &
+                            -   UWND(I,jj+1)*COSL(I,Jj+1))*wrk3(i,jj)) * wrk1(i,jj) &
+     &                      + F(I,Jj)
+                enddo
+              ENDIF
+            else
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  if(VWND(ip1,J)==SPVAL .or. VWND(im1,J)==SPVAL .or. &
+!                    UWND(II,J)==SPVAL .or. UWND(I,J+1)==SPVAL) cycle
+                     UPOLES(II,1)==SPVAL .or. UWND(I,J+1)==SPVAL) cycle
+                  ABSV(I,J) = ((VWND(ip1,J)-VWND(im1,J))*wrk2(i,j)               &
+!    &                      -  (UWND(II,J)*COSL(II,J)                            &
+     &                      -  (upoles(II,1)*coslpoles(II,1)                            &
+     &                      +   UWND(I,J+1)*COSL(I,J+1))*wrk3(i,j)) * wrk1(i,j)  &
+     &                      + F(I,J)
+                enddo
+              ELSE                                   !pole point, compute at j=2
+                jj = 2
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  if(VWND(ip1,JJ)==SPVAL .or. VWND(im1,JJ)==SPVAL .or. &
+                     UWND(I,J)==SPVAL .or. UWND(I,jj+1)==SPVAL) cycle
+                  ABSV(I,J) = ((VWND(ip1,JJ)-VWND(im1,JJ))*wrk2(i,jj)               &
+     &                      +  (UWND(I,J)*COSL(I,J)                                 &
+                            -   UWND(I,jj+1)*COSL(I,Jj+1))*wrk3(i,jj)) * wrk1(i,jj) &
+     &                      + F(I,Jj)
+                enddo
+              ENDIF
+            endif
+          ELSE IF(J == JM) THEN                      ! Near North or South Pole
+            if(gdlat(ista,j) < 0.) then ! count from north to south
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  if(VWND(ip1,J)==SPVAL .or. VWND(im1,J)==SPVAL .or. &
+!                    UWND(I,J-1)==SPVAL .or. UWND(II,J)==SPVAL) cycle
+                     UWND(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
+                  ABSV(I,J) = ((VWND(ip1,J)-VWND(im1,J))*wrk2(i,j)              &
+     &                      -  (UWND(I,J-1)*COSL(I,J-1)                         &
+!    &                      +   UWND(II,J)*COSL(II,J))*wrk3(i,j)) * wrk1(i,j)   &
+     &                      +   upoles(II,2)*coslpoles(II,2))*wrk3(i,j)) * wrk1(i,j)   &
+     &                      + F(I,J)
+                enddo
+              ELSE                                   !pole point,compute at jm-1
+                jj = jm-1
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  if(VWND(ip1,JJ)==SPVAL .or. VWND(im1,JJ)==SPVAL .or. &
+                     UWND(I,jj-1)==SPVAL .or. UWND(I,J)==SPVAL) cycle
+                  ABSV(I,J) = ((VWND(ip1,JJ)-VWND(im1,JJ))*wrk2(i,jj)         &
+     &                      -  (UWND(I,jj-1)*COSL(I,Jj-1)                     &
+     &                      -   UWND(I,J)*COSL(I,J))*wrk3(i,jj)) * wrk1(i,jj) &
+     &                      + F(I,Jj)
+                enddo
+              ENDIF
+            else
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  if(VWND(ip1,J)==SPVAL .or. VWND(im1,J)==SPVAL .or. &
+!                    UWND(I,J-1)==SPVAL .or. UWND(II,J)==SPVAL) cycle
+                     UWND(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
+                  ABSV(I,J) = ((VWND(ip1,J)-VWND(im1,J))*wrk2(i,j)              &
+     &                      +  (UWND(I,J-1)*COSL(I,J-1)                         &
+!    &                      +   UWND(II,J)*COSL(II,J))*wrk3(i,j)) * wrk1(i,j)   &
+     &                      +   upoles(II,2)*coslpoles(II,2))*wrk3(i,j)) * wrk1(i,j)   &
+     &                      + F(I,J)
+                enddo
+              ELSE                                   !pole point,compute at jm-1
+                jj = jm-1
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  if(VWND(ip1,JJ)==SPVAL .or. VWND(im1,JJ)==SPVAL .or. &
+                     UWND(I,jj-1)==SPVAL .or. UWND(I,J)==SPVAL) cycle
+                  ABSV(I,J) = ((VWND(ip1,JJ)-VWND(im1,JJ))*wrk2(i,jj)         &
+     &                      +  (UWND(I,jj-1)*COSL(I,Jj-1)                     &
+     &                      -   UWND(I,J)*COSL(I,J))*wrk3(i,jj)) * wrk1(i,jj) &
+     &                      + F(I,Jj)
+                enddo
+              ENDIF
+            endif
+          ELSE
+            DO I=ISTA,IEND
+              ip1 = ie(i)
+              im1 = iw(i)
+              if(VWND(ip1,J)==SPVAL .or. VWND(im1,J)==SPVAL .or. &
+                 UWND(I,J-1)==SPVAL .or. UWND(I,J+1)==SPVAL) cycle
+              ABSV(I,J)   = ((VWND(ip1,J)-VWND(im1,J))*wrk2(i,j)               &
+     &                    -  (UWND(I,J-1)*COSL(I,J-1)                          &
+                          -   UWND(I,J+1)*COSL(I,J+1))*wrk3(i,j)) * wrk1(i,j)  &
+                          + F(I,J)
+            ENDDO
+          END IF
 !     
 !     END OF ROUTINE.
       RETURN
