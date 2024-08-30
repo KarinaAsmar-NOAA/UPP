@@ -174,7 +174,7 @@
                   if (ii > im) ii = ii - im
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                      UP(II,J)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
-                     UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                     UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL cycle
                   PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j) +  (upoles(II,1)*coslpoles(II,1)))  
                   CHI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk2(i,j) +  (upoles(II,1)*coslpoles(II,1)))  
                 enddo
@@ -197,7 +197,6 @@
                   ii = i + imb2
                   if (ii > im) ii = ii - im
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
-!                    UP(II,J)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                      UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                   PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j))              
                   CHI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk2(i,j))
