@@ -185,7 +185,7 @@
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
                   PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj) -  (UP(I,J)*COSL(I,J)))
-                  CHI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk2(i,j) -  (UP(I,J)*COSL(I,J))))  
+                  CHI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk2(i,j) -  (UP(I,J)*COSL(I,J)))  
                 enddo
               ENDIF
             else
