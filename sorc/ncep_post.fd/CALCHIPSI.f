@@ -286,7 +286,7 @@
             enddo
             do i=ista,iend
               psi(i,j) = tx1(i)
-              chi(i,j) = txt1(i)
+              chi(i,j) = tx1(i)
             enddo
           endif
         END DO                               ! end of J loop
