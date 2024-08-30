@@ -159,21 +159,21 @@
                   if (ii > im) ii = ii - im
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
 !                    UP(II,J)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
-                     UPOLES(II,1)==SPVAL .or. UWND(I,J+1)==SPVAL) cycle
-                  ABSV(I,J) = ((VWND(ip1,J)-VWND(im1,J))*wrk2(i,j)               &
+                    ! UPOLES(II,1)==SPVAL .or. UWND(I,J+1)==SPVAL) cycle
+                  PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j)               &
 !    &                      +  (UWND(II,J)*COSL(II,J)                            &
-     &                      +  (upoles(II,1)*coslpoles(II,1)                            &
-     &                      +   UWND(I,J+1)*COSL(I,J+1))*wrk3(i,j)) * wrk1(i,j)  &
-     &                      + F(I,J)
+!     &                      +  (upoles(II,1)*coslpoles(II,1)                            &
+!     &                      +   UWND(I,J+1)*COSL(I,J+1))*wrk3(i,j)) * wrk1(i,j)  &
+!     &                      + F(I,J)
                 enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VWND(ip1,JJ)==SPVAL .or. VWND(im1,JJ)==SPVAL .or. &
-                     UWND(I,J)==SPVAL .or. UWND(I,jj+1)==SPVAL) cycle
-                  ABSV(I,J) = ((VWND(ip1,JJ)-VWND(im1,JJ))*wrk2(i,jj)               &
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
+                  PSI(I,J) = ((VWND(ip1,JJ)-VWND(im1,JJ))*wrk2(i,jj)               &
      &                      -  (UWND(I,J)*COSL(I,J)                                 &
                             -   UWND(I,jj+1)*COSL(I,Jj+1))*wrk3(i,jj)) * wrk1(i,jj) &
      &                      + F(I,Jj)
