@@ -56,6 +56,14 @@
       INTEGER, allocatable ::  IHE(:),IHW(:), IE(:),IW(:)!     
 !***************************************************************************
 !     START CALCHIPSI HERE.
+
+!$omp  parallel do private(i,j)
+        DO J=JSTA_2L,JEND_2U
+          DO I=ISTA_2L,IEND_2U
+            CHI(I,J) = SPVAL
+            PSI(I,J) = SPVAL
+          ENDDO
+        ENDDO
       
         CALL EXCH(GDLAT(ISTA_2L,JSTA_2L))
         CALL EXCH(GDLON(ISTA_2L,JSTA_2L))
@@ -143,9 +151,6 @@
           print*,'vpot',
         enddo
       enddo
-
-      CHI=5
-      PSI=5
 !     
 !     END OF ROUTINE.
       RETURN
