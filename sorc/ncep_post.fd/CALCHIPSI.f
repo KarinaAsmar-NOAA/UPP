@@ -175,7 +175,7 @@
 !                    UP(II,J)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                      UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                   PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j)               &
-     &                      +  (upoles(II,1)*coslpoles(II,1)                        !    &
+     &                      +  (upoles(II,1)*coslpoles(II,1))                        !    &
  !    &                      +   UWND(I,J+1)*COSL(I,J+1))*wrk3(i,j)) * wrk1(i,j)  &
  !    &                      + F(I,J)
                 enddo
@@ -187,7 +187,7 @@
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
                   PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj)               &
-     &                      -  (UP(I,J)*COSL(I,J)                               !  &
+     &                      -  (UP(I,J)*COSL(I,J))                               !  &
      !                       -   UP(I,jj+1)*COSL(I,Jj+1))*wrk3(i,jj)) * wrk1(i,jj) &
     ! &                      + F(I,Jj)
                 enddo
@@ -202,7 +202,7 @@
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
 !                    UP(II,J)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                      UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
-                  PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j)              ! &
+                  PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j))              ! &
 !     &                      -  (upoles(II,1)*coslpoles(II,1)                            &
 !     &                      +   UWND(I,J+1)*COSL(I,J+1))*wrk3(i,j)) * wrk1(i,j)  &
 !     &                      + F(I,J)
@@ -214,7 +214,7 @@
                   im1 = iw(i)
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
-                  PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj)               &
+                  PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj))               &
     ! &                      +  (UP(I,J)*COSL(I,J)   !                                &
              !               -   UWND(I,jj+1)*COSL(I,Jj+1))*wrk3(i,jj)) * wrk1(i,jj) &
     ! &                      + F(I,Jj)
@@ -233,7 +233,7 @@
 !                    UP(I,J-1)==SPVAL .or. UP(II,J)==SPVAL) cycle
                      UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
                   PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j)              &
-     &                      -  (UP(I,J-1)*COSL(I,J-1)                !         &
+     &                      -  (UP(I,J-1)*COSL(I,J-1))                !         &
 !     &                      +   upoles(II,2)*coslpoles(II,2))*wrk3(i,j)) * wrk1(i,j)   &
 !     &                      + F(I,J)
                 enddo
@@ -245,7 +245,7 @@
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj)         &
-     &                      -  (UP(I,jj-1)*COSL(I,Jj-1)             !        &
+     &                      -  (UP(I,jj-1)*COSL(I,Jj-1))             !        &
    !  &                      -   UWND(I,J)*COSL(I,J))*wrk3(i,jj)) * wrk1(i,jj) &
    !  &                      + F(I,Jj)
                 enddo
@@ -261,7 +261,7 @@
 !                    UP(I,J-1)==SPVAL .or. UP(II,J)==SPVAL) cycle
                      UP(I,J-1)==SPVAL .or. UP(II,2)==SPVAL) cycle
                   PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j)              &
-     &                      +  (UP(I,J-1)*COSL(I,J-1)              !           &
+     &                      +  (UP(I,J-1)*COSL(I,J-1))              !           &
 !     &                      +   upoles(II,2)*coslpoles(II,2))*wrk3(i,j)) * wrk1(i,j)   &
 !     &                      + F(I,J)
                 enddo
@@ -273,7 +273,7 @@
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj)         &
-     &                      +  (UP(I,jj-1)*COSL(I,Jj-1)      !               &
+     &                      +  (UP(I,jj-1)*COSL(I,Jj-1))      !               &
    !  &                      -   UWND(I,J)*COSL(I,J))*wrk3(i,jj)) * wrk1(i,jj) &
    !  &                      + F(I,Jj)
                 enddo
@@ -286,7 +286,7 @@
               if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                  UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
               PSI(I,J)   = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j)               &
-     &                    -  (UP(I,J-1)*COSL(I,J-1)                 !         &
+     &                    -  (UP(I,J-1)*COSL(I,J-1))                 !         &
  !                         -   UWND(I,J+1)*COSL(I,J+1))*wrk3(i,j)) * wrk1(i,j)  &
  !                         + F(I,J)
             ENDDO
