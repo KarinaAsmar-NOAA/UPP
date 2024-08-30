@@ -49,7 +49,7 @@
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(in)    :: UP, VP
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(out) :: CHI, PSI
       REAL, dimension(IM,2) :: GLATPOLES, COSLPOLES, UPOLES, AVPOLES
-      REAL, dimension(IM,JSTA:JEND) :: COSLTEMP, AVTEMP
+      REAL, dimension(IM,JSTA:JEND) :: COSLTEMP, PSITEMP
 !
       real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
       INTEGER, allocatable ::  IHE(:),IHW(:), IE(:),IW(:)
@@ -186,10 +186,10 @@
                   im1 = iw(i)
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
-                  PSI(I,J) = ((VWND(ip1,JJ)-VWND(im1,JJ))*wrk2(i,jj)               &
-     &                      -  (UWND(I,J)*COSL(I,J)                                 &
-                            -   UWND(I,jj+1)*COSL(I,Jj+1))*wrk3(i,jj)) * wrk1(i,jj) &
-     &                      + F(I,Jj)
+                  PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj)               &
+     &                      -  (UP(I,J)*COSL(I,J)                               !  &
+     !                       -   UP(I,jj+1)*COSL(I,Jj+1))*wrk3(i,jj)) * wrk1(i,jj) &
+    ! &                      + F(I,Jj)
                 enddo
               ENDIF
             else
@@ -199,26 +199,25 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VWND(ip1,J)==SPVAL .or. VWND(im1,J)==SPVAL .or. &
-!                    UWND(II,J)==SPVAL .or. UWND(I,J+1)==SPVAL) cycle
-                     UPOLES(II,1)==SPVAL .or. UWND(I,J+1)==SPVAL) cycle
-                  ABSV(I,J) = ((VWND(ip1,J)-VWND(im1,J))*wrk2(i,j)               &
-!    &                      -  (UWND(II,J)*COSL(II,J)                            &
-     &                      -  (upoles(II,1)*coslpoles(II,1)                            &
-     &                      +   UWND(I,J+1)*COSL(I,J+1))*wrk3(i,j)) * wrk1(i,j)  &
-     &                      + F(I,J)
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+!                    UP(II,J)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                     UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                  PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j)              ! &
+!     &                      -  (upoles(II,1)*coslpoles(II,1)                            &
+!     &                      +   UWND(I,J+1)*COSL(I,J+1))*wrk3(i,j)) * wrk1(i,j)  &
+!     &                      + F(I,J)
                 enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VWND(ip1,JJ)==SPVAL .or. VWND(im1,JJ)==SPVAL .or. &
-                     UWND(I,J)==SPVAL .or. UWND(I,jj+1)==SPVAL) cycle
-                  ABSV(I,J) = ((VWND(ip1,JJ)-VWND(im1,JJ))*wrk2(i,jj)               &
-     &                      +  (UWND(I,J)*COSL(I,J)                                 &
-                            -   UWND(I,jj+1)*COSL(I,Jj+1))*wrk3(i,jj)) * wrk1(i,jj) &
-     &                      + F(I,Jj)
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
+                  PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj)               &
+    ! &                      +  (UP(I,J)*COSL(I,J)   !                                &
+             !               -   UWND(I,jj+1)*COSL(I,Jj+1))*wrk3(i,jj)) * wrk1(i,jj) &
+    ! &                      + F(I,Jj)
                 enddo
               ENDIF
             endif
@@ -230,26 +229,25 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VWND(ip1,J)==SPVAL .or. VWND(im1,J)==SPVAL .or. &
-!                    UWND(I,J-1)==SPVAL .or. UWND(II,J)==SPVAL) cycle
-                     UWND(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
-                  ABSV(I,J) = ((VWND(ip1,J)-VWND(im1,J))*wrk2(i,j)              &
-     &                      -  (UWND(I,J-1)*COSL(I,J-1)                         &
-!    &                      +   UWND(II,J)*COSL(II,J))*wrk3(i,j)) * wrk1(i,j)   &
-     &                      +   upoles(II,2)*coslpoles(II,2))*wrk3(i,j)) * wrk1(i,j)   &
-     &                      + F(I,J)
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+!                    UP(I,J-1)==SPVAL .or. UP(II,J)==SPVAL) cycle
+                     UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
+                  PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j)              &
+     &                      -  (UP(I,J-1)*COSL(I,J-1)                !         &
+!     &                      +   upoles(II,2)*coslpoles(II,2))*wrk3(i,j)) * wrk1(i,j)   &
+!     &                      + F(I,J)
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VWND(ip1,JJ)==SPVAL .or. VWND(im1,JJ)==SPVAL .or. &
-                     UWND(I,jj-1)==SPVAL .or. UWND(I,J)==SPVAL) cycle
-                  ABSV(I,J) = ((VWND(ip1,JJ)-VWND(im1,JJ))*wrk2(i,jj)         &
-     &                      -  (UWND(I,jj-1)*COSL(I,Jj-1)                     &
-     &                      -   UWND(I,J)*COSL(I,J))*wrk3(i,jj)) * wrk1(i,jj) &
-     &                      + F(I,Jj)
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
+                  PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj)         &
+     &                      -  (UP(I,jj-1)*COSL(I,Jj-1)             !        &
+   !  &                      -   UWND(I,J)*COSL(I,J))*wrk3(i,jj)) * wrk1(i,jj) &
+   !  &                      + F(I,Jj)
                 enddo
               ENDIF
             else
@@ -335,81 +333,6 @@
         if(jend==jm) absv(ista:iend,jm)=avtemp(ista:iend,jm)
     
         deallocate (wrk1, wrk2, wrk3, cosl, iw, ie)
-
-      ELSE !(MODELNAME == 'GFS' .or. global)
-
-      IF (GRIDTYPE == 'B')THEN
-        CALL EXCH(VWND)
-        CALL EXCH(UWND)
-      ENDIF
-     
-      CALL DVDXDUDY(UWND,VWND)
-
-      IF(GRIDTYPE == 'A')THEN
-!$omp parallel do  private(i,j,jmt2,tphi,r2dx,r2dy,dvdx,dudy,uavg)
-        DO J=JSTA_M,JEND_M
-          JMT2 = JM/2+1
-          TPHI = (J-JMT2)*(DYVAL/gdsdegr)*DTR
-          DO I=ISTA_M,IEND_M
-            IF(DDVDX(I,J)<SPVAL.AND.DDUDY(I,J)<SPVAL.AND. &
-               UUAVG(I,J)<SPVAL.AND.UWND(I,J)<SPVAL.AND.  &
-     &         UWND(I,J+1)<SPVAL.AND.UWND(I,J-1)<SPVAL) THEN
-              DVDX   = DDVDX(I,J)
-              DUDY   = DDUDY(I,J)
-              UAVG   = UUAVG(I,J) 
-!  is there a (f+tan(phi)/erad)*u term?
-              IF(MODELNAME  == 'RAPR' .OR. MODELNAME  == 'FV3R') then
-                 ABSV(I,J) = DVDX - DUDY + F(I,J)   ! for run RAP over north pole      
-              else
-                 ABSV(I,J) = DVDX - DUDY + F(I,J) + UAVG*TAN(GDLAT(I,J)*DTR)/ERAD  ! not sure about this???
-              endif
-            END IF
-          END DO
-        END DO
-
-      ELSE IF (GRIDTYPE == 'E')THEN
-       allocate(ihw(JSTA_2L:JEND_2U), IHE(JSTA_2L:JEND_2U))
-!$omp  parallel do private(j)
-        DO J=JSTA_2L,JEND_2U
-          IHW(J) = -MOD(J,2)
-          IHE(J) = IHW(J)+1
-        ENDDO
-!$omp parallel do  private(i,j,jmt2,tphi,r2dx,r2dy,dvdx,dudy,uavg)
-        DO J=JSTA_M,JEND_M
-          JMT2 = JM/2+1
-          TPHI = (J-JMT2)*(DYVAL/1000.)*DTR
-          TPHI = (J-JMT2)*(DYVAL/gdsdegr)*DTR
-          DO I=ISTA_M,IEND_M
-            IF(VWND(I+IHE(J),J) < SPVAL.AND.VWND(I+IHW(J),J) < SPVAL .AND.   &
-     &         UWND(I,J+1) < SPVAL     .AND.UWND(I,J-1) < SPVAL) THEN
-              DVDX   = DDVDX(I,J)
-              DUDY   = DDUDY(I,J)
-              UAVG   = UUAVG(I,J)
-!  is there a (f+tan(phi)/erad)*u term?
-              ABSV(I,J) = DVDX - DUDY + F(I,J) + UAVG*TAN(TPHI)/ERAD 
-            END IF
-          END DO
-        END DO
-       deallocate(ihw, IHE)
-      ELSE IF (GRIDTYPE == 'B')THEN
-!        CALL EXCH(VWND)      !done before dvdxdudy() Jesse 20200520
-        DO J=JSTA_M,JEND_M
-          JMT2 = JM/2+1
-          TPHI = (J-JMT2)*(DYVAL/gdsdegr)*DTR
-          DO I=ISTA_M,IEND_M         
-            if(VWND(I,  J)==SPVAL .or. VWND(I,  J-1)==SPVAL .or. &
-               VWND(I-1,J)==SPVAL .or. VWND(I-1,J-1)==SPVAL .or. &
-               UWND(I,  J)==SPVAL .or. UWND(I-1,J)==SPVAL .or. &
-               UWND(I,J-1)==SPVAL .or. UWND(I-1,J-1)==SPVAL) cycle
-              DVDX   = DDVDX(I,J)
-              DUDY   = DDUDY(I,J)
-              UAVG   = UUAVG(I,J)
-!  is there a (f+tan(phi)/erad)*u term?
-           ABSV(I,J) = DVDX - DUDY + F(I,J) + UAVG*TAN(TPHI)/ERAD 
-          END DO
-        END DO 
-      END IF 
-      END IF
 !     
 !     END OF ROUTINE.
 !     
