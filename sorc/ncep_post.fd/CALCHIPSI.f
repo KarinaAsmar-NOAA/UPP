@@ -253,7 +253,8 @@
                   PSI(I,J) = (UP(I,J-1)*COSL(I,J-1)+UP(II,J)*COSL(II,J))*wrk3(i,j)   &
      &                      +   upoles(II,2)*coslpoles(II,2)*wrk3(i,j)
                   CHI(I,J) = (VP(I,J-1)*COSL(I,J-1)+VP(II,J)*COSL(II,J))*wrk3(i,j)   &
-     &                      +   vpoles(II,2)*coslpoles(II,2)*wrk3(i,j)                enddo
+     &                      +   vpoles(II,2)*coslpoles(II,2)*wrk3(i,j)
+                enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
                 DO I=ISTA,IEND
