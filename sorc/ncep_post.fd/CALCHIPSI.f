@@ -177,7 +177,8 @@
                   if (ii > im) ii = ii - im
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                      UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
-                  PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j)) !+  (upoles(II,1)*coslpoles(II,1)))  
+                  ! PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j)) !+  (upoles(II,1)*coslpoles(II,1)))  
+                  PSI(I,J) = (UPOLES(II,1)*COSLPOLES(II,1) + UP(I,J+1)*COSL(I,J+1))*wrk3)
                   CHI(I,J) = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j)) !+  (vpoles(II,1)*glatpoles(II,1)))  
                 enddo
               ELSE                                   !pole point, compute at j=2
