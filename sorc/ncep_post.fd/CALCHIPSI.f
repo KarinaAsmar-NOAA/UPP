@@ -66,24 +66,25 @@
 !     LOOP TO COMPUTE STREAMFUNCTION AND VELOCITY POTENTIAL FROM WINDS.
 !     
 !$omp  parallel do private(i,j)
-        DO J=JSTA_2L,JEND_2U
-          DO I=ISTA_2L,IEND_2U
-            PSI(I,J) = SPVAL
-            CHI(I,J) = SPVAL
-          ENDDO
+      DO J=JSTA_2L,JEND_2U
+        DO I=ISTA_2L,IEND_2U
+          PSI(I,J) = SPVAL
+          CHI(I,J) = SPVAL
         ENDDO
+      ENDDO
 
       CALL EXCH(UP)
       CALL EXCH(VP)
 !
-        CALL EXCH(GDLAT(ISTA_2L,JSTA_2L))
-        CALL EXCH(GDLON(ISTA_2L,JSTA_2L))
+      CALL EXCH(GDLAT(ISTA_2L,JSTA_2L))
+      CALL EXCH(GDLON(ISTA_2L,JSTA_2L))
 
-        allocate (wrk1(ista:iend,jsta:jend), wrk2(ista:iend,jsta:jend),          &
+      allocate (wrk1(ista:iend,jsta:jend), wrk2(ista:iend,jsta:jend),          &
      &            wrk3(ista:iend,jsta:jend), cosl(ista_2l:iend_2u,jsta_2l:jend_2u))
-        allocate(iw(im),ie(im))
+      allocate(iw(im),ie(im))
 
-        imb2 = im/2
+! CALCULATE DISTANCES
+      imb2 = im/2
 !$omp  parallel do private(i)
       do i=ista,iend
         ie(i) = i+1
@@ -156,6 +157,7 @@
           endif
         enddo  
 
+! CALCULATE STRM AND VPOT
         npass = 0
 
         jtem = jm / 18 + 1
