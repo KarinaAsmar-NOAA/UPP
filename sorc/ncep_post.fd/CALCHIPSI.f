@@ -189,8 +189,8 @@
                   PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj) -  (UP(I,J)*COSL(I,J)))
                   CHI(I,J) = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) -  (VP(I,J)*GDLAT(I,J)))  
                 enddo
-              ENDIF
-            else
+              ENDIF                              ! end pole point if block
+            else                              ! gdlat(ista,j) not positive
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
                 DO I=ISTA,IEND
                   ip1 = ie(i)
@@ -237,8 +237,8 @@
                   PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj) -  (UP(I,jj-1)*COSL(I,Jj-1))) 
                   CHI(I,J) = ((VP(ip1,JJ)-VP(im1,JJ))*wrk3(i,jj) -  (VP(I,jj-1)*GDLAT(I,Jj-1))) 
                 enddo
-              ENDIF
-            else
+              ENDIF                        ! end pole point if block
+            else                        ! gdlat(ista,j) not negative
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
                 DO I=ISTA,IEND
                   ip1 = ie(i)
@@ -262,7 +262,7 @@
                 enddo
               ENDIF
             endif
-          ELSE
+          ELSE                                    ! J NOT 1 OR JM
             DO I=ISTA,IEND
               ip1 = ie(i)
               im1 = iw(i)
@@ -271,7 +271,7 @@
               PSI(I,J)   = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j) -  (UP(I,J-1)*COSL(I,J-1)))
               CHI(I,J)   = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) -  (VP(I,J-1)*GDLAT(I,J-1)))
             ENDDO
-          END IF
+          END IF                              ! END J IF BLOCK
           if (npass > 0) then
             do i=ista,iend
               tx1(i) = psi(i,j)
@@ -290,7 +290,7 @@
               psi(i,j) = tx1(i)
               chi(i,j) = tx1(i)
             enddo
-          endif
+          endif                        ! end npass>0 if block
         END DO                               ! end of J loop
 
 !       deallocate (wrk1, wrk2, wrk3, cosl)
