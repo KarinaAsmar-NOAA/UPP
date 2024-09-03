@@ -164,6 +164,7 @@
       
         call fullpole(UP(ista_2l:iend_2u,jsta_2l:jend_2u),upoles)
         call fullpole(VP(ista_2l:iend_2u,jsta_2l:jend_2u),vpoles)
+        
 !$omp  parallel do private(i,j,ip1,im1,ii,jj,tx1,tx2)
         DO J=JSTA,JEND
           IF(J == 1) then                            ! Near North or South pole
