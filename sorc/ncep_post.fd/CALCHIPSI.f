@@ -98,14 +98,14 @@
             im1 = iw(i)
             cosl(i,j) = cos(gdlat(i,j)*dtr)
             IF(cosl(i,j) >= SMALL) then
-              wrk1(i,j) = 1.0 / (ERAD*cosl(i,j))
+              wrk1(i,j) = (ERAD*cosl(i,j))
             else
               wrk1(i,j) = 0.
             end if    
             if(i == im .or. i == 1) then
-              wrk2(i,j) = 1.0 / ((360.+GDLON(ip1,J)-GDLON(im1,J))*DTR) !1/dlam
+              wrk2(i,j) = ((360.+GDLON(ip1,J)-GDLON(im1,J))*DTR) !1/dlam
             else
-              wrk2(i,j) = 1.0 / ((GDLON(ip1,J)-GDLON(im1,J))*DTR)      !1/dlam
+              wrk2(i,j) = ((GDLON(ip1,J)-GDLON(im1,J))*DTR)      !1/dlam
             end if
           enddo
         enddo
@@ -122,15 +122,13 @@
               do i=ista,iend
                 ii = i + imb2
                 if (ii > im) ii = ii - im
-          !     wrk3(i,j) = 1.0 / ((180.-GDLAT(i,J+1)-GDLAT(II,J))*DTR) !1/dphi
-                wrk3(i,j) = 1.0 / ((180.-GDLAT(i,J+1)-GLATPOLES(ii,1))*DTR) !1/dphi
+                wrk3(i,j) = ((180.-GDLAT(i,J+1)-GLATPOLES(ii,1))*DTR) !1/dphi
               enddo
             else ! count from south to north
               do i=ista,iend
                 ii = i + imb2
                 if (ii > im) ii = ii - im
-          !     wrk3(i,j) = 1.0 / ((180.+GDLAT(i,J+1)+GDLAT(II,J))*DTR) !1/dphi
-                wrk3(i,j) = 1.0 / ((180.+GDLAT(i,J+1)+GLATPOLES(ii,1))*DTR) !1/dphi
+                wrk3(i,j) = ((180.+GDLAT(i,J+1)+GLATPOLES(ii,1))*DTR) !1/dphi
 !
               enddo
             end if      
@@ -139,20 +137,18 @@
               do i=ista,iend
                 ii = i + imb2
                 if (ii > im) ii = ii - im
-          !      wrk3(i,j) = 1.0 / ((180.+GDLAT(i,J-1)+GDLAT(II,J))*DTR)
-                wrk3(i,j) = 1.0 / ((180.+GDLAT(i,J-1)+GLATPOLES(ii,2))*DTR)
+                wrk3(i,j) = ((180.+GDLAT(i,J-1)+GLATPOLES(ii,2))*DTR)
               enddo
             else ! count from south to north
               do i=ista,iend
                 ii = i + imb2
                 if (ii > im) ii = ii - im
-          !     wrk3(i,j) = 1.0 / ((180.-GDLAT(i,J-1)-GDLAT(II,J))*DTR)
-                wrk3(i,j) = 1.0 / ((180.-GDLAT(i,J-1)-GLATPOLES(ii,2))*DTR)
+                wrk3(i,j) = ((180.-GDLAT(i,J-1)-GLATPOLES(ii,2))*DTR)
               enddo
             end if  
           else
             do i=ista,iend
-              wrk3(i,j) = 1.0 / ((GDLAT(I,J-1)-GDLAT(I,J+1))*DTR) !1/dphi
+              wrk3(i,j) = ((GDLAT(I,J-1)-GDLAT(I,J+1))*DTR) !1/dphi
             enddo
           endif
         enddo  
