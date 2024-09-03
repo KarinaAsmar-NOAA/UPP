@@ -177,8 +177,8 @@
                   if (ii > im) ii = ii - im
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                      UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
-                  PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j) +  (upoles(II,1)*coslpoles(II,1)))  
-                  CHI(I,J) = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) +  (vpoles(II,1)*glatpoles(II,1)))  
+                  PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j) !+  (upoles(II,1)*coslpoles(II,1)))  
+                  CHI(I,J) = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) !+  (vpoles(II,1)*glatpoles(II,1)))  
                 enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
@@ -187,8 +187,8 @@
                   im1 = iw(i)
                   if(UP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
-                  PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj) -  (UP(I,J)*COSL(I,J)))
-                  CHI(I,J) = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) -  (VP(I,J)*GDLAT(I,J)))  
+                  PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj) ! -  (UP(I,J)*COSL(I,J)))
+                  CHI(I,J) = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) ! -  (VP(I,J)*GDLAT(I,J)))  
                 enddo
               ENDIF                              ! end pole point if block
             else                              ! gdlat(ista,j) not positive
@@ -225,8 +225,8 @@
                   if (ii > im) ii = ii - im
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                      UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
-                  PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j) -  (UP(I,J-1)*COSL(I,J-1)))      
-                  CHI(I,J) = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) -  (VP(I,J-1)*GDLAT(I,J-1)))      
+                  PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j) ! -  (UP(I,J-1)*COSL(I,J-1)))      
+                  CHI(I,J) = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) ! -  (VP(I,J-1)*GDLAT(I,J-1)))      
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
@@ -235,8 +235,8 @@
                   im1 = iw(i)
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
-                  PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj) -  (UP(I,jj-1)*COSL(I,Jj-1))) 
-                  CHI(I,J) = ((VP(ip1,JJ)-VP(im1,JJ))*wrk3(i,jj) -  (VP(I,jj-1)*GDLAT(I,Jj-1))) 
+                  PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj) ! -  (UP(I,jj-1)*COSL(I,Jj-1))) 
+                  CHI(I,J) = ((VP(ip1,JJ)-VP(im1,JJ))*wrk3(i,jj) ! -  (VP(I,jj-1)*GDLAT(I,Jj-1))) 
                 enddo
               ENDIF                        ! end pole point if block
             else                        ! gdlat(ista,j) not negative
@@ -248,8 +248,8 @@
                   if (ii > im) ii = ii - im
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                      UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
-                  PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j) +  (UP(I,J-1)*COSL(I,J-1)))         
-                  CHI(I,J) = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) +  (VP(I,J-1)*GDLAT(I,J-1)))         
+                  PSI(I,J) = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j) ! +  (UP(I,J-1)*COSL(I,J-1)))         
+                  CHI(I,J) = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) ! +  (VP(I,J-1)*GDLAT(I,J-1)))         
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
@@ -258,8 +258,8 @@
                   im1 = iw(i)
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
-                  PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj) +  (UP(I,jj-1)*COSL(I,Jj-1))) 
-                  CHI(I,J) = ((VP(ip1,JJ)-VP(im1,JJ))*wrk3(i,jj) +  (VP(I,jj-1)*GDLAT(I,Jj-1))) 
+                  PSI(I,J) = ((UP(ip1,JJ)-UP(im1,JJ))*wrk3(i,jj) ! +  (UP(I,jj-1)*COSL(I,Jj-1))) 
+                  CHI(I,J) = ((VP(ip1,JJ)-VP(im1,JJ))*wrk3(i,jj) ! +  (VP(I,jj-1)*GDLAT(I,Jj-1))) 
                 enddo
               ENDIF
             endif
@@ -269,8 +269,8 @@
               im1 = iw(i)
               if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                  UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
-              PSI(I,J)   = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j) -  (UP(I,J-1)*COSL(I,J-1)))
-              CHI(I,J)   = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) -  (VP(I,J-1)*GDLAT(I,J-1)))
+              PSI(I,J)   = ((UP(ip1,J)-UP(im1,J))*wrk3(i,j) ! -  (UP(I,J-1)*COSL(I,J-1)))
+              CHI(I,J)   = ((VP(ip1,J)-VP(im1,J))*wrk3(i,j) ! -  (VP(I,J-1)*GDLAT(I,J-1)))
             ENDDO
           END IF                              ! END J IF BLOCK
           if (npass > 0) then
