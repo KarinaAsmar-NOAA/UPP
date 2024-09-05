@@ -268,7 +268,8 @@
               im1 = iw(i)
               if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                  UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
-              PSI(I,J) = (UP(I,J-1)*COSL(I,J-1)-UP(I,J+1)*COSL(I,J+1))*wrk3(i,j)
+              ! PSI(I,J) = (UP(I,J-1)*COSL(I,J-1)-UP(I,J+1)*COSL(I,J+1))*wrk3(i,j)
+              PSI(I,J) = -1/2*(VP(im1,J)+VP(ip1,J))*(ip1-im1) + 1/2*(U(I,J+1)+U(I,J-1))*((J)-(J-1))
               CHI(I,J) = (VP(I,J-1)*COSL(I,J-1)-VP(I,J+1)*COSL(I,J+1))*wrk3(i,j)
             ENDDO
           END IF                              ! END J IF BLOCK
