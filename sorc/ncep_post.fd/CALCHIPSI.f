@@ -268,12 +268,14 @@
               im1 = iw(i)
               if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                  UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
-              ! PSI(I,J) = (UP(I,J-1)*COSL(I,J-1)-UP(I,J+1)*COSL(I,J+1))*wrk3(i,j)
+              CHI(I,J) = (UP(I,J-1)*COSL(I,J-1)-UP(I,J+1)*COSL(I,J+1))*wrk3(i,j)  !! TEST PSI
+              print*,'wrong psi',chi(i,j)
               PSI(I,J) = 1/2*(UP(I,J-1) + UP(I,J+1))*wrk3(i,j)      &
       &           - 1/2*(VP(im1,J)+VP(ip1,J))*wrk2(i,j)
+              print*,'psi',PSI(I,J)
     !          PSI(I,J) = -1/2*(VP(im1,J)+VP(ip1,J))*wrk2(i,j) + 1/2*(UP(I,J+1)*COSL(I,J+1)      &
     !  &              + UP(I,J-1)*COSL(I,J-1))*wrk3(i,j)
-              CHI(I,J) = (VP(I,J-1)*COSL(I,J-1)-VP(I,J+1)*COSL(I,J+1))*wrk3(i,j)
+      !        CHI(I,J) = (VP(I,J-1)*COSL(I,J-1)-VP(I,J+1)*COSL(I,J+1))*wrk3(i,j)
             ENDDO
           END IF                              ! END J IF BLOCK
           if (npass > 0) then
