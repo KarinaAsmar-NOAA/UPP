@@ -271,8 +271,9 @@
    !           PSI(I,J)   = (-1.0*(VP(ip1,J)+VP(im1,J))*wrk2(i,j)               &
    !  &                    +  (UP(I,J-1)*COSL(I,J-1)                          &
    !                       +   UP(I,J+1)*COSL(I,J+1))*wrk3(i,j)) * wrk1(i,j)*0.5  
-               PSI(I,J)   = (-1.0*VP(I,J)*wrk2(i,j)               &
-     &                    +  UP(I,J)*COSL(I,J)*wrk3(i,j)) * wrk1(i,j)  
+  !             PSI(I,J)   = (-1.0*VP(I,J)*wrk2(i,j)               &
+  !   &                    +  UP(I,J)*COSL(I,J)*wrk3(i,j)) * wrk1(i,j)  
+              PSI(I,J) = -1.0*VP(I,J)*wrk2(i,j)*wrk1(i,j)
               CHI(I,J)   = (-1.0*(UP(I,J-1)*COSL(I,J-1)+UP(I,J+1)*COSL(I,J+1))*wrk2(i,j)               &
      &                    -  (VP(ip1,J)+VP(im1,J))*wrk3(i,j)) * wrk1(i,j)*0.5
               print*,'psi',PSI(I,J)
