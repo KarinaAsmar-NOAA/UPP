@@ -274,9 +274,18 @@
               PSIINIT(I,J) = UP(I,J)*wrk3(i,j)*wrk1(i,j) 
               CHIINIT(I,J)   = (-1.0*(UP(I,J-1)*COSL(I,J-1)+UP(I,J+1)*COSL(I,J+1))*wrk2(i,j)               &
      &                    -  (VP(ip1,J)+VP(im1,J))*wrk3(i,j)) * wrk1(i,j)*0.5
-              PSI(I,J) = PSIINIT(I,J-1) + PSIINIT(J+1)
             ENDDO
           END IF                              ! END J IF BLOCK
+
+          DO J=JSTA,JEND
+            DO I=ISTA,IEND
+              IF (J /= 1) .AND. (J /= JM) then
+                PSI(I,J) = PSIINIT(I,J-1) + PSIINIT(I,J+1)
+              ENDIF
+            ENDDO
+          ENDDO
+
+          
           if (npass > 0) then
             do i=ista,iend
               tx1(i) = psi(i,j)
