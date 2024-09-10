@@ -270,7 +270,7 @@
                  UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
               CHI(I,J) = (UP(I,J-1)*COSL(I,J-1)-UP(I,J+1)*COSL(I,J+1))*wrk3(i,j)  !! TEST PSI
               print*,'wrong psi',chi(i,j)
-              PSI(I,J) = 0.5*(UP(I,J-1)*COSL(I,J-1)) + UP(I,J+1)*COSL(I,J+1))*wrk3(i,j)      &
+              PSI(I,J) = 0.5*(UP(I,J-1)*COSL(I,J-1) + UP(I,J+1)*COSL(I,J+1))*wrk3(i,j)      &
       &           - 0.5*(VP(im1,J)+VP(ip1,J))*wrk2(i,j)
               print*,'psi',PSI(I,J)
       !        CHI(I,J) = (VP(I,J-1)*COSL(I,J-1)-VP(I,J+1)*COSL(I,J+1))*wrk3(i,j)
