@@ -276,15 +276,6 @@
      &                    -  (VP(ip1,J)+VP(im1,J))*wrk3(i,j)) * wrk1(i,j)*0.5
             ENDDO
           END IF                              ! END J IF BLOCK
-
-          DO J=JSTA,JEND
-            DO I=ISTA,IEND
-              IF ((J /= 1) .AND. (J /= JM)) then
-                PSI(I,J) = PSIINIT(I,J-1) + PSIINIT(I,J+1)
-              ENDIF
-            ENDDO
-          ENDDO
-
           
           if (npass > 0) then
             do i=ista,iend
@@ -301,11 +292,20 @@
               enddo
             enddo
             do i=ista,iend
-              psi(i,j) = tx1(i)
-              chi(i,j) = tx1(i)
+              psiinit(i,j) = tx1(i)
+              chiinit(i,j) = tx1(i)
             enddo
           endif                        ! end npass>0 if block
         END DO                               ! end of J loop
+
+        DO J=JSTA,JEND
+            DO I=ISTA,IEND
+              IF ((J /= 1) .AND. (J /= JM)) then
+                PSI(I,J) = PSIINIT(I,J-1) + PSIINIT(I,J+1)
+              ENDIF
+            ENDDO
+          ENDDO
+
 
 !       deallocate (wrk1, wrk2, wrk3, cosl)
 ! GFS use lon avg as one scaler value for pole point
