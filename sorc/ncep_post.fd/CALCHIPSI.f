@@ -96,9 +96,9 @@
           do i=ista,iend
             ip1 = ie(i)
             im1 = iw(i)
-            cosl(i,j) = cos(gdlat(i,j)*dtr)
+            cosl(i,j) = cos(gdlat(i,j)*dtr)  ! cosine of latitude in radians
             IF(cosl(i,j) >= SMALL) then
-              wrk1(i,j) = ERAD*cosl(i,j)
+              wrk1(i,j) = ERAD*cosl(i,j)  ! earth radius in meters times cosine of latitude in radians
             else
               wrk1(i,j) = 0.
             end if    
@@ -270,8 +270,11 @@
                  UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
               CHI(I,J) = (UP(I,J-1)*COSL(I,J-1)-UP(I,J+1)*COSL(I,J+1))*wrk3(i,j)  !! TEST PSI
               print*,'wrong psi',chi(i,j)
-              PSI(I,J) = 0.5*(UP(I,J-1)*COSL(I,J-1) + UP(I,J+1)*COSL(I,J+1))*wrk3(i,j)      &
-      &           - 0.5*(VP(im1,J)+VP(ip1,J))*wrk2(i,j)
+              PSI(I,J)   = (-1*(VWND(ip1,J)+VWND(im1,J))*wrk2(i,j)               &
+     &                    +  (UWND(I,J-1)*COSL(I,J-1)                          &
+                          +   UWND(I,J+1)*COSL(I,J+1))*wrk3(i,j)) * wrk1(i,j)*0.5  
+ !             PSI(I,J) = 0.5*(UP(I,J-1)*COSL(I,J-1) + UP(I,J+1)*COSL(I,J+1))*wrk3(i,j)      &
+ !     &           - 0.5*(VP(im1,J)+VP(ip1,J))*wrk2(i,j)
               print*,'psi',PSI(I,J)
       !        CHI(I,J) = (VP(I,J-1)*COSL(I,J-1)-VP(I,J+1)*COSL(I,J+1))*wrk3(i,j)
             ENDDO
