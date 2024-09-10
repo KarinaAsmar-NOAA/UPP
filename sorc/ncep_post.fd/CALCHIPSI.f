@@ -279,7 +279,7 @@
 
           DO J=JSTA,JEND
             DO I=ISTA,IEND
-              IF (J /= 1) .AND. (J /= JM) then
+              IF ((J /= 1) .AND. (J /= JM)) then
                 PSI(I,J) = PSIINIT(I,J-1) + PSIINIT(I,J+1)
               ENDIF
             ENDDO
