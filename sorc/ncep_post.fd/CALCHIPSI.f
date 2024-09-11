@@ -55,7 +55,7 @@
 !
       real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
       INTEGER, allocatable ::  IHE(:),IHW(:), IE(:),IW(:)
-      REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u) :: CHIINIT, PSIINIT
+      REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u) :: DCHI, DPSI
 !
       integer, parameter :: npass2=2, npass3=3
       integer I,J,ip1,im1,ii,iir,iil,jj,JMT2,imb2, npass, nn, jtem
@@ -71,8 +71,13 @@
         DO I=ISTA_2L,IEND_2U
           PSI(I,J) = SPVAL
           CHI(I,J) = SPVAL
-          PSIINIT(I,J) = SPVAL
-          CHIINIT(I,J) = SPVAL
+          IF ((I==1) .AND. (J==1)) THEN
+            DPSI(I,J) = 0.0
+            DCHI(I,J) = 0.0
+          ELSE
+            DPSI(I,J) = SPVAL
+            DCHI(I,J) = SPVAL
+          ENDIF
         ENDDO
       ENDDO
 
@@ -271,8 +276,8 @@
               im1 = iw(i)
               if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                  UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
-              PSIINIT(I,J) = UP(I,J)*wrk3(i,j)*wrk1(i,j) 
-              CHIINIT(I,J)   = (-1.0*(UP(I,J-1)*COSL(I,J-1)+UP(I,J+1)*COSL(I,J+1))*wrk2(i,j)               &
+              DPSI(I,J) = UP(I,J-1)*wrk3(i,j)*wrk1(i,j) 
+              DCHI(I,J)   = (-1.0*(UP(I,J-1)*COSL(I,J-1)+UP(I,J+1)*COSL(I,J+1))*wrk2(i,j)               &
      &                    -  (VP(ip1,J)+VP(im1,J))*wrk3(i,j)) * wrk1(i,j)*0.5
             ENDDO
           END IF                              ! END J IF BLOCK
@@ -300,8 +305,13 @@
 
         DO J=JSTA,JEND
             DO I=ISTA,IEND
-              IF ((J /= 1) .AND. (J /= JM)) then
-                PSI(I,J) = PSIINIT(I,J-1) + PSIINIT(I,J+1)
+              IF ((I==1) .AND. (J==1)) THEN
+                PSI(I,J) = 0.0
+              ELSE
+                IF ((J /= 1) .AND. (J /= JM)) then
+                  PSI(I,J+1) = DPSI(I,J) + PSI(I,J-1)
+                ELSE
+                  PSI(I,J+1) = DPSI(I,J+1)
               ENDIF
             ENDDO
           ENDDO
