@@ -239,7 +239,7 @@
                   im1 = iw(i)
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
-                  DPSI(I,J) = ((UP(I,jj-1)*COSL(I,Jj-1)))*wrk3(i,jj)) * wrk1(i,jj) 
+                  DPSI(I,J) = ((UP(I,jj-1)*COSL(I,Jj-1)))*wrk3(i,jj) * wrk1(i,jj) 
                   CHI(I,J) = (VP(I,jj-1)*COSL(I,Jj-1)-VP(I,J)*COSL(I,J))*wrk3(i,jj)
                 enddo
               ENDIF                        ! end pole point if block
