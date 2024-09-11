@@ -200,7 +200,7 @@
                   if (ii > im) ii = ii - im
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                      UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
-                  DPSI(I,J) = (-0.5(VP(ip1,J)+VP(im1,J))*wrk2(i,j)              &
+                  DPSI(I,J) = (-0.5*(VP(ip1,J)+VP(im1,J))*wrk2(i,j)              &
      &                      +  0.5*(upoles(II,1)*coslpoles(II,1)                 &
      &                      +   UP(I,J+1)*COSL(I,J+1))*wrk3(i,j)) * wrk1(i,j) 
                   DCHI(I,J) = -1.0*((vpoles(II,1)*coslpoles(II,1))*wrk3(i,j)) * wrk1(i,j)
