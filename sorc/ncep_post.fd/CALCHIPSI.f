@@ -305,8 +305,8 @@
 
         DO J=JSTA,JEND
           DO I=ISTA,IEND
-            IF ((I==1) .AND. (J==1)) THEN
-              PSI(I,J) = 0.0
+            IF (J==1) THEN
+              PSI(I,J+1) = DPSI(I,J)
             ELSE
               PSI(I,J+1) = DPSI(I,J) + PSI(I,J-1)
             ENDIF
