@@ -297,8 +297,8 @@
               enddo
             enddo
             do i=ista,iend
-              psiinit(i,j) = tx1(i)
-              chiinit(i,j) = tx1(i)
+              dpsi(i,j) = tx1(i)
+              dchi(i,j) = tx1(i)
             enddo
           endif                        ! end npass>0 if block
         END DO                               ! end of J loop
