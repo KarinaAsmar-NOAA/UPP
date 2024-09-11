@@ -69,15 +69,8 @@
 !$omp  parallel do private(i,j)
       DO J=JSTA_2L,JEND_2U
         DO I=ISTA_2L,IEND_2U
-          PSI(I,J) = SPVAL
-          CHI(I,J) = SPVAL
-          IF ((I==1) .AND. (J==1)) THEN
-            DPSI(I,J) = 0.0
-            DCHI(I,J) = 0.0
-          ELSE
-            DPSI(I,J) = SPVAL
-            DCHI(I,J) = SPVAL
-          ENDIF
+          DPSI(I,J) = SPVAL
+          DCHI(I,J) = SPVAL
         ENDDO
       ENDDO
 
