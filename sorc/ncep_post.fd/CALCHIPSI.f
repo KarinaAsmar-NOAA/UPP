@@ -304,17 +304,18 @@
         END DO                               ! end of J loop
 
         DO J=JSTA,JEND
-            DO I=ISTA,IEND
-              IF ((I==1) .AND. (J==1)) THEN
-                PSI(I,J) = 0.0
+          DO I=ISTA,IEND
+            IF ((I==1) .AND. (J==1)) THEN
+              PSI(I,J) = 0.0
+            ELSE
+              IF ((J /= 1) .AND. (J /= JM)) then
+                PSI(I,J+1) = DPSI(I,J) + PSI(I,J-1)
               ELSE
-                IF ((J /= 1) .AND. (J /= JM)) then
-                  PSI(I,J+1) = DPSI(I,J) + PSI(I,J-1)
-                ELSE
-                  PSI(I,J+1) = DPSI(I,J+1)
+                PSI(I,J+1) = DPSI(I,J+1)
               ENDIF
-            ENDDO
+            ENDIF
           ENDDO
+        ENDDO
 
 
 !       deallocate (wrk1, wrk2, wrk3, cosl)
