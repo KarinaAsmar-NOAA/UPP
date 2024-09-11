@@ -297,7 +297,7 @@
               PSI(I,J+1) = DPSI(I,J)
               CHI(I,J+1) = DCHI(I,J)
             ELSE
-              PSI(I,J+1) = DPSI(I,J) + PSI(I,J-1)
+              PSI(I,J+1) = DPSI(I,J) ! + PSI(I,J-1)
               CHI(I,J+1) = DCHI(I,J) + CHI(I,J-1)
             ENDIF
           ENDDO
