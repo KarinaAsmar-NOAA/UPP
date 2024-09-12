@@ -265,25 +265,25 @@
             ENDDO
           END IF                              ! END J IF BLOCK
           
-          if (npass > 0) then
-            do i=ista,iend
-              tx1(i) = psi(i,j)
-            enddo
-            do nn=1,npass
-              do i=ista,iend
-                tx2(i+1) = tx1(i)
-              enddo
-              tx2(1)    = tx2(im+1)
-              tx2(im+2) = tx2(2)
-              do i=2,im+1
-                tx1(i-1) = 0.25 * (tx2(i-1) + tx2(i+1)) + 0.5*tx2(i)
-              enddo
-            enddo
-            do i=ista,iend
-              dpsi(i,j) = tx1(i)
-              dchi(i,j) = tx1(i)
-            enddo
-          endif                        ! end npass>0 if block
+ !         if (npass > 0) then
+ !           do i=ista,iend
+ !             tx1(i) = psi(i,j)
+ !           enddo
+ !           do nn=1,npass
+ !             do i=ista,iend
+ !               tx2(i+1) = tx1(i)
+ !             enddo
+ !             tx2(1)    = tx2(im+1)
+ !             tx2(im+2) = tx2(2)
+ !             do i=2,im+1
+ !               tx1(i-1) = 0.25 * (tx2(i-1) + tx2(i+1)) + 0.5*tx2(i)
+ !             enddo
+ !           enddo
+ !           do i=ista,iend
+ !             dpsi(i,j) = tx1(i)
+ !             dchi(i,j) = tx1(i)
+ !           enddo
+ !         endif                        ! end npass>0 if block
         END DO                               ! end of J loop
 
 !$omp  parallel do private(i,j,ii)
