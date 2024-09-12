@@ -259,7 +259,7 @@
           END IF
           if (npass > 0) then
             do i=ista,iend
-              tx1(i) = absv(i,j)
+              tx1(i) = psi(i,j)
             enddo
             do nn=1,npass
               do i=ista,iend
@@ -272,7 +272,7 @@
               enddo
             enddo
             do i=ista,iend
-              absv(i,j) = tx1(i)
+              psi(i,j) = tx1(i)
             enddo
           endif
         END DO                               ! end of J loop
@@ -280,10 +280,10 @@
 !       deallocate (wrk1, wrk2, wrk3, cosl)
 ! GFS use lon avg as one scaler value for pole point
 
-      ! call poleavg(IM,JM,JSTA,JEND,SMALL,COSL(1,jsta),SPVAL,ABSV(1,jsta))
+      ! call poleavg(IM,JM,JSTA,JEND,SMALL,COSL(1,jsta),SPVAL,psi(1,jsta))
 
-        call exch(absv(ista_2l:iend_2u,jsta_2l:jend_2u))
-        call fullpole(absv(ista_2l:iend_2u,jsta_2l:jend_2u),avpoles)     
+        call exch(psi(ista_2l:iend_2u,jsta_2l:jend_2u))
+        call fullpole(psi(ista_2l:iend_2u,jsta_2l:jend_2u),avpoles)     
 
         cosltemp=spval
         if(jsta== 1) cosltemp(1:im, 1)=coslpoles(1:im,1)
@@ -294,8 +294,8 @@
         
         call poleavg(IM,JM,JSTA,JEND,SMALL,cosltemp(1,jsta),SPVAL,avtemp(1,jsta))
 
-        if(jsta== 1) absv(ista:iend, 1)=avtemp(ista:iend, 1)
-        if(jend==jm) absv(ista:iend,jm)=avtemp(ista:iend,jm)
+        if(jsta== 1) psi(ista:iend, 1)=avtemp(ista:iend, 1)
+        if(jend==jm) psi(ista:iend,jm)=avtemp(ista:iend,jm)
     
         deallocate (wrk1, wrk2, wrk3, cosl, iw, ie)
 
@@ -322,9 +322,9 @@
               UAVG   = UUAVG(I,J) 
 !  is there a (f+tan(phi)/erad)*u term?
               IF(MODELNAME  == 'RAPR' .OR. MODELNAME  == 'FV3R') then
-                 ABSV(I,J) = DVDX - DUDY + F(I,J)   ! for run RAP over north pole      
+                 psi(I,J) = DVDX - DUDY + F(I,J)   ! for run RAP over north pole      
               else
-                 ABSV(I,J) = DVDX - DUDY + F(I,J) + UAVG*TAN(GDLAT(I,J)*DTR)/ERAD  ! not sure about this???
+                 psi(I,J) = DVDX - DUDY + F(I,J) + UAVG*TAN(GDLAT(I,J)*DTR)/ERAD  ! not sure about this???
               endif
             END IF
           END DO
@@ -349,7 +349,7 @@
               DUDY   = DDUDY(I,J)
               UAVG   = UUAVG(I,J)
 !  is there a (f+tan(phi)/erad)*u term?
-              ABSV(I,J) = DVDX - DUDY + F(I,J) + UAVG*TAN(TPHI)/ERAD 
+              psi(I,J) = DVDX - DUDY + F(I,J) + UAVG*TAN(TPHI)/ERAD 
             END IF
           END DO
         END DO
@@ -368,7 +368,7 @@
               DUDY   = DDUDY(I,J)
               UAVG   = UUAVG(I,J)
 !  is there a (f+tan(phi)/erad)*u term?
-           ABSV(I,J) = DVDX - DUDY + F(I,J) + UAVG*TAN(TPHI)/ERAD 
+           psi(I,J) = DVDX - DUDY + F(I,J) + UAVG*TAN(TPHI)/ERAD 
           END DO
         END DO 
       END IF 
