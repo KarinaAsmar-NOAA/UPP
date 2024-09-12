@@ -218,7 +218,7 @@
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
 !                    UP(I,J-1)==SPVAL .or. UP(II,J)==SPVAL) cycle
                      UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
-                  DPSI(I,J)=UPUPOLES(II,2)*wrk3(i,j) * wrk1(i,j) 
+                  DPSI(I,J)=UPOLES(II,2)*wrk3(i,j) * wrk1(i,j) 
                   DCHI(I,J)=VP(I,J)
                 enddo
               ELSE                                   !pole point,compute at jm-1
