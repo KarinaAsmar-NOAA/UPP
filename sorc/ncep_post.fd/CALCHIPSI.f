@@ -32,7 +32,7 @@
 !> @param[out] CHI real velocity potential (m^2/s) at P-point.
 !> @param[out] PSI real streamfunction (m^2/s) at P-point.
 !-----------------------------------------------------------------------
-      SUBROUTINE CALCHIPSI(UP,VP,CHI,DPSI)
+      SUBROUTINE CALCHIPSI(UP,VP,CHI,PSI)
 !
 !     INCLUDE ETA GRID DIMENSIONS.  SET/DERIVE OTHER PARAMETERS.
       use vrbls2d,      only: f
@@ -49,13 +49,13 @@
 !     DECLARE VARIABLES.
 !     
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(in)    :: UP, VP
-      REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(out) :: CHI, DPSI
+      REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(out) :: CHI, PSI
       REAL, dimension(IM,2) :: GLATPOLES, COSLPOLES, UPOLES, VPOLES, PSIPOLES, CHIPOLES
       REAL, dimension(IM,JSTA:JEND) :: COSLTEMP, PSITEMP, CHITEMP
 !
       real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
       INTEGER, allocatable ::  IHE(:),IHW(:), IE(:),IW(:)
-      REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u) :: DCHI !, DPSI
+      REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u) :: DCHI, DPSI
 !
       integer, parameter :: npass2=2, npass3=3
       integer I,J,ip1,im1,ii,iir,iil,jj,JMT2,imb2, npass, nn, jtem
@@ -283,96 +283,22 @@
       ! call poleavg(IM,JM,JSTA,JEND,SMALL,COSL(1,jsta),SPVAL,psi(1,jsta))
 
         call exch(psi(ista_2l:iend_2u,jsta_2l:jend_2u))
-        call fullpole(psi(ista_2l:iend_2u,jsta_2l:jend_2u),avpoles)     
+        call fullpole(psi(ista_2l:iend_2u,jsta_2l:jend_2u),psipoles)     
 
         cosltemp=spval
         if(jsta== 1) cosltemp(1:im, 1)=coslpoles(1:im,1)
         if(jend==jm) cosltemp(1:im,jm)=coslpoles(1:im,2)
         avtemp=spval
-        if(jsta== 1) avtemp(1:im, 1)=avpoles(1:im,1)
-        if(jend==jm) avtemp(1:im,jm)=avpoles(1:im,2)
+        if(jsta== 1) psitemp(1:im, 1)=psipoles(1:im,1)
+        if(jend==jm) psitemp(1:im,jm)=psipoles(1:im,2)
         
-        call poleavg(IM,JM,JSTA,JEND,SMALL,cosltemp(1,jsta),SPVAL,avtemp(1,jsta))
+        call poleavg(IM,JM,JSTA,JEND,SMALL,cosltemp(1,jsta),SPVAL,psitemp(1,jsta))
 
-        if(jsta== 1) psi(ista:iend, 1)=avtemp(ista:iend, 1)
-        if(jend==jm) psi(ista:iend,jm)=avtemp(ista:iend,jm)
+        if(jsta== 1) psi(ista:iend, 1)=psitemp(ista:iend, 1)
+        if(jend==jm) psi(ista:iend,jm)=psitemp(ista:iend,jm)
     
         deallocate (wrk1, wrk2, wrk3, cosl, iw, ie)
 
-      ELSE !(MODELNAME == 'GFS' .or. global)
-
-      IF (GRIDTYPE == 'B')THEN
-        CALL EXCH(VP)
-        CALL EXCH(UP)
-      ENDIF
-     
-      CALL DVDXDUDY(UP,VP)
-
-      IF(GRIDTYPE == 'A')THEN
-!$omp parallel do  private(i,j,jmt2,tphi,r2dx,r2dy,dvdx,dudy,uavg)
-        DO J=JSTA_M,JEND_M
-          JMT2 = JM/2+1
-          TPHI = (J-JMT2)*(DYVAL/gdsdegr)*DTR
-          DO I=ISTA_M,IEND_M
-            IF(DDVDX(I,J)<SPVAL.AND.DDUDY(I,J)<SPVAL.AND. &
-               UUAVG(I,J)<SPVAL.AND.UP(I,J)<SPVAL.AND.  &
-     &         UP(I,J+1)<SPVAL.AND.UP(I,J-1)<SPVAL) THEN
-              DVDX   = DDVDX(I,J)
-              DUDY   = DDUDY(I,J)
-              UAVG   = UUAVG(I,J) 
-!  is there a (f+tan(phi)/erad)*u term?
-              IF(MODELNAME  == 'RAPR' .OR. MODELNAME  == 'FV3R') then
-                 psi(I,J) = DVDX - DUDY + F(I,J)   ! for run RAP over north pole      
-              else
-                 psi(I,J) = DVDX - DUDY + F(I,J) + UAVG*TAN(GDLAT(I,J)*DTR)/ERAD  ! not sure about this???
-              endif
-            END IF
-          END DO
-        END DO
-
-      ELSE IF (GRIDTYPE == 'E')THEN
-       allocate(ihw(JSTA_2L:JEND_2U), IHE(JSTA_2L:JEND_2U))
-!$omp  parallel do private(j)
-        DO J=JSTA_2L,JEND_2U
-          IHW(J) = -MOD(J,2)
-          IHE(J) = IHW(J)+1
-        ENDDO
-!$omp parallel do  private(i,j,jmt2,tphi,r2dx,r2dy,dvdx,dudy,uavg)
-        DO J=JSTA_M,JEND_M
-          JMT2 = JM/2+1
-          TPHI = (J-JMT2)*(DYVAL/1000.)*DTR
-          TPHI = (J-JMT2)*(DYVAL/gdsdegr)*DTR
-          DO I=ISTA_M,IEND_M
-            IF(VP(I+IHE(J),J) < SPVAL.AND.VP(I+IHW(J),J) < SPVAL .AND.   &
-     &         UP(I,J+1) < SPVAL     .AND.UP(I,J-1) < SPVAL) THEN
-              DVDX   = DDVDX(I,J)
-              DUDY   = DDUDY(I,J)
-              UAVG   = UUAVG(I,J)
-!  is there a (f+tan(phi)/erad)*u term?
-              psi(I,J) = DVDX - DUDY + F(I,J) + UAVG*TAN(TPHI)/ERAD 
-            END IF
-          END DO
-        END DO
-       deallocate(ihw, IHE)
-      ELSE IF (GRIDTYPE == 'B')THEN
-!        CALL EXCH(VP)      !done before dvdxdudy() Jesse 20200520
-        DO J=JSTA_M,JEND_M
-          JMT2 = JM/2+1
-          TPHI = (J-JMT2)*(DYVAL/gdsdegr)*DTR
-          DO I=ISTA_M,IEND_M         
-            if(VP(I,  J)==SPVAL .or. VP(I,  J-1)==SPVAL .or. &
-               VP(I-1,J)==SPVAL .or. VP(I-1,J-1)==SPVAL .or. &
-               UP(I,  J)==SPVAL .or. UP(I-1,J)==SPVAL .or. &
-               UP(I,J-1)==SPVAL .or. UP(I-1,J-1)==SPVAL) cycle
-              DVDX   = DDVDX(I,J)
-              DUDY   = DDUDY(I,J)
-              UAVG   = UUAVG(I,J)
-!  is there a (f+tan(phi)/erad)*u term?
-           psi(I,J) = DVDX - DUDY + F(I,J) + UAVG*TAN(TPHI)/ERAD 
-          END DO
-        END DO 
-      END IF 
-      END IF
 !     
 !     END OF ROUTINE.
 !     
