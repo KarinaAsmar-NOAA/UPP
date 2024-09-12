@@ -260,7 +260,7 @@
               im1 = iw(i)
               if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                  UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
-              DPSI(I,J)   = UP(I,J)*wrk3*wrk1(i,j)   
+              DPSI(I,J)   = UP(I,J)*wrk3(i,j)*wrk1(i,j)   
               DCHI(I,J)   = -1.0*((UP(I,J-1)*COSL(I,J-1))*wrk3(i,j)) * wrk1(i,j) 
             ENDDO
           END IF                              ! END J IF BLOCK
