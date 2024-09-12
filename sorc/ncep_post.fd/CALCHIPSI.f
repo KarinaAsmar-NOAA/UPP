@@ -303,8 +303,8 @@
           else
              psi(i,j+1) = dpsi(i,j) + psi(i,j-1)
              chi(i,j+1) = dchi(i,j) + chi(i,j-1)
-            enddo
           endif
+          enddo
         enddo 
 
 
