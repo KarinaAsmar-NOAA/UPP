@@ -276,6 +276,13 @@
           endif
         END DO                               ! end of J loop
 
+        ! TEST***CHANGE THIS
+        DO J=JSTA,JEND
+          DO I=ISTA,IEND
+            PSI(I,J)=DPSI(I,J)
+          ENDDO
+        ENDDO
+
 !       deallocate (wrk1, wrk2, wrk3, cosl)
 ! GFS use lon avg as one scaler value for pole point
 
