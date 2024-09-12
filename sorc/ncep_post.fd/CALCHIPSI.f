@@ -166,8 +166,8 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VWND(ip1,J)==SPVAL .or. VWND(im1,J)==SPVAL .or. &
-                     UPOLES(II,1)==SPVAL .or. UWND(I,J+1)==SPVAL) cycle
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+                     UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                   DPSI(I,J) = UP(I,J+1)*wrk3(i,j) * wrk1(i,j)  
                   DCHI(I,J) = VP(I,J)
                 enddo
@@ -176,8 +176,8 @@
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VWND(ip1,JJ)==SPVAL .or. VWND(im1,JJ)==SPVAL .or. &
-                     UWND(I,J)==SPVAL .or. UWND(I,jj+1)==SPVAL) cycle
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
                   DPSI(I,J) = UP(I,jj+1)*wrk3(i,jj)*wrk1(i,jj) 
                   DCHI(I,J)=VP(I,J)
                 enddo
@@ -189,9 +189,9 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VWND(ip1,J)==SPVAL .or. VWND(im1,J)==SPVAL .or. &
-!                    UWND(II,J)==SPVAL .or. UWND(I,J+1)==SPVAL) cycle
-                     UPOLES(II,1)==SPVAL .or. UWND(I,J+1)==SPVAL) cycle
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+!                    UP(II,J)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                     UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                   DPSI(I,J)=UP(I,J+1)*wrk3(i,j) * wrk1(i,j)  
                   DCHI(I,J)=VP(I,J)
                 enddo
@@ -200,8 +200,8 @@
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VWND(ip1,JJ)==SPVAL .or. VWND(im1,JJ)==SPVAL .or. &
-                     UWND(I,J)==SPVAL .or. UWND(I,jj+1)==SPVAL) cycle
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
                   DPSI(I,J)=UP(I,jj+1)*wrk3(i,jj) * wrk1(i,jj) 
                   DCHI(I,J)=VP(I,J)
                 enddo
@@ -215,9 +215,9 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VWND(ip1,J)==SPVAL .or. VWND(im1,J)==SPVAL .or. &
-!                    UWND(I,J-1)==SPVAL .or. UWND(II,J)==SPVAL) cycle
-                     UWND(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+!                    UP(I,J-1)==SPVAL .or. UP(II,J)==SPVAL) cycle
+                     UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
                   DPSI(I,J)=UPUPOLES(II,2)*wrk3(i,j) * wrk1(i,j) 
                   DCHI(I,J)=VP(I,J)
                 enddo
@@ -226,8 +226,8 @@
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VWND(ip1,JJ)==SPVAL .or. VWND(im1,JJ)==SPVAL .or. &
-                     UWND(I,jj-1)==SPVAL .or. UWND(I,J)==SPVAL) cycle
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   DPSI(I,J)=UP(I,J)*wrk3(i,jj) * wrk1(i,jj) 
                   DCHI(I,J)=VP(I,J)
                 enddo
@@ -239,9 +239,9 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VWND(ip1,J)==SPVAL .or. VWND(im1,J)==SPVAL .or. &
-!                    UWND(I,J-1)==SPVAL .or. UWND(II,J)==SPVAL) cycle
-                     UWND(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+!                    UP(I,J-1)==SPVAL .or. UP(II,J)==SPVAL) cycle
+                     UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
                   DPSI(I,J)=UPOLES(II,2)*wrk3(i,j) * wrk1(i,j)  
                   DCHI(I,J)=VP(I,J)
                   enddo
@@ -250,8 +250,8 @@
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VWND(ip1,JJ)==SPVAL .or. VWND(im1,JJ)==SPVAL .or. &
-                     UWND(I,jj-1)==SPVAL .or. UWND(I,J)==SPVAL) cycle
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   DPSI(I,J)=UP(I,J)*wrk3(i,jj) * wrk1(i,jj)
                   DCHI(I,J)=VP(I,J)
                 enddo
@@ -261,8 +261,8 @@
             DO I=ISTA,IEND
               ip1 = ie(i)
               im1 = iw(i)
-              if(VWND(ip1,J)==SPVAL .or. VWND(im1,J)==SPVAL .or. &
-                 UWND(I,J-1)==SPVAL .or. UWND(I,J+1)==SPVAL) cycle
+              if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+                 UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
               DPSI(I,J)=UP(I,J+1)*wrk3(i,j) * wrk1(i,j)  
               DCHI(I,J)=VP(I,J)
             ENDDO
@@ -301,9 +301,9 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VWND(ip1,J)==SPVAL .or. VWND(im1,J)==SPVAL .or. &
-!                    UWND(II,J)==SPVAL .or. UWND(I,J+1)==SPVAL) cycle
-                     UPOLES(II,1)==SPVAL .or. UWND(I,J+1)==SPVAL) cycle
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+!                    UP(II,J)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                     UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                      PSI(II,1)=DPSI(I,J)+PSI(I,J+1)
                      CHI(II,1)=DCHI(I,J)
                 enddo
@@ -312,8 +312,8 @@
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VWND(ip1,JJ)==SPVAL .or. VWND(im1,JJ)==SPVAL .or. &
-                     UWND(I,J)==SPVAL .or. UWND(I,jj+1)==SPVAL) cycle
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
                      PSI(I,J)=DPSI(I,J)+PSI(I,jj+1)
                      CHI(I,J)=DCHI(I,J)
                 enddo
@@ -325,9 +325,9 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VWND(ip1,J)==SPVAL .or. VWND(im1,J)==SPVAL .or. &
-!                    UWND(II,J)==SPVAL .or. UWND(I,J+1)==SPVAL) cycle
-                     UPOLES(II,1)==SPVAL .or. UWND(I,J+1)==SPVAL) cycle
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+!                    UP(II,J)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                     UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                      PSI(II,1)=DPSI(I,J)+PSI(I,J+1)
                      CHI(II,1)=DCHI(I,J)
                 enddo
@@ -336,8 +336,8 @@
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VWND(ip1,JJ)==SPVAL .or. VWND(im1,JJ)==SPVAL .or. &
-                     UWND(I,J)==SPVAL .or. UWND(I,jj+1)==SPVAL) cycle
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
                      PSI(I,J)=DPSI(I,J)+PSI(I,jj+1)
                      CHI(I,J)=DCHI(I,J)
                 enddo
@@ -351,9 +351,9 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VWND(ip1,J)==SPVAL .or. VWND(im1,J)==SPVAL .or. &
-!                    UWND(I,J-1)==SPVAL .or. UWND(II,J)==SPVAL) cycle
-                     UWND(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+!                    UP(I,J-1)==SPVAL .or. UP(II,J)==SPVAL) cycle
+                     UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
                      PSI(I,J-1)=DPSI(I,J)+PSI(II,2)
                      CHI(I,J-1)=DCHI(I,J)
                 enddo
@@ -362,8 +362,8 @@
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VWND(ip1,JJ)==SPVAL .or. VWND(im1,JJ)==SPVAL .or. &
-                     UWND(I,jj-1)==SPVAL .or. UWND(I,J)==SPVAL) cycle
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
                      PSI(I,jj-1)=DPSI(I,J)+PSI(I,J)
                      CHI(I,jj-1)=DCHI(I,J)
                 enddo
@@ -375,9 +375,9 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VWND(ip1,J)==SPVAL .or. VWND(im1,J)==SPVAL .or. &
-!                    UWND(I,J-1)==SPVAL .or. UWND(II,J)==SPVAL) cycle
-                     UWND(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+!                    UP(I,J-1)==SPVAL .or. UP(II,J)==SPVAL) cycle
+                     UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
                      PSI(I,J-1)=DPSI(I,J)+PSI(II,2)
                      CHI(I,J-1)=DCHI(I,J)
                 enddo
@@ -386,8 +386,8 @@
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VWND(ip1,JJ)==SPVAL .or. VWND(im1,JJ)==SPVAL .or. &
-                     UWND(I,jj-1)==SPVAL .or. UWND(I,J)==SPVAL) cycle
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
                      PSI(I,jj-1)=DPSI(I,J)+PSI(I,J)
                      CHI(I,jj-1)=DCHI(I,J)
                 enddo
@@ -397,8 +397,8 @@
             DO I=ISTA,IEND
               ip1 = ie(i)
               im1 = iw(i)
-              if(VWND(ip1,J)==SPVAL .or. VWND(im1,J)==SPVAL .or. &
-                 UWND(I,J-1)==SPVAL .or. UWND(I,J+1)==SPVAL) cycle
+              if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+                 UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                  PSI(I,J-1)=DPSI(I,J)+PSI(I,J+1)
                  CHI(I,J-1)=DCHI(I,J)
             ENDDO
