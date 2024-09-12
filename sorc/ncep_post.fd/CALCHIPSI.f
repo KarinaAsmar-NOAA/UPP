@@ -260,30 +260,30 @@
               im1 = iw(i)
               if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                  UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
-              DPSI(I,J)   = UP(I,J+1)*wrk3(i,j)*wrk1(i,j)   
+              DPSI(I,J)   = UP(I,J-1)*(GDLAT(I,J+1)-GDLAT(I,J-1))*DTR*wrk1(i,j)   
               DCHI(I,J)   = -1.0*((UP(I,J-1)*COSL(I,J-1))*wrk3(i,j)) * wrk1(i,j) 
             ENDDO
           END IF                              ! END J IF BLOCK
           
- !         if (npass > 0) then
- !           do i=ista,iend
- !             tx1(i) = psi(i,j)
- !           enddo
- !           do nn=1,npass
- !             do i=ista,iend
- !               tx2(i+1) = tx1(i)
- !             enddo
- !             tx2(1)    = tx2(im+1)
- !             tx2(im+2) = tx2(2)
- !             do i=2,im+1
- !               tx1(i-1) = 0.25 * (tx2(i-1) + tx2(i+1)) + 0.5*tx2(i)
- !             enddo
- !           enddo
- !           do i=ista,iend
- !             dpsi(i,j) = tx1(i)
- !             dchi(i,j) = tx1(i)
- !           enddo
- !         endif                        ! end npass>0 if block
+          if (npass > 0) then
+            do i=ista,iend
+              tx1(i) = psi(i,j)
+            enddo
+            do nn=1,npass
+              do i=ista,iend
+                tx2(i+1) = tx1(i)
+              enddo
+              tx2(1)    = tx2(im+1)
+              tx2(im+2) = tx2(2)
+              do i=2,im+1
+                tx1(i-1) = 0.25 * (tx2(i-1) + tx2(i+1)) + 0.5*tx2(i)
+              enddo
+            enddo
+            do i=ista,iend
+              dpsi(i,j) = tx1(i)
+              dchi(i,j) = tx1(i)
+            enddo
+          endif                        ! end npass>0 if block
         END DO                               ! end of J loop
 
 !$omp  parallel do private(i,j,ii)
@@ -296,7 +296,7 @@
               psi(i,j) = dpsi(i,2) + dpsi(i,j-1)
               chi(i,j) = dchi(i,2) + dchi(i,j-1)
           else
-             psi(i,j-1) = dpsi(i,j) + psi(i,j+1)
+             psi(i,j+1) = dpsi(i,j) + psi(i,j-1)
              chi(i,j+1) = dchi(i,j) + chi(i,j-1)
           endif
           enddo
