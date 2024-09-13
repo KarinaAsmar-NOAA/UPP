@@ -314,8 +314,8 @@
               do i=ista,iend
                 ii = i + imb2
                 if (ii > im) ii = ii - im
-                psi(i,j+1)=psi(ii,1)-dpsi(i,j)
-                chi(i,j+1)=chi(ii,1)-dchi(i,j)
+                psi(i,j+1)=dpsi(i,j)-psi(ii,1)
+                chi(i,j+1)=dchi(i,j)-chi(ii,1)
               enddo
             end if      
           elseif (j == JM) then
@@ -330,8 +330,8 @@
               do i=ista,iend
                 ii = i + imb2
                 if (ii > im) ii = ii - im
-                psi(i,j-1)=psi(ii,2)-dpsi(i,j)
-                chi(i,j-1)=chi(ii,2)-dchi(i,j)
+                psi(i,j-1)=dpsi(i,j)-psi(ii,2)
+                chi(i,j-1)=dchi(i,j)-chi(ii,2)
               enddo
             end if  
           else
