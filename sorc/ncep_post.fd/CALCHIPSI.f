@@ -78,11 +78,10 @@
 
         allocate (wrk1(ista:iend,jsta:jend),        &
      &            wrk3(ista:iend,jsta:jend), cosl(ista_2l:iend_2u,jsta_2l:jend_2u))
-        allocate(iw(im),ie(im))
 
         imb2 = im/2
 
-!$omp  parallel do private(i,j,ip1,im1)
+!$omp  parallel do private(i,j)
         DO J=JSTA,JEND
           do i=ista,iend
             cosl(i,j) = cos(gdlat(i,j)*dtr)
@@ -142,7 +141,7 @@
         call fullpole(UP(ista_2l:iend_2u,jsta_2l:jend_2u),upoles)
         call fullpole(VP(ista_2l:iend_2u,jsta_2l:jend_2u),vpoles)
 
-!$omp  parallel do private(i,j,ip1,im1,ii,jj,tx1,tx2)
+!$omp  parallel do private(i,j,ii,jj,tx1,tx2)
         DO J=JSTA,JEND
           IF(J == 1) then                            ! Near North or South pole
             if(gdlat(ista,j) > 0.) then ! count from north to south
