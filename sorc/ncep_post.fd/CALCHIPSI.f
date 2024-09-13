@@ -280,8 +280,13 @@
               do i=ista,iend
                 ii = i + imb2
                 if (ii > im) ii = ii - im
-                psi(i,j+1)=psi(ii,1)+dpsi(i,j)
-                chi(i,j+1)=chi(ii,1)+dchi(i,j)
+                  if (i==1) then
+                      psi(i,j)=0.0
+                      chi(i,j)=0.0
+                  else
+                      psi(i,j+1)=psi(ii,1)+dpsi(i,j)
+                      chi(i,j+1)=chi(ii,1)+dchi(i,j)
+                  endif
               enddo
             else ! count from south to north
               do i=ista,iend
