@@ -35,15 +35,12 @@
       SUBROUTINE CALCHIPSI(UP,VP,CHI,PSI)
 !
 !     INCLUDE ETA GRID DIMENSIONS.  SET/DERIVE OTHER PARAMETERS.
-      use vrbls2d,      only: f
-      use masks,        only: gdlat, gdlon, dx, dy
-      use params_mod,   only: d00, dtr, small, erad
-      use ctlblk_mod,   only: jsta_2l, jend_2u, spval, modelname, global, &
-                              jsta, jend, im, jm, jsta_m, jend_m, gdsdegr,&
-                              ista, iend, ista_m, iend_m, ista_2l, iend_2u, me, num_procs
-      use gridspec_mod, only: gridtype, dyval
-      use upp_math,     only: DVDXDUDY, DDVDX, DDUDY, UUAVG
-
+      use masks,        only: gdlat, gdlon
+      use params_mod,   only: dtr, small, erad
+      use ctlblk_mod,   only: jsta_2l, jend_2u, spval, &
+                              jsta, jend, im, jm, &
+                              ista, iend, ista_2l, iend_2u
+!
       implicit none
 !
 !     DECLARE VARIABLES.
@@ -53,7 +50,7 @@
       REAL, dimension(IM,2) :: GLATPOLES, COSLPOLES, UPOLES, VPOLES, PSIPOLES, CHIPOLES
       REAL, dimension(IM,JSTA:JEND) :: COSLTEMP, PSITEMP, CHITEMP
 !
-      real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
+      real,    allocatable ::  wrk1(:,:), wrk3(:,:), cosl(:,:)
       INTEGER, allocatable ::  IE(:),IW(:)
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u) :: DCHI, DPSI
 !
