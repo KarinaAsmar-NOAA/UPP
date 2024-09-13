@@ -366,7 +366,7 @@
         if(jsta== 1) chi(ista:iend, 1)=chitemp(ista:iend, 1)
         if(jend==jm) chi(ista:iend,jm)=chitemp(ista:iend,jm)
     
-        deallocate (wrk1, wrk2, wrk3, cosl, iw, ie)
+        deallocate (wrk1, wrk3, cosl, iw, ie)
 
 !     
 !     END OF ROUTINE.
