@@ -292,8 +292,13 @@
               do i=ista,iend
                 ii = i + imb2
                 if (ii > im) ii = ii - im
-                psi(i,j+1)=dpsi(i,j)-psi(ii,1)
-                chi(i,j+1)=dchi(i,j)-chi(ii,1)
+                  if (i==1) then
+                      psi(i,j)=0.0
+                      chi(i,j)=0.0
+                  else
+                      psi(i,j+1)=dpsi(i,j)-psi(ii,1)
+                      chi(i,j+1)=dchi(i,j)-chi(ii,1)
+                  endif
               enddo
             end if      
           elseif (j == JM) then
