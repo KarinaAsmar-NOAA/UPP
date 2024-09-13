@@ -54,7 +54,7 @@
       REAL, dimension(IM,JSTA:JEND) :: COSLTEMP, PSITEMP, CHITEMP
 !
       real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
-      INTEGER, allocatable ::  IHE(:),IHW(:), IE(:),IW(:)
+      INTEGER, allocatable ::  IE(:),IW(:)
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u) :: DCHI, DPSI
 !
       integer, parameter :: npass2=2, npass3=3
