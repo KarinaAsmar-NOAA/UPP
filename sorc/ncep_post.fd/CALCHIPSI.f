@@ -101,7 +101,6 @@
             end if    
           enddo
         enddo
-!       CALL EXCH(cosl(1,JSTA_2L))
         CALL EXCH(cosl)
 
         call fullpole( cosl(ista_2l:iend_2u,jsta_2l:jend_2u),coslpoles)
@@ -162,7 +161,6 @@
                   ii = i + imb2
                   if (ii > im) ii = ii - im
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
-!                    UP(II,J)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                      UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                   DPSI(I,J) = UP(I,J+1)*wrk3(i,j) * wrk1(i,j)  
                   DCHI(I,J) = -1.0*VP(I,J+1)*wrk3(i,j) * wrk1(i,j)  
@@ -185,7 +183,6 @@
                   ii = i + imb2
                   if (ii > im) ii = ii - im
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
-!                    UP(II,J)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                      UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                   DPSI(I,J) = UP(I,J+1)*wrk3(i,j) * wrk1(i,j)  
                   DCHI(I,J) = -1.0*VP(I,J+1)*wrk3(i,j) * wrk1(i,j)  
@@ -211,7 +208,6 @@
                   ii = i + imb2
                   if (ii > im) ii = ii - im
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
-!                    UP(I,J-1)==SPVAL .or. UP(II,J)==SPVAL) cycle
                      UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
                   DPSI(I,J) = upoles(II,2)*wrk3(i,j) * wrk1(i,j)   
                   DCHI(I,J) = -1.0*vpoles(II,2)*wrk3(i,j) * wrk1(i,j)   
@@ -235,7 +231,6 @@
                   ii = i + imb2
                   if (ii > im) ii = ii - im
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
-!                    UP(I,J-1)==SPVAL .or. UP(II,J)==SPVAL) cycle
                      UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
                   DPSI(I,J) = upoles(II,2)*wrk3(i,j) * wrk1(i,j)   
                   DCHI(I,J) = -1.0*vpoles(II,2)*wrk3(i,j) * wrk1(i,j)   
@@ -298,13 +293,54 @@
           endif
         END DO                               ! end of J loop
 
-        !!!!!!!!!! TEST***CHANGE THIS
+!        DO J=JSTA,JEND
+!          DO I=ISTA,IEND
+!            PSI(I,J)=DPSI(I,J)
+!            CHI(I,J)=DCHI(I,J)
+!          ENDDO
+!        ENDDO
+
+!$omp  parallel do private(i,j,ii)
         DO J=JSTA,JEND
-          DO I=ISTA,IEND
-            PSI(I,J)=DPSI(I,J)
-            CHI(I,J)=DCHI(I,J)
-          ENDDO
-        ENDDO
+          if (j == 1) then
+           if(gdlat(ista,j) > 0.) then ! count from north to south
+              do i=ista,iend
+                ii = i + imb2
+                if (ii > im) ii = ii - im
+                psi(i,j+1)=psi(ii,1)+dpsi(i,j)
+                chi(i,j+1)=chi(ii,1)+dchi(i,j)
+              enddo
+            else ! count from south to north
+              do i=ista,iend
+                ii = i + imb2
+                if (ii > im) ii = ii - im
+                psi(i,j+1)=psi(ii,1)-dpsi(i,j)
+                chi(i,j+1)=chi(ii,1)-dchi(i,j)
+              enddo
+            end if      
+          elseif (j == JM) then
+            if(gdlat(ista,j) < 0.) then ! count from north to south
+              do i=ista,iend
+                ii = i + imb2
+                if (ii > im) ii = ii - im
+                psi(i,j-1)=psi(ii,2)+dpsi(i,j)
+                chi(i,j-1)=chi(ii,2)+dchi(i,j)
+              enddo
+            else ! count from south to north
+              do i=ista,iend
+                ii = i + imb2
+                if (ii > im) ii = ii - im
+                psi(i,j-1)=psi(ii,2)-dpsi(i,j)
+                chi(i,j-1)=chi(ii,2)-dchi(i,j)
+              enddo
+            end if  
+          else
+            do i=ista,iend
+              psi(i,j-1)=psi(i,j+1)+dpsi(i,j)
+              chi(i,j-1)=chi(i,j+1)+dchi(i,j)
+            enddo
+          endif
+        enddo 
 
 ! GFS use lon avg as one scaler value for pole point
 
