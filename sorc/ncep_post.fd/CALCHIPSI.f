@@ -51,11 +51,10 @@
       REAL, dimension(IM,JSTA:JEND) :: COSLTEMP, PSITEMP, CHITEMP
 !
       real,    allocatable ::  wrk1(:,:), wrk3(:,:), cosl(:,:)
-      INTEGER, allocatable ::  IE(:),IW(:)
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u) :: DCHI, DPSI
 !
       integer, parameter :: npass2=2, npass3=3
-      integer I,J,ip1,im1,ii,iir,iil,jj,JMT2,imb2, npass, nn, jtem
+      integer I,J,ii,iir,iil,jj,JMT2,imb2, npass, nn, jtem
       real    tx1(im+2), tx2(im+2)
 !     
 !***************************************************************************
@@ -82,17 +81,10 @@
         allocate(iw(im),ie(im))
 
         imb2 = im/2
-!$omp  parallel do private(i)
-      do i=ista,iend
-        ie(i) = i+1
-        iw(i) = i-1
-      enddo
 
 !$omp  parallel do private(i,j,ip1,im1)
         DO J=JSTA,JEND
           do i=ista,iend
-            ip1 = ie(i)
-            im1 = iw(i)
             cosl(i,j) = cos(gdlat(i,j)*dtr)
             IF(cosl(i,j) >= SMALL) then
               wrk1(i,j) = ERAD*cosl(i,j)
@@ -156,11 +148,9 @@
             if(gdlat(ista,j) > 0.) then ! count from north to south
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
                 DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+                  if(VP(II,1)==SPVAL .or. VP(I,J+1)==SPVAL .or. &
                      UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                   DPSI(I,J) = UP(I,J+1)*wrk3(i,j) * wrk1(i,j)  
                   DCHI(I,J) = -1.0*VP(I,J+1)*wrk3(i,j) * wrk1(i,j)  
@@ -168,9 +158,7 @@
               ELSE                                   !pole point, compute at j=2
                 jj = 2
                 DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                  if(VP(I,J)==SPVAL .or. VP(I,jj+1)==SPVAL .or. &
                      UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
                   DPSI(I,J) = UP(I,jj+1)*wrk3(i,jj) * wrk1(i,jj) 
                 enddo
@@ -178,11 +166,9 @@
             else
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
                 DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+                  if(VPOLES(II,1)==SPVAL .or. VP(I,J+1)==SPVAL .or. &
                      UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                   DPSI(I,J) = UP(I,J+1)*wrk3(i,j) * wrk1(i,j)  
                   DCHI(I,J) = -1.0*VP(I,J+1)*wrk3(i,j) * wrk1(i,j)  
@@ -190,9 +176,7 @@
               ELSE                                   !pole point, compute at j=2
                 jj = 2
                 DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                  if(VP(I,J)==SPVAL .or. VP(I,jj+1)==SPVAL .or. &
                      UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
                   DPSI(I,J) = UP(I,jj+1)*wrk3(i,jj) * wrk1(i,jj) 
                   DCHI(I,J) = -1.0*VP(I,jj+1)*wrk3(i,jj) * wrk1(i,jj) 
@@ -203,11 +187,9 @@
             if(gdlat(ista,j) < 0.) then ! count from north to south
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
                 DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+                  if(VP(I,J-1)==SPVAL .or. VPOLES(II,2)==SPVAL .or. &
                      UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
                   DPSI(I,J) = upoles(II,2)*wrk3(i,j) * wrk1(i,j)   
                   DCHI(I,J) = -1.0*vpoles(II,2)*wrk3(i,j) * wrk1(i,j)   
@@ -215,9 +197,7 @@
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
                 DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                  if(VP(I,jj-1)==SPVAL .or. VP(I,J)==SPVAL .or. &
                      UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   DPSI(I,J) = UP(I,J)*wrk3(i,jj) * wrk1(i,jj) 
                   DCHI(I,J) = -1.0*VP(I,J)*wrk3(i,jj) * wrk1(i,jj) 
@@ -226,11 +206,9 @@
             else
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
                 DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+                  if(VP(I,J-1)==SPVAL .or. VPOLES(II,2)==SPVAL .or. &
                      UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
                   DPSI(I,J) = upoles(II,2)*wrk3(i,j) * wrk1(i,j)   
                   DCHI(I,J) = -1.0*vpoles(II,2)*wrk3(i,j) * wrk1(i,j)   
@@ -238,9 +216,7 @@
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
                 DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                  if(VP(I,jj-1)==SPVAL .or. VP(I,J)==SPVAL .or. &
                      UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   DPSI(I,J) = UP(I,J)*wrk3(i,jj) * wrk1(i,jj) 
                   DCHI(I,J) = -1.0*VP(I,J)*wrk3(i,jj) * wrk1(i,jj) 
@@ -249,9 +225,7 @@
             endif
           ELSE
             DO I=ISTA,IEND
-              ip1 = ie(i)
-              im1 = iw(i)
-              if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+              if(VP(I,J-1)==SPVAL .or. VP(I,J+1)==SPVAL .or. &
                  UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
               DPSI(I,J)   = UP(I,J+1)*wrk3(i,j) * wrk1(i,j)  
               DCHI(I,J)   = -1.0*VP(I,J+1)*wrk3(i,j) * wrk1(i,j)  
@@ -366,7 +340,7 @@
         if(jsta== 1) chi(ista:iend, 1)=chitemp(ista:iend, 1)
         if(jend==jm) chi(ista:iend,jm)=chitemp(ista:iend,jm)
     
-        deallocate (wrk1, wrk3, cosl, iw, ie)
+        deallocate (wrk1, wrk3, cosl)
 
 !     
 !     END OF ROUTINE.
