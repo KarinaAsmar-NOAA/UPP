@@ -59,7 +59,7 @@
 !
       integer, parameter :: npass2=2, npass3=3
       integer I,J,ip1,im1,ii,iir,iil,jj,JMT2,imb2, npass, nn, jtem
-      real    R2DX,R2DY,DVDX,DUDY,UAVG,TPH1,TPHI, tx1(im+2), tx2(im+2)
+      real    tx1(im+2), tx2(im+2)
 !     
 !***************************************************************************
 !     START CALCHIPSI HERE.
