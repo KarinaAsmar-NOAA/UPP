@@ -220,6 +220,7 @@
                 if (ii > im) ii = ii - im
                 psi(i,J+1) = dpsi(i,j) + psipoles(ii,1)
                 chi(i,J+1) = dchi(i,j) + chipoles(ii,1)
+                print*,'j=1',psi(i,j-1),dpsi(i,j)
               enddo
             else ! count from south to north
               do i=ista,iend
@@ -236,6 +237,7 @@
                 if (ii > im) ii = ii - im
                 psi(i,J-1) = dpsi(i,j) - psipoles(ii,2)
                 chi(i,J-1) = dchi(i,j) - chipoles(ii,2)
+                print*,'j=jm',psi(i,j-1),dpsi(i,j)
               enddo
             else ! count from south to north
               do i=ista,iend
