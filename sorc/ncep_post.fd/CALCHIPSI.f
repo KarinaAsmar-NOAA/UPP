@@ -152,8 +152,8 @@
             else ! count from south to north
               jj=2
               do i=ista,iend
-                  DPSI(I,J) = UP(I,J)*wrk3(i,jj) * wrk1(i,jj)   
-                  DCHI(I,J) = -1.0*VP(I,J)*wrk3(i,jj) * wrk1(i,jj)  
+                  DPSI(I,J) = UP(I,jj)*wrk3(i,jj) * wrk1(i,jj)   
+                  DCHI(I,J) = -1.0*VP(I,jj)*wrk3(i,jj) * wrk1(i,jj)  
               enddo
             end if      
           elseif (j == JM) then
@@ -165,8 +165,8 @@
             else ! count from south to north
               jj = jm-1
               do i=ista,iend
-                  DPSI(I,J) = UP(I,J)*wrk3(i,jj) * wrk1(i,jj)   
-                  DCHI(I,J) = -1.0*VP(I,J)*wrk3(i,jj) * wrk1(i,jj)
+                  DPSI(I,J) = UP(I,jj)*wrk3(i,jj) * wrk1(i,jj)   
+                  DCHI(I,J) = -1.0*VP(I,jj)*wrk3(i,jj) * wrk1(i,jj)
               enddo
             end if  
           else
@@ -247,8 +247,12 @@
             end if  
           else
             do i=ista,iend
+              !if(j==jsta) then
+              !else if (j==jend) then
+              !else
               PSI(I,J-1) = DPSI(I,J) + PSI(I,J+1) 
               CHI(I,J-1) = DCHI(I,J) + CHI(I,J+1) 
+              !endif
             enddo
           endif
         enddo              ! end of J loop
