@@ -50,7 +50,7 @@
       REAL, dimension(IM,2) :: GLATPOLES, COSLPOLES, UPOLES, VPOLES, PSIPOLES, CHIPOLES
       REAL, dimension(IM,JSTA:JEND) :: COSLTEMP, PSITEMP, CHITEMP
 !
-      real,    allocatable ::  wrk1(:,:), wrk3(:,:), cosl(:,:)
+      real,    allocatable ::  wrk1(:,:), wrk3(:,:), cosl(:,:), dpsi_j(:,:), dchi_j(:,:)
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u) :: DCHI, DPSI
 !
       integer, parameter :: npass2=2, npass3=3
@@ -248,13 +248,16 @@
               enddo
             end if  
           else
+            allocate(dpsi_j(ista:iend,1:jj)
             do i=ista,iend
-              !if(j==jsta) then
-              !else if (j==jend) then
-              !else
-              PSI(I,J) = DPSI(I,J-1) + DPSI(I,J+1) 
+              do jj=1,j
+                dpsi_j(i,jj)=sum(dpsi(i,jj))
+              enddo
+              
+              PSI(I,J) = dpsi_j(i,j) + psipoles(ii,1)
               CHI(I,J) = DCHI(I,J-1) + DCHI(I,J+1) 
-              !endif
+
+              
               print*,'jsta,jend',jsta,jend
               print*,'j', j
               print*,'dpsi j',dpsi(i,j)
