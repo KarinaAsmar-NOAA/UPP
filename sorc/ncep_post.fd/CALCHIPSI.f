@@ -258,7 +258,8 @@
               print*,'j', j
               print*,'dpsi add',dpsi(i,1)+dpsi(1,2)+dpsi(1,3)
               print*,'psi j', psi(i,j)
-              print*,'dpsi :j', j, shape(dpsi(i,1:j))
+              print*,'dpsi shape :j', j, shape(dpsi(i,1:j))
+              print*,'dpsi :j', dpsi(i,1:j)
               print*,'sum', sum(dpsi(i,1:j))
               print*,'sum2', sum(dpsi(i,1:3))
             enddo
