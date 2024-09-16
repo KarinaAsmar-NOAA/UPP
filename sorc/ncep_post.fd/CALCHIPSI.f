@@ -255,6 +255,7 @@
               !endif
               print*,'jsta,jend',jsta,jend
               print*,'j', j
+              print*,'dpsi j',dpsi(i,j)
               print*,'psi j-1',psi(i,j-1)
               print*,'psi j+1',psi(i,j+1)
             enddo
