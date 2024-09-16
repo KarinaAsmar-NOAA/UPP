@@ -248,13 +248,12 @@
               enddo
             end if  
           else
-            allocate(dpsi_j(ista:iend,1:jj)
+            allocate(dpsi_j(ista:iend,1:j))
             do i=ista,iend
               do jj=1,j
-                dpsi_j(i,jj)=sum(dpsi(i,jj))
+                dpsi_j(i,jj)=dpsi(i,jj)
               enddo
-              
-              PSI(I,J) = dpsi_j(i,j) + psipoles(ii,1)
+              PSI(I,J) = sum(dpsi_j(i,j)) + psipoles(ii,1)
               CHI(I,J) = DCHI(I,J-1) + DCHI(I,J+1) 
 
               
