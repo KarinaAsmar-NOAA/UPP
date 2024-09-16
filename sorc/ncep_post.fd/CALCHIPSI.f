@@ -55,7 +55,7 @@
 !
       integer, parameter :: npass2=2, npass3=3
       integer I,J,ii,iir,iil,jj,JMT2,imb2, npass, nn, jtem
-      real    tx1(im+2), tx2(im+2)
+      real    tx1(im+2), tx2(im+2), tx3(im+2), tx4(im+2)
 !     
 !***************************************************************************
 !     START CALCHIPSI HERE.
@@ -160,6 +160,7 @@
                   if(VP(I,J)==SPVAL .or. VP(I,jj+1)==SPVAL .or. &
                      UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
                   DPSI(I,J) = UP(I,jj+1)*wrk3(i,jj) * wrk1(i,jj) 
+                  DCHI(I,J) = -1.0*VP(I,jj+1)*wrk3(i,jj)*wrk1(i,jj)
                 enddo
               ENDIF
             else
@@ -232,36 +233,26 @@
           END IF
           if (npass > 0) then
             do i=ista,iend
-              tx1(i) = psi(i,j)
+              tx1(i) = dpsi(i,j)
+              tx3(i) = dchi(i,j)
             enddo
             do nn=1,npass
               do i=ista,iend
                 tx2(i+1) = tx1(i)
+                tx4(i+1) = tx3(i)
               enddo
               tx2(1)    = tx2(im+1)
               tx2(im+2) = tx2(2)
+              tx4(1)    = tx4(im+1)
+              tx4(im+2) = tx4(2)
               do i=2,im+1
                 tx1(i-1) = 0.25 * (tx2(i-1) + tx2(i+1)) + 0.5*tx2(i)
+                tx3(i-1) = 0.25 * (tx4(i-1) + tx4(i+1)) + 0.5*tx4(i)
               enddo
             enddo
             do i=ista,iend
-              psi(i,j) = tx1(i)
-            enddo
-            do i=ista,iend
-              tx1(i) = chi(i,j)
-            enddo
-            do nn=1,npass
-              do i=ista,iend
-                tx2(i+1) = tx1(i)
-              enddo
-              tx2(1)    = tx2(im+1)
-              tx2(im+2) = tx2(2)
-              do i=2,im+1
-                tx1(i-1) = 0.25 * (tx2(i-1) + tx2(i+1)) + 0.5*tx2(i)
-              enddo
-            enddo
-            do i=ista,iend
-              chi(i,j) = tx1(i)
+              dpsi(i,j) = tx1(i)
+              dchi(i,j) = tx4(i)
             enddo
           endif
         END DO                               ! end of J loop
