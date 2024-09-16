@@ -239,7 +239,8 @@
                 ii = i + imb2
                 if (ii > im) ii = ii - im
                 psi(i,J-1) = dpsi(i,j) + psi(ii,2)  ! should this be psipoles???????????
-                chi(i,J-1) = dchi(i,j) + chi(ii,2)              enddo
+                chi(i,J-1) = dchi(i,j) + chi(ii,2)             
+              enddo
             end if  
           else
             do i=ista,iend
