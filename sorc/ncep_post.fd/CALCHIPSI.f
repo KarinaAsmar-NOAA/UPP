@@ -208,6 +208,9 @@
 !          ENDDO
 !        ENDDO
 
+        call fullpole(psi(ista_2l:iend_2u,jsta_2l:jend_2u),psipoles)
+        call fullpole(chi(ista_2l:iend_2u,jsta_2l:jend_2u),chipoles)
+
 !$omp  parallel do private(i,j,ii)
         DO J=JSTA,JEND
           if (j == 1) then
@@ -215,15 +218,15 @@
               do i=ista,iend
                 ii = i + imb2
                 if (ii > im) ii = ii - im
-                psi(i,j+1) = dpsi(i,j) + psi(ii,1) 
-                chi(i,j+1) = dchi(i,j) + chi(ii,1)
+                psi(i,J+1) = dpsi(i,j) + psipoles(ii,1)
+                chi(i,J+1) = dchi(i,j) + chipoles(ii,1)
               enddo
             else ! count from south to north
               do i=ista,iend
                 ii = i + imb2
                 if (ii > im) ii = ii - im
-                psi(i,J+1) = dpsi(i,j) - psi(ii,1) 
-                chi(i,J+1) = dchi(i,j) - chi(ii,1) 
+                psi(i,J+1) = dpsi(i,j) - psipoles(ii,1)
+                chi(i,J+1) = dchi(i,j) - chipoles(ii,1)      
               enddo
             end if      
           elseif (j == JM) then
@@ -231,32 +234,32 @@
               do i=ista,iend
                 ii = i + imb2
                 if (ii > im) ii = ii - im
-                psi(i,J-1) = dpsi(i,j) - psi(ii,2)  ! should this be psipoles???????????
-                chi(i,J-1) = dchi(i,j) - chi(ii,2)
+                psi(i,J-1) = dpsi(i,j) - psipoles(ii,2)
+                chi(i,J-1) = dchi(i,j) - chipoles(ii,2)
               enddo
             else ! count from south to north
               do i=ista,iend
                 ii = i + imb2
                 if (ii > im) ii = ii - im
-                psi(i,J-1) = dpsi(i,j) + psi(ii,2)  ! should this be psipoles???????????
-                chi(i,J-1) = dchi(i,j) + chi(ii,2)             
+                psi(i,J-1) = dpsi(i,j) + psipoles(ii,2)
+                chi(i,J-1) = dchi(i,j) + chipoles(ii,2)
               enddo
             end if  
           else
             do i=ista,iend
-                psi(i,J-1) = dpsi(i,j) + psi(i,J+1)
-                chi(i,J-1) = dchi(i,j) + chi(i,J+1)
+              PSI(I,J-1) = DPSI(I,J) + PSI(I,J+1) 
+              CHI(I,J-1) = DCHI(I,J) + CHI(I,J+1) 
             enddo
           endif
-        enddo              ! End of J loop
+        enddo              ! end of J loop
 
 
 ! GFS use lon avg as one scaler value for pole point
 
         call exch(psi(ista_2l:iend_2u,jsta_2l:jend_2u))
         call exch(chi(ista_2l:iend_2u,jsta_2l:jend_2u))
-        call fullpole(psi(ista_2l:iend_2u,jsta_2l:jend_2u),psipoles)     
-        call fullpole(chi(ista_2l:iend_2u,jsta_2l:jend_2u),chipoles)     
+        !call fullpole(psi(ista_2l:iend_2u,jsta_2l:jend_2u),psipoles)     
+        !call fullpole(chi(ista_2l:iend_2u,jsta_2l:jend_2u),chipoles)     
 
         cosltemp=spval
         if(jsta== 1) cosltemp(1:im, 1)=coslpoles(1:im,1)
