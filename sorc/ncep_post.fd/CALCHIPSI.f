@@ -252,8 +252,8 @@
               !if(j==jsta) then
               !else if (j==jend) then
               !else
-              PSI(I,J-1) = DPSI(I,J) + PSI(I,J+1) 
-              CHI(I,J-1) = DCHI(I,J) + CHI(I,J+1) 
+              PSI(I,J) = DPSI(I,J-1) + DPSI(I,J+1) 
+              CHI(I,J) = DCHI(I,J-1) + DCHI(I,J+1) 
               !endif
               print*,'jsta,jend',jsta,jend
               print*,'j', j
