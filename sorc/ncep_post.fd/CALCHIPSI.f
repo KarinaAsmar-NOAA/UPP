@@ -253,6 +253,10 @@
               PSI(I,J-1) = DPSI(I,J) + PSI(I,J+1) 
               CHI(I,J-1) = DCHI(I,J) + CHI(I,J+1) 
               !endif
+              print*,'jsta,jend',jsta,jend
+              print*,'j', j
+              print*,'psi j-1',psi(i,j-1)
+              print*,'psi j+1',psi(i,j+1)
             enddo
           endif
         enddo              ! end of J loop
