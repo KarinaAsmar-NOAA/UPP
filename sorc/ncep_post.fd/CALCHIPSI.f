@@ -319,6 +319,7 @@
 ! GFS use lon avg as one scaler value for pole point
 
         call exch(psi(ista_2l:iend_2u,jsta_2l:jend_2u))
+        call exch(chi(ista_2l:iend_2u,jsta_2l:jend_2u))
         call fullpole(psi(ista_2l:iend_2u,jsta_2l:jend_2u),psipoles)     
         call fullpole(chi(ista_2l:iend_2u,jsta_2l:jend_2u),chipoles)     
 
