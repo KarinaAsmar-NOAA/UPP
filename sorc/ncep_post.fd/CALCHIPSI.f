@@ -264,7 +264,7 @@
           ENDDO
         ENDDO
 
-!$omp  parallel do private(i,j,ii)
+!!$omp  parallel do private(i,j,ii)
 !        DO J=JSTA,JEND
 !          if (j == 1) then
 !           if(gdlat(ista,j) > 0.) then ! count from north to south
