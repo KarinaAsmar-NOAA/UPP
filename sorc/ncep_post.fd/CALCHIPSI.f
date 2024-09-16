@@ -251,7 +251,6 @@
             do i=ista,iend
                 ii = i + imb2
                 if (ii > im) ii = ii - im
-                pack(q, w/=0)
               PSI(I,J) = sum(pack(dpsi(i,1:j),dpsi(i,1:j)/=spval)) + psipoles(ii,1)
               CHI(I,J) = DCHI(I,J-1) + DCHI(I,J+1) 
 
