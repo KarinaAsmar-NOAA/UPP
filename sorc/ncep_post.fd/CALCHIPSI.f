@@ -251,7 +251,8 @@
             do i=ista,iend
                 ii = i + imb2
                 if (ii > im) ii = ii - im
-              PSI(I,J) = sum(dpsi(i,1:j)) + psipoles(ii,1)
+                pack(q, w/=0)
+              PSI(I,J) = sum(pack(dpsi(i,1:j),dpsi(i,1:j)/=spval)) + psipoles(ii,1)
               CHI(I,J) = DCHI(I,J-1) + DCHI(I,J+1) 
 
               print*,'jsta,jend',jsta,jend
@@ -259,7 +260,7 @@
               print*,'dpsi add',dpsi(i,1)+dpsi(1,2)+dpsi(1,3)
               print*,'psi j', psi(i,j)
               print*,'dpsi shape :j', j, shape(dpsi(i,1:j))
-              print*,'dpsi :j', dpsi(i,1:j)
+              ! print*,'dpsi :j', dpsi(i,1:j)
               print*,'sum', sum(dpsi(i,1:j))
               print*,'sum2', sum(dpsi(i,1:3))
             enddo
