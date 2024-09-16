@@ -249,15 +249,17 @@
             end if  
           else
             do i=ista,iend
+                ii = i + imb2
+                if (ii > im) ii = ii - im
               PSI(I,J) = sum(dpsi(i,:j)) + psipoles(ii,1)
               CHI(I,J) = DCHI(I,J-1) + DCHI(I,J+1) 
 
-              
               print*,'jsta,jend',jsta,jend
               print*,'j', j
               print*,'dpsi j',dpsi(i,j)
-              print*,'psi j-1',psi(i,j-1)
-              print*,'psi j+1',psi(i,j+1)
+              print*,'psi j', psi(i,j)
+              print*,'dpsi :j', shape(dpsi(i,:j))
+              print*,'sum', sum(dpsi(i,:j))
             enddo
           endif
         enddo              ! end of J loop
