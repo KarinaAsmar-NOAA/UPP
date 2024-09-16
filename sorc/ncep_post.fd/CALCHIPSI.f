@@ -82,7 +82,7 @@
         imb2 = im/2
 
 !$omp  parallel do private(i,j)
-        DO J=JSTA,JEND
+        DO J=JSTA,JEND 
           do i=ista,iend
             cosl(i,j) = cos(gdlat(i,j)*dtr)
             IF(cosl(i,j) >= SMALL) then
