@@ -146,32 +146,42 @@
           if (j == 1) then
            if(gdlat(ista,j) > 0.) then ! count from north to south
               do i=ista,iend
+                  if(UP(I,J)==SPVAL) cycle
                   DPSI(I,J) = UP(I,J)*wrk3(i,j) * wrk1(i,j)   
+                  if(VP(I,J)==SPVAL) cycle
                   DCHI(I,J) = -1.0*VP(I,J)*wrk3(i,j) * wrk1(i,j)  
               enddo
             else ! count from south to north
               jj=2
               do i=ista,iend
+                  if(UP(I,J)==SPVAL) cycle
                   DPSI(I,J) = UP(I,jj)*wrk3(i,jj) * wrk1(i,jj)   
+                  if(VP(I,J)==SPVAL) cycle                  
                   DCHI(I,J) = -1.0*VP(I,jj)*wrk3(i,jj) * wrk1(i,jj)  
               enddo
             end if      
           elseif (j == JM) then
             if(gdlat(ista,j) < 0.) then ! count from north to south
               do i=ista,iend
+                  if(UP(I,J)==SPVAL) cycle              
                   DPSI(I,J) = UP(I,J)*wrk3(i,j) * wrk1(i,j)   
+                  if(VP(I,J)==SPVAL) cycle            
                   DCHI(I,J) = -1.0*VP(I,J)*wrk3(i,j) * wrk1(i,j)
               enddo
             else ! count from south to north
               jj = jm-1
               do i=ista,iend
-                  DPSI(I,J) = UP(I,jj)*wrk3(i,jj) * wrk1(i,jj)   
+                  if(UP(I,J)==SPVAL) cycle              
+                  DPSI(I,J) = UP(I,jj)*wrk3(i,jj) * wrk1(i,jj)  
+                  if(VP(I,J)==SPVAL) cycle                  
                   DCHI(I,J) = -1.0*VP(I,jj)*wrk3(i,jj) * wrk1(i,jj)
               enddo
             end if  
           else
             do i=ista,iend
+              if(UP(I,J)==SPVAL) cycle            
               DPSI(I,J)   = UP(I,J)*wrk3(i,j) * wrk1(i,j)  
+              if(VP(I,J)==SPVAL) cycle              
               DCHI(I,J)   = -1.0*VP(I,J)*wrk3(i,j) * wrk1(i,j)  
             enddo
           endif
