@@ -172,6 +172,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                      UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
+                  if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
+                  if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)
                 enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
@@ -182,6 +184,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                      UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                  if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
+                  if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)
                 enddo
               ENDIF
             else
@@ -196,6 +200,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                      UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
+                  if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
+                  if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
                 enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
@@ -206,6 +212,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                      UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                  if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
+                  if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
                 enddo
               ENDIF
             endif
@@ -222,6 +230,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                      UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
+                  if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
+                  if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
@@ -232,6 +242,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                      UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                  if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
+                  if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
                 enddo
               ENDIF
             else
@@ -245,6 +257,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                      UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
+                  if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
+                  if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
@@ -255,6 +269,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                      UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                  if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
+                  if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
                 enddo
               ENDIF
             endif
@@ -266,6 +282,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                  UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                  if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
+                  if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
             ENDDO
           END IF
           if (npass > 0) then
