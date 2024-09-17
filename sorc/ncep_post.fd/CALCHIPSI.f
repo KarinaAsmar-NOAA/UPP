@@ -460,7 +460,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
               im1 = iw(i)
               if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                  UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
-                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:J+1),DPSI(1:ip1,1:J+1)/=SPVAL)) + dpsipoles(II,1)
+                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:J-1),DPSI(1:ip1,1:J-1)/=SPVAL)) + dpsipoles(II,1)
                   CHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
                   if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
                   if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
