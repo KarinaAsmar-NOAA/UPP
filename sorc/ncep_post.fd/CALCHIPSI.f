@@ -263,7 +263,7 @@
               if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                  UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                   DPSI(I,J) = (0.5*((UP(im1,J+1)+UP(ip1,J-1)))*wrk3(i,j) - 0.5*(VP(ip1,J+1)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
-                  DCHI(I,J) = (-0.5*((UP(im1,J+1)+UP(ip1,J-1)()*wrk2(i,j) - 0.5*(VP(ip1,J+1)+VP(im1,J))*wrk3(i,j))*wrk1(i,j)                   
+                  DCHI(I,J) = (-0.5*((UP(im1,J+1)+UP(ip1,J-1)))*wrk2(i,j) - 0.5*(VP(ip1,J+1)+VP(im1,J))*wrk3(i,j))*wrk1(i,j)                   
             ENDDO
           END IF
           if (npass > 0) then
