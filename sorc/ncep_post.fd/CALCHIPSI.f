@@ -293,7 +293,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
               dchi(i,j) = tx4(i)
             enddo
           endif
-!        END DO                               ! end of J loop
+        END DO                               ! end of J loop
       
 !$omp  parallel do private(i,j)
 !!!!!!!!!!!!!! REVIEW ....
