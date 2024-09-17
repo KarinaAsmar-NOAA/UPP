@@ -50,7 +50,7 @@
       REAL, dimension(IM,2) :: GLATPOLES, COSLPOLES, UPOLES, VPOLES, PSIPOLES, CHIPOLES
       REAL, dimension(IM,JSTA:JEND) :: COSLTEMP, PSITEMP, CHITEMP
 !
-real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
+      real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
       INTEGER, allocatable ::  IHE(:),IHW(:), IE(:),IW(:)
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u) :: DCHI, DPSI
 !
@@ -168,18 +168,20 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(I,J)==SPVAL .or. UP(I,J)==SPVAL) cycle
-                  DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
-                  DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+                     UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                  DPSI(I,J) = 0.5*((UP(im1,J+1)+UPOLES(II,1))*wrk3(i,j)) - 0.5*(VP(ip1,J+1)+VP(im1,1))*wrk2(i,j))*wrk1(i,j)
+                  DCHI(I,J) = -0.5*((UP(im1,J+1)+UPOLES(II,1))*wrk2(i,j)) - 0.5*(VP(ip1,J+1)+VP(im1,1))*wrk3(i,j))*wrk1(i,j)
                 enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VP(I,J)==SPVAL .or. UP(I,J)==SPVAL) cycle
-                  DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
-                  DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
+                  DPSI(I,J) = 0.5*((UP(im1,jj+1)+UP(ip1,J))*wrk3(i,j)) - 0.5*(VP(ip1,J)+VP(im1,jj+1))*wrk2(i,j))*wrk1(i,j)
+                  DCHI(I,J) = -0.5*((UP(im1,jj+1)+UP(ip1,J))*wrk2(i,j)) - 0.5*(VP(ip1,J)+VP(im1,jj+1))*wrk3(i,j))*wrk1(i,j)
                 enddo
               ENDIF
             else
@@ -189,18 +191,20 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(I,J)==SPVAL .or. UP(I,J)==SPVAL) cycle
-                  DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
-                  DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)                
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+                     UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                  DPSI(I,J) = 0.5*((UP(im1,J+1)+UP(ip1,1))*wrk3(i,j)) - 0.5*(VP(ip1,1)+VP(im1,J+1))*wrk2(i,j))*wrk1(i,j)
+                  DCHI(I,J) = -0.5*((UP(im1,J+1)+UP(ip1,1))*wrk2(i,j)) - 0.5*(VP(ip1,1)+VP(im1,J+1))*wrk3(i,j))*wrk1(i,j)              
                 enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VP(I,J)==SPVAL .or. UP(I,J)==SPVAL) cycle
-                  DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
-                  DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)               
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
+                  DPSI(I,J) = 0.5*((UP(im1,jj+1)+UP(ip1,J))*wrk3(i,j)) - 0.5*(VP(ip1,J)+VP(im1,jj+1))*wrk2(i,j))*wrk1(i,j)
+                  DCHI(I,J) = -0.5*((UP(im1,jj+1)+UP(ip1,J))*wrk2(i,j)) - 0.5*(VP(ip1,J)+VP(im1,jj+1))*wrk3(i,j))*wrk1(i,j)                
                 enddo
               ENDIF
             endif
@@ -212,18 +216,20 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(I,J)==SPVAL .or. UP(I,J)==SPVAL) cycle
-                  DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
-                  DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)                 
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+                     UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
+                  DPSI(I,J) = 0.5*((UP(im1,2)+UP(ip1,J-1))*wrk3(i,j)) - 0.5*(VP(ip1,J-1)+VP(im1,2))*wrk2(i,j))*wrk1(i,j)
+                  DCHI(I,J) = -0.5*((UP(im1,2)+UP(ip1,J-1))*wrk2(i,j)) - 0.5*(VP(ip1,J-1)+VP(im1,2))*wrk3(i,j))*wrk1(i,j)                
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VP(I,J)==SPVAL .or. UP(I,J)==SPVAL) cycle
-                  DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
-                  DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)                
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
+                  DPSI(I,J) = 0.5*((UP(im1,J)+UP(ip1,jj-1))*wrk3(i,j)) - 0.5*(VP(ip1,jj-1)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
+                  DCHI(I,J) = -0.5*((UP(im1,J)+UP(ip1,jj-1))*wrk2(i,j)) - 0.5*(VP(ip1,jj-1)+VP(im1,J))*wrk3(i,j))*wrk1(i,j)          
                 enddo
               ENDIF
             else
@@ -233,18 +239,20 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(I,J)==SPVAL .or. UP(I,J)==SPVAL) cycle
-                  DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
-                  DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)                 
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+                     UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
+                  DPSI(I,J) = 0.5*((UPOLES(II,2)+UP(ip1,J-1))*wrk3(i,j)) - 0.5*(VP(ip1,J-1)+VP(im1,2))*wrk2(i,j))*wrk1(i,j)
+                  DCHI(I,J) = -0.5*((UPOLES(II,2)+UP(ip1,J-1))*wrk2(i,j)) - 0.5*(VP(ip1,J-1)+VP(im1,2))*wrk3(i,j))*wrk1(i,j)              
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VP(I,J)==SPVAL .or. UP(I,J)==SPVAL) cycle
-                  DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
-                  DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)               
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
+                  DPSI(I,J) = 0.5*((UP(im1,J)+UP(ip1,jj-1))*wrk3(i,j)) - 0.5*(VP(ip1,jj-1)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
+                  DCHI(I,J) = -0.5*((UP(im1,J)+UP(ip1,jj-1))*wrk2(i,j)) - 0.5*(VP(ip1,jj-1)+VP(im1,J))*wrk3(i,j))*wrk1(i,j)                
                 enddo
               ENDIF
             endif
@@ -252,9 +260,10 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
             DO I=ISTA,IEND
               ip1 = ie(i)
               im1 = iw(i)
-                  if(VP(I,J)==SPVAL .or. UP(I,J)==SPVAL) cycle
-                  DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
-                  DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)              
+              if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+                 UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                  DPSI(I,J) = 0.5*((UP(im1,J+1)+UP(ip1,J-1))*wrk3(i,j)) - 0.5*(VP(ip1,J+1)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
+                  DCHI(I,J) = -0.5*((UP(im1,J+1)+UP(ip1,J-1))*wrk2(i,j)) - 0.5*(VP(ip1,J+1)+VP(im1,J))*wrk3(i,j))*wrk1(i,j)                   
             ENDDO
           END IF
           if (npass > 0) then
