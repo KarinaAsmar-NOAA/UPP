@@ -94,6 +94,25 @@
         enddo
         CALL EXCH(cosl)
 
+        !$omp  parallel do private(i,j,ip1,im1)
+        DO J=JSTA,JEND
+          do i=ista,iend
+            ip1 = ie(i)
+            im1 = iw(i)
+            cosl(i,j) = cos(gdlat(i,j)*dtr)
+            IF(cosl(i,j) >= SMALL) then
+              wrk1(i,j) = ERAD*cosl(i,j)
+            else
+              wrk1(i,j) = 0.
+            end if    
+            if(i == im .or. i == 1) then
+              wrk2(i,j) = (360.+GDLON(ip1,J)-GDLON(im1,J))*DTR !1/dlam
+            else
+              wrk2(i,j) = (GDLON(ip1,J)-GDLON(im1,J))*DTR      !1/dlam
+            end if
+          enddo
+        enddo
+
         call fullpole( cosl(ista_2l:iend_2u,jsta_2l:jend_2u),coslpoles)
         call fullpole(gdlat(ista_2l:iend_2u,jsta_2l:jend_2u),glatpoles)
 
