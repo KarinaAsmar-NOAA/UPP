@@ -269,13 +269,19 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
             ENDDO
           END IF
+      END DO                   ! TEMPORARY END OF J LOOP
+      
+!$omp  parallel do private(i,j)
 !!!!!!!!!!!!!! REVIEW ....
+        DO J=JSTA,JEND
           DO I=ISTA,IEND
             PSI(I,J)=DPSI(I,J)
             CHI(I,J)=DCHI(I,J)
           ENDDO
+       ENDDO
 !!!!!!!!!!!!!! REVIEW ...
           if (npass > 0) then
+!$omp  parallel do private(i,j,tx1,tx2,tx3,tx4)
             do i=ista,iend
               tx1(i) = psi(i,j)
               tx3(i) = chi(i,j)
@@ -299,7 +305,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
               chi(i,j) = tx4(i)
             enddo
           endif
-        END DO                               ! end of J loop
+!        END DO                               ! end of J loop
 
 ! GFS use lon avg as one scaler value for pole point
 
@@ -326,7 +332,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
         if(jsta== 1) chi(ista:iend, 1)=chitemp(ista:iend, 1)
         if(jend==jm) chi(ista:iend,jm)=chitemp(ista:iend,jm)
     
-        deallocate (wrk1, wrk3, cosl)
+        deallocate (wrk1, wrk2, wrk3, cosl)
 
 !     
 !     END OF ROUTINE.
