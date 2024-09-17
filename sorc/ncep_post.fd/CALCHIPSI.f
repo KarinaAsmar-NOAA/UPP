@@ -158,8 +158,6 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
 
 !$omp  parallel do private(i,j,ip1,im1,ii,jj,tx1,tx2)
         DO J=JSTA,JEND
-!         npass = npass2
-!         if (j > jm-jtem+1 .or. j < jtem) npass = npass3
           IF(J == 1) then                            ! Near North or South pole
             if(gdlat(ista,j) > 0.) then ! count from north to south
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
@@ -340,17 +338,135 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
     
         deallocate (wrk1, wrk2, wrk3, cosl)
 
-!$omp  parallel do private(i,j)
-!!!!!!!!!!!!!! REVIEW ....
+!$omp  parallel do private(i,j,ip1,im1,ii,jj,tx1,tx2)
         DO J=JSTA,JEND
-          DO I=ISTA,IEND
-            if (me==0) print*,'dpsi', i,j,dpsi(i,j)
-            if (me==0) print*,'dchi', i,j,dchi(i,j)
-            PSI(I,J)=DPSI(I,J)
-            CHI(I,J)=DCHI(I,J)
-          ENDDO
-       ENDDO
-!!!!!!!!!!!!!! REVIEW ...
+          IF(J == 1) then                            ! Near North or South pole
+            if(gdlat(ista,j) > 0.) then ! count from north to south
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+                     UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                  PSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
+                  CHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
+                  if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
+                  if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)
+                enddo
+              ELSE                                   !pole point, compute at j=2
+                jj = 2
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
+                  PSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
+                  CHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                  if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
+                  if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)
+                enddo
+              ENDIF
+            else
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+!                    UP(II,J)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                     UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                  PSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
+                  CHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
+                  if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
+                  if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
+                enddo
+              ELSE                                   !pole point, compute at j=2
+                jj = 2
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
+                  PSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
+                  CHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                  if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
+                  if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
+                enddo
+              ENDIF
+            endif
+          ELSE IF(J == JM) THEN                      ! Near North or South Pole
+            if(gdlat(ista,j) < 0.) then ! count from north to south
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+!                    UP(I,J-1)==SPVAL .or. UP(II,J)==SPVAL) cycle
+                     UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
+                  PSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
+                  CHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
+                  if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
+                  if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
+                enddo
+              ELSE                                   !pole point,compute at jm-1
+                jj = jm-1
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
+                  PSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
+                  CHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                  if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
+                  if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
+                enddo
+              ENDIF
+            else
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+                     UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
+                  PSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
+                  CHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
+                  if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
+                  if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
+                enddo
+              ELSE                                   !pole point,compute at jm-1
+                jj = jm-1
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
+                  PSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
+                  CHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                  if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
+                  if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
+                enddo
+              ENDIF
+            endif
+          ELSE
+            DO I=ISTA,IEND
+              ip1 = ie(i)
+              im1 = iw(i)
+              if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+                 UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:J+1),DPSI(1:ip1,1:J+1)/=SPVAL)) + dpsipoles(II,1)
+                  CHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                  if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
+                  if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
+            ENDDO
+          END IF
+        END DO                               ! end of J loop
 
 !     
 !     END OF ROUTINE.
