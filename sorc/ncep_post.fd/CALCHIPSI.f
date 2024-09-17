@@ -269,12 +269,12 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
             ENDDO
           END IF
-!!!!!!!!!!!!!! REVIEW THIS....
+!!!!!!!!!!!!!! REVIEW ....
           DO I=ISTA,IEND
             PSI(I,J)=DPSI(I,J)
             CHI(I,J)=DCHI(I,J)
           ENDDO
-        ENDDO
+!!!!!!!!!!!!!! REVIEW ...
           if (npass > 0) then
             do i=ista,iend
               tx1(i) = psi(i,j)
