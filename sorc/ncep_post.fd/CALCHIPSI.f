@@ -269,10 +269,16 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
             ENDDO
           END IF
+!!!!!!!!!!!!!! REVIEW THIS....
+          DO I=ISTA,IEND
+            PSI(I,J)=DPSI(I,J)
+            CHI(I,J)=DCHI(I,J)
+          ENDDO
+        ENDDO
           if (npass > 0) then
             do i=ista,iend
-              tx1(i) = dpsi(i,j)
-              tx3(i) = dchi(i,j)
+              tx1(i) = psi(i,j)
+              tx3(i) = chi(i,j)
             enddo
             do nn=1,npass
               do i=ista,iend
@@ -289,77 +295,11 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
               enddo
             enddo
             do i=ista,iend
-              dpsi(i,j) = tx1(i)
-              dchi(i,j) = tx4(i)
+              psi(i,j) = tx1(i)
+              chi(i,j) = tx4(i)
             enddo
           endif
         END DO                               ! end of J loop
-
-        DO J=JSTA,JEND
-          DO I=ISTA,IEND
-            PSI(I,J)=DPSI(I,J)
-            CHI(I,J)=DCHI(I,J)
-          ENDDO
-        ENDDO
-
-!        call fullpole(psi(ista_2l:iend_2u,jsta_2l:jend_2u),psipoles)
-!        call fullpole(chi(ista_2l:iend_2u,jsta_2l:jend_2u),chipoles)
-
-!!$omp  parallel do private(i,j,ii)
-!        DO J=JSTA,JEND
-!          if (j == 1) then
-!           if(gdlat(ista,j) > 0.) then ! count from north to south
-!              do i=ista,iend
-!                ii = i + imb2
-!                if (ii > im) ii = ii - im
-!                psi(i,J+1) = dpsi(i,j) + psipoles(ii,1)
-!                chi(i,J+1) = dchi(i,j) + chipoles(ii,1)
-!                print*,'j=1',psi(i,j-1),dpsi(i,j)
-!              enddo
-!            else ! count from south to north
-!              do i=ista,iend
-!                ii = i + imb2
-!                if (ii > im) ii = ii - im
-!                psi(i,J+1) = dpsi(i,j) - psipoles(ii,1)
-!                chi(i,J+1) = dchi(i,j) - chipoles(ii,1)      
-!              enddo
-!            end if      
-!          elseif (j == JM) then
-!            if(gdlat(ista,j) < 0.) then ! count from north to south
-!              do i=ista,iend
-!                ii = i + imb2
-!                if (ii > im) ii = ii - im
-!                psi(i,J-1) = dpsi(i,j) - psipoles(ii,2)
-!                chi(i,J-1) = dchi(i,j) - chipoles(ii,2)
-!                print*,'j=jm',psi(i,j-1),dpsi(i,j)
-!              enddo
-!            else ! count from south to north
-!              do i=ista,iend
-!                ii = i + imb2
-!                if (ii > im) ii = ii - im
-!                psi(i,J-1) = dpsi(i,j) + psipoles(ii,2)
-!                chi(i,J-1) = dchi(i,j) + chipoles(ii,2)
-!              enddo
-!            end if  
-!          else
-!            do i=ista,iend
-!                ii = i + imb2
-!                if (ii > im) ii = ii - im
-!              PSI(I,J) = sum(pack(dpsi(i,1:j),dpsi(i,1:j)/=spval)) + psipoles(ii,1)
-!              CHI(I,J) = DCHI(I,J-1) + DCHI(I,J+1) 
-
-!              print*,'jsta,jend',jsta,jend
-!              print*,'j', j
-!              print*,'dpsi add',dpsi(i,1)+dpsi(1,2)+dpsi(1,3)
-!              print*,'psi j', psi(i,j)
-!              print*,'dpsi shape :j', j, shape(dpsi(i,1:j))
-!              ! print*,'dpsi :j', dpsi(i,1:j)
-!              print*,'sum', sum(dpsi(i,1:j))
-!              print*,'sum2', sum(dpsi(i,1:3))
-!            enddo
-!          endif
-!        enddo              ! end of J loop
-
 
 ! GFS use lon avg as one scaler value for pole point
 
