@@ -305,10 +305,10 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
         cosltemp=spval
         if(jsta== 1) cosltemp(1:im, 1)=coslpoles(1:im,1)
         if(jend==jm) cosltemp(1:im,jm)=coslpoles(1:im,2)
-        psitemp=spval
+        dpsitemp=spval
         if(jsta== 1) dpsitemp(1:im, 1)=dpsipoles(1:im,1)
         if(jend==jm) dpsitemp(1:im,jm)=dpsipoles(1:im,2)
-        chitemp=spval
+        dchitemp=spval
         if(jsta== 1) dchitemp(1:im, 1)=dchipoles(1:im,1)
         if(jend==jm) dchitemp(1:im,jm)=dchipoles(1:im,2)
         
