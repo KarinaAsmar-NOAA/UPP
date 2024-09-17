@@ -171,7 +171,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                      UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
-                  DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
+                  DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
                 enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
@@ -181,7 +181,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
-                  DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                  DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
                 enddo
               ENDIF
             else
@@ -195,7 +195,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
 !                    UP(II,J)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                      UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
-                  DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
+                  DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
                 enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
@@ -205,7 +205,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
-                  DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                  DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
                 enddo
               ENDIF
             endif
@@ -221,7 +221,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
 !                    UP(I,J-1)==SPVAL .or. UP(II,J)==SPVAL) cycle
                      UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
-                  DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
+                  DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
@@ -231,7 +231,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
-                  DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                  DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
                 enddo
               ENDIF
             else
@@ -242,10 +242,9 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
-!                    UP(I,J-1)==SPVAL .or. UP(II,J)==SPVAL) cycle
                      UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
-                  DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
+                  DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
@@ -255,7 +254,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
-                  DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                  DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
                 enddo
               ENDIF
             endif
@@ -266,25 +265,14 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
               if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                  UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
-                  DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                  DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
             ENDDO
           END IF
-      END DO                   ! TEMPORARY END OF J LOOP
-      
-!$omp  parallel do private(i,j)
-!!!!!!!!!!!!!! REVIEW ....
-        DO J=JSTA,JEND
-          DO I=ISTA,IEND
-            PSI(I,J)=DPSI(I,J)
-            CHI(I,J)=DCHI(I,J)
-          ENDDO
-       ENDDO
-!!!!!!!!!!!!!! REVIEW ...
           if (npass > 0) then
 !$omp  parallel do private(i,j,tx1,tx2,tx3,tx4)
             do i=ista,iend
-              tx1(i) = psi(i,j)
-              tx3(i) = chi(i,j)
+              tx1(i) = dpsi(i,j)
+              tx3(i) = dchi(i,j)
             enddo
             do nn=1,npass
               do i=ista,iend
@@ -301,11 +289,21 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
               enddo
             enddo
             do i=ista,iend
-              psi(i,j) = tx1(i)
-              chi(i,j) = tx4(i)
+              dpsi(i,j) = tx1(i)
+              dchi(i,j) = tx4(i)
             enddo
           endif
 !        END DO                               ! end of J loop
+      
+!$omp  parallel do private(i,j)
+!!!!!!!!!!!!!! REVIEW ....
+        DO J=JSTA,JEND
+          DO I=ISTA,IEND
+            PSI(I,J)=DPSI(I,J)
+            CHI(I,J)=DCHI(I,J)
+          ENDDO
+       ENDDO
+!!!!!!!!!!!!!! REVIEW ...
 
 ! GFS use lon avg as one scaler value for pole point
 
