@@ -50,7 +50,7 @@
       REAL, dimension(IM,2) :: GLATPOLES, COSLPOLES, UPOLES, VPOLES, PSIPOLES, CHIPOLES
       REAL, dimension(IM,JSTA:JEND) :: COSLTEMP, PSITEMP, CHITEMP
 !
-      real,    allocatable ::  wrk1(:,:), wrk3(:,:), cosl(:,:)
+      real,    allocatable ::  wrk1(:,:),  wrk2(:,:), wrk3(:,:), cosl(:,:)
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u) :: DCHI, DPSI
 !
       integer, parameter :: npass2=2, npass3=3
@@ -76,7 +76,7 @@
         CALL EXCH(GDLAT(ISTA_2L,JSTA_2L))
         CALL EXCH(GDLON(ISTA_2L,JSTA_2L))
 
-        allocate (wrk1(ista:iend,jsta:jend),        &
+        allocate (wrk1(ista:iend,jsta:jend),   wrk2(ista:iend,jsta:jend),               &
      &            wrk3(ista:iend,jsta:jend), cosl(ista_2l:iend_2u,jsta_2l:jend_2u))
 
         imb2 = im/2
