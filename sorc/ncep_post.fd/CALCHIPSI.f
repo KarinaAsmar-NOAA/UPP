@@ -299,8 +299,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
 !!!!!!!!!!!!!! REVIEW ....
         DO J=JSTA,JEND
           DO I=ISTA,IEND
-            if me==0 print*,'dpsi', i,j,dpsi(i,j)
-            if me==0 print*,'dchi', i,j,dchi(i,j)
+            if (me==0) print*,'dpsi', i,j,dpsi(i,j)
+            if (me==0) print*,'dchi', i,j,dchi(i,j)
             PSI(I,J)=DPSI(I,J)
             CHI(I,J)=DCHI(I,J)
           ENDDO
