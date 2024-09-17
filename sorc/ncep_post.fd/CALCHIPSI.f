@@ -68,6 +68,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
           DO I=ISTA_2L,IEND_2U
             DPSI(I,J) = SPVAL
             DCHI(I,J) = SPVAL
+            PSI(I,J) = SPVAL
+            CHI(I,J) = SPVAL
           ENDDO
         ENDDO
 
@@ -166,8 +168,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
-                     UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                  if(VP(I,J)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
                 enddo
@@ -176,8 +177,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
-                     UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
+                  if(VP(I,J)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
                 enddo
@@ -189,9 +189,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
-!                    UP(II,J)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
-                     UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                  if(VP(I,J)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)                
                 enddo
@@ -200,8 +198,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
-                     UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
+                  if(VP(I,J)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)               
                 enddo
@@ -215,9 +212,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
-!                    UP(I,J-1)==SPVAL .or. UP(II,J)==SPVAL) cycle
-                     UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
+                  if(VP(I,J)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)                 
                 enddo
@@ -226,8 +221,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
-                     UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
+                  if(VP(I,J)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)                
                 enddo
@@ -239,8 +233,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
-                     UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
+                  if(VP(I,J)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)                 
                 enddo
@@ -249,8 +242,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
-                     UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
+                  if(VP(I,J)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)               
                 enddo
@@ -260,8 +252,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
             DO I=ISTA,IEND
               ip1 = ie(i)
               im1 = iw(i)
-              if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
-                 UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                  if(VP(I,J)==SPVAL .or. UP(I,J)==SPVAL) cycle
                   DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
                   DCHI(I,J) = (-1.0*UP(I,J)*wrk2(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)              
             ENDDO
@@ -303,8 +294,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
-                     UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                  if(PSI(ip1,1)==SPVAL .or. PSI(im1,J+1)==SPVAL .or. &
+                     CHI(ip1,1)==SPVAL .or. CHI(im1,J+1)==SPVAL) cycle
                      PSI(ip1,1) = DPSI(I,J) + PSI(im1,J+1)
                      CHI(ip1,1) = DCHI(I,J) + CHI(im1,J+1)
                 enddo
@@ -313,8 +304,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
-                     UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
+                  if(PSI(ip1,J)==SPVAL .or. PSI(im1,jj+1)==SPVAL .or. &
+                     CHI(ip1,J)==SPVAL .or. CHI(im1,jj+1)==SPVAL) cycle
                      PSI(ip1,J) = DPSI(I,J) + PSI(im1,jj+1)
                      CHI(ip1,J) = DCHI(I,J) + CHI(im1,jj+1)
                 enddo
@@ -326,8 +317,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
-                     UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                  if(PSI(ip1,1)==SPVAL .or. PSI(im1,J+1)==SPVAL .or. &
+                     CHI(ip1,1)==SPVAL .or. CHI(im1,J+1)==SPVAL) cycle
                      PSI(ip1,1) = DPSI(I,J) + PSI(im1,J+1)
                      CHI(ip1,1) = DCHI(I,J) + CHI(im1,J+1)        
                 enddo
@@ -336,8 +327,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
-                     UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
+                  if(PSI(ip1,J)==SPVAL .or. PSI(im1,jj+1)==SPVAL .or. &
+                     CHI(ip1,J)==SPVAL .or. CHI(im1,jj+1)==SPVAL) cycle
                      PSI(ip1,J) = DPSI(I,J) + PSI(im1,jj+1)
                      CHI(ip1,J) = DCHI(I,J) + CHI(im1,jj+1)           
                 enddo
@@ -351,9 +342,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
-!                    UP(I,J-1)==SPVAL .or. UP(II,J)==SPVAL) cycle
-                     UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
+                  if(PSI(ip1,J-1)==SPVAL .or. PSI(im1,2)==SPVAL .or. &
+                     CHI(ip1,J-1)==SPVAL .or. CHI(im1,2)==SPVAL) cycle
                      PSI(ip1,J-1) = DPSI(I,J) + PSI(im1,2)
                      CHI(ip1,J-1) = DCHI(I,J) + CHI(im1,2)       
                 enddo
@@ -362,8 +352,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
-                     UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
+                  if(PSI(ip1,jj-1)==SPVAL .or. PSI(im1,J)==SPVAL .or. &
+                     CHI(ip1,jj-1)==SPVAL .or. CHI(im1,J)==SPVAL) cycle
                      PSI(ip1,jj-1) = DPSI(I,J) + PSI(im1,J)
                      CHI(ip1,jj-1) = DCHI(I,J) + CHI(im1,J)        
                 enddo
@@ -375,8 +365,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
-                     UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
+                  if(PSI(ip1,J-1)==SPVAL .or. PSI(im1,2)==SPVAL .or. &
+                     CHI(ip1,J-1)==SPVAL .or. CHI(im1,2)==SPVAL) cycle
                      PSI(ip1,J-1) = DPSI(I,J) + PSI(im1,2)
                      CHI(ip1,J-1) = DCHI(I,J) + CHI(im1,2)   
                 enddo
@@ -385,8 +375,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
-                     UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
+                  if(PSI(ip1,jj-1)==SPVAL .or. PSI(im1,J)==SPVAL .or. &
+                     CHI(ip1,jj-1)==SPVAL .or. CHI(im1,J)==SPVAL) cycle
                      PSI(ip1,jj-1) = DPSI(I,J) + PSI(im1,J)
                      CHI(ip1,jj-1) = DCHI(I,J) + CHI(im1,J)          
                 enddo
@@ -396,8 +386,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
             DO I=ISTA,IEND
               ip1 = ie(i)
               im1 = iw(i)
-              if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
-                 UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                  if(PSI(ip1,J-1)==SPVAL .or. PSI(im1,J+1)==SPVAL .or. &
+                     CHI(ip1,J-1)==SPVAL .or. CHI(im1,J+1)==SPVAL) cycle
                      PSI(ip1,J-1) = DPSI(I,J) + PSI(im1,J+1)
                      CHI(ip1,J-1) = DCHI(I,J) + CHI(im1,J+1)          
             ENDDO
