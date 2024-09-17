@@ -160,40 +160,119 @@
         call fullpole(UP(ista_2l:iend_2u,jsta_2l:jend_2u),upoles)
         call fullpole(VP(ista_2l:iend_2u,jsta_2l:jend_2u),vpoles)
 
-!$omp  parallel do private(i,j,ii)
+!$omp  parallel do private(i,j,ip1,im1,ii,jj,tx1,tx2)
         DO J=JSTA,JEND
-          if (j == 1) then
-           if(gdlat(ista,j) > 0.) then ! count from north to south
-              do i=ista,iend
-                  if(UP(I,J)/=SPVAL) DPSI(I,J) = UP(I,J)*wrk3(i,j) * wrk1(i,j)   
-                  if(VP(I,J)/=SPVAL) DCHI(I,J) = -1.0*VP(I,J)*wrk3(i,j) * wrk1(i,j)  
-              enddo
-            else ! count from south to north
-              jj=2
-              do i=ista,iend
-                  if(UP(I,jj)/=SPVAL) DPSI(I,J) = UP(I,jj)*wrk3(i,jj) * wrk1(i,jj)   
-                  if(VP(I,J)/=SPVAL) DCHI(I,J) = -1.0*VP(I,jj)*wrk3(i,jj) * wrk1(i,jj)  
-              enddo
-            end if      
-          elseif (j == JM) then
+!         npass = npass2
+!         if (j > jm-jtem+1 .or. j < jtem) npass = npass3
+          IF(J == 1) then                            ! Near North or South pole
+            if(gdlat(ista,j) > 0.) then ! count from north to south
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+                     UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                  DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
+                  DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
+                enddo
+              ELSE                                   !pole point, compute at j=2
+                jj = 2
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
+                  DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
+                  DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                enddo
+              ENDIF
+            else
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+!                    UP(II,J)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                     UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                  DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
+                  DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
+                enddo
+              ELSE                                   !pole point, compute at j=2
+                jj = 2
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
+                  DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
+                  DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                enddo
+              ENDIF
+            endif
+          ELSE IF(J == JM) THEN                      ! Near North or South Pole
             if(gdlat(ista,j) < 0.) then ! count from north to south
-              do i=ista,iend
-                  if(UP(I,J)/=SPVAL)  DPSI(I,J) = UP(I,J)*wrk3(i,j) * wrk1(i,j)   
-                  if(VP(I,J)/=SPVAL) DCHI(I,J) = -1.0*VP(I,J)*wrk3(i,j) * wrk1(i,j)
-              enddo
-            else ! count from south to north
-              jj = jm-1
-              do i=ista,iend
-                  if(UP(I,jj)/=SPVAL) DPSI(I,J) = UP(I,jj)*wrk3(i,jj) * wrk1(i,jj)  
-                  if(VP(I,J)/=SPVAL) DCHI(I,J) = -1.0*VP(I,jj)*wrk3(i,jj) * wrk1(i,jj)
-              enddo
-            end if  
-          else
-            do i=ista,iend
-              if(UP(I,J)/=SPVAL) DPSI(I,J)   = UP(I,J)*wrk3(i,j) * wrk1(i,j)  
-              if(VP(I,J)/=SPVAL) DCHI(I,J)   = -1.0*VP(I,J)*wrk3(i,j) * wrk1(i,j)  
-            enddo
-          endif
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+!                    UP(I,J-1)==SPVAL .or. UP(II,J)==SPVAL) cycle
+                     UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
+                  DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
+                  DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
+                enddo
+              ELSE                                   !pole point,compute at jm-1
+                jj = jm-1
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
+                  DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
+                  DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                enddo
+              ENDIF
+            else
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+!                    UP(I,J-1)==SPVAL .or. UP(II,J)==SPVAL) cycle
+                     UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
+                  DPSI(I,J) = (UP(I,J)*wrk3(i,j) - VP(I,J)*wrk2(i,j))*wrk1(i,j)
+                  DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,j) - VP(I,J)*wrk3(i,j))*wrk1(i,j)
+                enddo
+              ELSE                                   !pole point,compute at jm-1
+                jj = jm-1
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
+                     UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
+                  DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
+                  DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+                enddo
+              ENDIF
+            endif
+          ELSE
+            DO I=ISTA,IEND
+              ip1 = ie(i)
+              im1 = iw(i)
+              if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+                 UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                  DPSI(I,J) = (UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk2(i,jj))*wrk1(i,jj)
+                  DCHI(I,J) = (-1.0*UP(I,J)*wrk3(i,jj) - VP(I,J)*wrk3(i,jj))*wrk1(i,jj)
+            ENDDO
+          END IF
           if (npass > 0) then
             do i=ista,iend
               tx1(i) = dpsi(i,j)
@@ -220,78 +299,78 @@
           endif
         END DO                               ! end of J loop
 
-!        DO J=JSTA,JEND
-!          DO I=ISTA,IEND
-!            PSI(I,J)=DPSI(I,J)
-!            CHI(I,J)=DCHI(I,J)
-!          ENDDO
-!        ENDDO
-
-        call fullpole(psi(ista_2l:iend_2u,jsta_2l:jend_2u),psipoles)
-        call fullpole(chi(ista_2l:iend_2u,jsta_2l:jend_2u),chipoles)
-
-!$omp  parallel do private(i,j,ii)
         DO J=JSTA,JEND
-          if (j == 1) then
-           if(gdlat(ista,j) > 0.) then ! count from north to south
-              do i=ista,iend
-                ii = i + imb2
-                if (ii > im) ii = ii - im
-                psi(i,J+1) = dpsi(i,j) + psipoles(ii,1)
-                chi(i,J+1) = dchi(i,j) + chipoles(ii,1)
-                print*,'j=1',psi(i,j-1),dpsi(i,j)
-              enddo
-            else ! count from south to north
-              do i=ista,iend
-                ii = i + imb2
-                if (ii > im) ii = ii - im
-                psi(i,J+1) = dpsi(i,j) - psipoles(ii,1)
-                chi(i,J+1) = dchi(i,j) - chipoles(ii,1)      
-              enddo
-            end if      
-          elseif (j == JM) then
-            if(gdlat(ista,j) < 0.) then ! count from north to south
-              do i=ista,iend
-                ii = i + imb2
-                if (ii > im) ii = ii - im
-                psi(i,J-1) = dpsi(i,j) - psipoles(ii,2)
-                chi(i,J-1) = dchi(i,j) - chipoles(ii,2)
-                print*,'j=jm',psi(i,j-1),dpsi(i,j)
-              enddo
-            else ! count from south to north
-              do i=ista,iend
-                ii = i + imb2
-                if (ii > im) ii = ii - im
-                psi(i,J-1) = dpsi(i,j) + psipoles(ii,2)
-                chi(i,J-1) = dchi(i,j) + chipoles(ii,2)
-              enddo
-            end if  
-          else
-            do i=ista,iend
-                ii = i + imb2
-                if (ii > im) ii = ii - im
-              PSI(I,J) = sum(pack(dpsi(i,1:j),dpsi(i,1:j)/=spval)) + psipoles(ii,1)
-              CHI(I,J) = DCHI(I,J-1) + DCHI(I,J+1) 
+          DO I=ISTA,IEND
+            PSI(I,J)=DPSI(I,J)
+            CHI(I,J)=DCHI(I,J)
+          ENDDO
+        ENDDO
 
-              print*,'jsta,jend',jsta,jend
-              print*,'j', j
-              print*,'dpsi add',dpsi(i,1)+dpsi(1,2)+dpsi(1,3)
-              print*,'psi j', psi(i,j)
-              print*,'dpsi shape :j', j, shape(dpsi(i,1:j))
-              ! print*,'dpsi :j', dpsi(i,1:j)
-              print*,'sum', sum(dpsi(i,1:j))
-              print*,'sum2', sum(dpsi(i,1:3))
-            enddo
-          endif
-        enddo              ! end of J loop
+!        call fullpole(psi(ista_2l:iend_2u,jsta_2l:jend_2u),psipoles)
+!        call fullpole(chi(ista_2l:iend_2u,jsta_2l:jend_2u),chipoles)
+
+!!$omp  parallel do private(i,j,ii)
+!        DO J=JSTA,JEND
+!          if (j == 1) then
+!           if(gdlat(ista,j) > 0.) then ! count from north to south
+!              do i=ista,iend
+!                ii = i + imb2
+!                if (ii > im) ii = ii - im
+!                psi(i,J+1) = dpsi(i,j) + psipoles(ii,1)
+!                chi(i,J+1) = dchi(i,j) + chipoles(ii,1)
+!                print*,'j=1',psi(i,j-1),dpsi(i,j)
+!              enddo
+!            else ! count from south to north
+!              do i=ista,iend
+!                ii = i + imb2
+!                if (ii > im) ii = ii - im
+!                psi(i,J+1) = dpsi(i,j) - psipoles(ii,1)
+!                chi(i,J+1) = dchi(i,j) - chipoles(ii,1)      
+!              enddo
+!            end if      
+!          elseif (j == JM) then
+!            if(gdlat(ista,j) < 0.) then ! count from north to south
+!              do i=ista,iend
+!                ii = i + imb2
+!                if (ii > im) ii = ii - im
+!                psi(i,J-1) = dpsi(i,j) - psipoles(ii,2)
+!                chi(i,J-1) = dchi(i,j) - chipoles(ii,2)
+!                print*,'j=jm',psi(i,j-1),dpsi(i,j)
+!              enddo
+!            else ! count from south to north
+!              do i=ista,iend
+!                ii = i + imb2
+!                if (ii > im) ii = ii - im
+!                psi(i,J-1) = dpsi(i,j) + psipoles(ii,2)
+!                chi(i,J-1) = dchi(i,j) + chipoles(ii,2)
+!              enddo
+!            end if  
+!          else
+!            do i=ista,iend
+!                ii = i + imb2
+!                if (ii > im) ii = ii - im
+!              PSI(I,J) = sum(pack(dpsi(i,1:j),dpsi(i,1:j)/=spval)) + psipoles(ii,1)
+!              CHI(I,J) = DCHI(I,J-1) + DCHI(I,J+1) 
+
+!              print*,'jsta,jend',jsta,jend
+!              print*,'j', j
+!              print*,'dpsi add',dpsi(i,1)+dpsi(1,2)+dpsi(1,3)
+!              print*,'psi j', psi(i,j)
+!              print*,'dpsi shape :j', j, shape(dpsi(i,1:j))
+!              ! print*,'dpsi :j', dpsi(i,1:j)
+!              print*,'sum', sum(dpsi(i,1:j))
+!              print*,'sum2', sum(dpsi(i,1:3))
+!            enddo
+!          endif
+!        enddo              ! end of J loop
 
 
 ! GFS use lon avg as one scaler value for pole point
 
         call exch(psi(ista_2l:iend_2u,jsta_2l:jend_2u))
         call exch(chi(ista_2l:iend_2u,jsta_2l:jend_2u))
-        !call fullpole(psi(ista_2l:iend_2u,jsta_2l:jend_2u),psipoles)     
-        !call fullpole(chi(ista_2l:iend_2u,jsta_2l:jend_2u),chipoles)     
+        call fullpole(psi(ista_2l:iend_2u,jsta_2l:jend_2u),psipoles)     
+        call fullpole(chi(ista_2l:iend_2u,jsta_2l:jend_2u),chipoles)     
 
         cosltemp=spval
         if(jsta== 1) cosltemp(1:im, 1)=coslpoles(1:im,1)
