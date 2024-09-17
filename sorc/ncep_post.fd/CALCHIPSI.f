@@ -77,25 +77,18 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
         CALL EXCH(GDLAT(ISTA_2L,JSTA_2L))
         CALL EXCH(GDLON(ISTA_2L,JSTA_2L))
 
-        allocate (wrk1(ista:iend,jsta:jend),   wrk2(ista:iend,jsta:jend),               &
+        allocate (wrk1(ista:iend,jsta:jend), wrk2(ista:iend,jsta:jend),          &
      &            wrk3(ista:iend,jsta:jend), cosl(ista_2l:iend_2u,jsta_2l:jend_2u))
+        allocate(iw(im),ie(im))
 
         imb2 = im/2
-
-!$omp  parallel do private(i,j)
-        DO J=JSTA,JEND 
-          do i=ista,iend
-            cosl(i,j) = cos(gdlat(i,j)*dtr)
-            IF(cosl(i,j) >= SMALL) then
-              wrk1(i,j) = ERAD*cosl(i,j)
-            else
-              wrk1(i,j) = 0.
-            end if    
-          enddo
-        enddo
-        CALL EXCH(cosl)
-
-        !$omp  parallel do private(i,j,ip1,im1)
+!$omp  parallel do private(i)
+      do i=ista,iend
+        ie(i) = i+1
+        iw(i) = i-1
+      enddo
+      
+!$omp  parallel do private(i,j,ip1,im1)
         DO J=JSTA,JEND
           do i=ista,iend
             ip1 = ie(i)
@@ -113,6 +106,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
             end if
           enddo
         enddo
+        CALL EXCH(cosl)
 
         call fullpole( cosl(ista_2l:iend_2u,jsta_2l:jend_2u),coslpoles)
         call fullpole(gdlat(ista_2l:iend_2u,jsta_2l:jend_2u),glatpoles)
@@ -131,6 +125,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                 ii = i + imb2
                 if (ii > im) ii = ii - im
                 wrk3(i,j) = (180.+GDLAT(i,J+1)+GLATPOLES(ii,1))*DTR !1/dphi
+!
               enddo
             end if      
           elseif (j == JM) then
