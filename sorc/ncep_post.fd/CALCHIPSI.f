@@ -39,7 +39,7 @@
       use params_mod,   only: dtr, small, erad
       use ctlblk_mod,   only: jsta_2l, jend_2u, spval, &
                               jsta, jend, im, jm, &
-                              ista, iend, ista_2l, iend_2u
+                              ista, iend, ista_2l, iend_2u, me
 !
       implicit none
 !
