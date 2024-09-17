@@ -50,11 +50,11 @@
       REAL, dimension(IM,2) :: GLATPOLES, COSLPOLES, UPOLES, VPOLES, PSIPOLES, CHIPOLES
       REAL, dimension(IM,JSTA:JEND) :: COSLTEMP, PSITEMP, CHITEMP
 !
-      real,    allocatable ::  wrk1(:,:),  wrk2(:,:), wrk3(:,:), cosl(:,:)
-      REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u) :: DCHI, DPSI
+real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
+      INTEGER, allocatable ::  IHE(:),IHW(:), IE(:),IW(:)
 !
       integer, parameter :: npass2=2, npass3=3
-      integer I,J,ii,iir,iil,jj,JMT2,imb2, npass, nn, jtem
+      integer I,J,ip1,im1,ii,iir,iil,jj,JMT2,imb2, npass, nn, jtem
       real    tx1(im+2), tx2(im+2), tx3(im+2), tx4(im+2)
 !     
 !***************************************************************************
