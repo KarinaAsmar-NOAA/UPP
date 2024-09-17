@@ -311,6 +311,11 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
           endif
         END DO                               ! end of J loop
 
+        call exch(psi(ista_2l:iend_2u,jsta_2l:jend_2u))
+        call exch(chi(ista_2l:iend_2u,jsta_2l:jend_2u))
+        call fullpole(psi(ista_2l:iend_2u,jsta_2l:jend_2u),psipoles)     
+        call fullpole(chi(ista_2l:iend_2u,jsta_2l:jend_2u),chipoles)    
+
         !$omp  parallel do private(i,j,ip1,im1,ii,jj)
         DO J=JSTA,JEND
           IF(J == 1) then                            ! Near North or South pole
@@ -323,8 +328,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   if (ii > im) ii = ii - im
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                      UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
-                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:J+1),DPSI(II:ip1,1:J+1)/=SPVAL)) + dpsipoles(II,1)
-                 CHI(I,J) = SUM(PACK(DCHI(1:ip1,1:J+1),DCHI(II:ip1,1:J+1)/=SPVAL)) + dchipoles(II,1)
+                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:J+1),DPSI(II:ip1,1:J+1)/=SPVAL)) + psipoles(II,1)
+                 CHI(I,J) = SUM(PACK(DCHI(1:ip1,1:J+1),DCHI(II:ip1,1:J+1)/=SPVAL)) + chipoles(II,1)
                   if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
                   if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)
                 enddo
@@ -335,8 +340,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   im1 = iw(i)
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
-                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:J),DPSI(1:ip1,1:J)/=SPVAL)) + dpsipoles(II,1)
-                 CHI(I,J) = SUM(PACK(DCHI(1:ip1,1:J),DCHI(1:ip1,1:J)/=SPVAL)) + dchipoles(II,1)
+                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:J),DPSI(1:ip1,1:J)/=SPVAL)) + psipoles(II,1)
+                 CHI(I,J) = SUM(PACK(DCHI(1:ip1,1:J),DCHI(1:ip1,1:J)/=SPVAL)) + chipoles(II,1)
                   if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
                   if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)
                 enddo
@@ -350,8 +355,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   if (ii > im) ii = ii - im
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                      UPOLES(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
-                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:J-1),DPSI(1:ip1,1:J-1)/=SPVAL)) + dpsipoles(II,1)
-                 CHI(I,J) = SUM(PACK(DCHI(1:ip1,1:J-1),DCHI(1:ip1,1:J-1)/=SPVAL)) + dchipoles(II,1)
+                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:J-1),DPSI(1:ip1,1:J-1)/=SPVAL)) + psipoles(II,1)
+                 CHI(I,J) = SUM(PACK(DCHI(1:ip1,1:J-1),DCHI(1:ip1,1:J-1)/=SPVAL)) + chipoles(II,1)
                   if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
                   if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
                 enddo
@@ -362,8 +367,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   im1 = iw(i)
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,J)==SPVAL .or. UP(I,jj+1)==SPVAL) cycle
-                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:J),DPSI(1:ip1,1:J)/=SPVAL)) + dpsipoles(II,1)
-                 CHI(I,J) = SUM(PACK(DCHI(1:ip1,1:J),DCHI(1:ip1,1:J)/=SPVAL)) + dchipoles(II,1)
+                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:J),DPSI(1:ip1,1:J)/=SPVAL)) + psipoles(II,1)
+                 CHI(I,J) = SUM(PACK(DCHI(1:ip1,1:J),DCHI(1:ip1,1:J)/=SPVAL)) + chipoles(II,1)
                   if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
                   if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
                 enddo
@@ -380,8 +385,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
 !                    UP(I,J-1)==SPVAL .or. UP(II,J)==SPVAL) cycle
                      UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
-                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:J-1),DPSI(1:ip1,1:J-1)/=SPVAL)) + dpsipoles(II,1)
-                 CHI(I,J) = SUM(PACK(DCHI(1:ip1,1:J-1),DCHI(1:ip1,1:J-1)/=SPVAL)) + dchipoles(II,1)
+                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:J-1),DPSI(1:ip1,1:J-1)/=SPVAL)) + psipoles(II,1)
+                 CHI(I,J) = SUM(PACK(DCHI(1:ip1,1:J-1),DCHI(1:ip1,1:J-1)/=SPVAL)) + chipoles(II,1)
                   if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
                   if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
                 enddo
@@ -392,8 +397,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   im1 = iw(i)
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
-                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:jj-1),DPSI(1:ip1,1:jj-1)/=SPVAL)) + dpsipoles(II,1)
-                 CHI(I,J) = SUM(PACK(DCHI(1:ip1,1:jj-1),DCHI(1:ip1,1:jj-1)/=SPVAL)) + dchipoles(II,1)
+                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:jj-1),DPSI(1:ip1,1:jj-1)/=SPVAL)) + psipoles(II,1)
+                 CHI(I,J) = SUM(PACK(DCHI(1:ip1,1:jj-1),DCHI(1:ip1,1:jj-1)/=SPVAL)) + chipoles(II,1)
                   if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
                   if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
                 enddo
@@ -407,8 +412,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   if (ii > im) ii = ii - im
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                      UP(I,J-1)==SPVAL .or. UPOLES(II,2)==SPVAL) cycle
-                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:J-1),DPSI(1:ip1,1:J-1)/=SPVAL)) + dpsipoles(II,1)
-                 CHI(I,J) = SUM(PACK(DCHI(1:ip1,1:J-1),DCHI(1:ip1,1:J-1)/=SPVAL)) + dchipoles(II,1)
+                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:J-1),DPSI(1:ip1,1:J-1)/=SPVAL)) + psipoles(II,1)
+                 CHI(I,J) = SUM(PACK(DCHI(1:ip1,1:J-1),DCHI(1:ip1,1:J-1)/=SPVAL)) + chipoles(II,1)
                   if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
                   if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
                 enddo
@@ -419,8 +424,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
                   im1 = iw(i)
                   if(VP(ip1,JJ)==SPVAL .or. VP(im1,JJ)==SPVAL .or. &
                      UP(I,jj-1)==SPVAL .or. UP(I,J)==SPVAL) cycle
-                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:jj-1),DPSI(1:ip1,1:jj-1)/=SPVAL)) + dpsipoles(II,1)
-                 CHI(I,J) = SUM(PACK(DCHI(1:ip1,1:jj-1),DCHI(1:ip1,1:jj-1)/=SPVAL)) + dchipoles(II,1)
+                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:jj-1),DPSI(1:ip1,1:jj-1)/=SPVAL)) + psipoles(II,1)
+                 CHI(I,J) = SUM(PACK(DCHI(1:ip1,1:jj-1),DCHI(1:ip1,1:jj-1)/=SPVAL)) + chipoles(II,1)
                   if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
                   if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
                 enddo
@@ -432,8 +437,8 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
               im1 = iw(i)
               if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                  UP(I,J-1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
-                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:J-1),DPSI(1:ip1,1:J-1)/=SPVAL)) + dpsipoles(II,1)
-                 CHI(I,J) = SUM(PACK(DCHI(1:ip1,1:J-1),DCHI(1:ip1,1:J-1)/=SPVAL)) + dchipoles(II,1)
+                 PSI(I,J) = SUM(PACK(DPSI(1:ip1,1:J-1),DPSI(1:ip1,1:J-1)/=SPVAL)) + psipoles(II,1)
+                 CHI(I,J) = SUM(PACK(DCHI(1:ip1,1:J-1),DCHI(1:ip1,1:J-1)/=SPVAL)) + chipoles(II,1)
                   if (me==0) print*, 'debug', dpsi(i,j),up(i,j),vp(i,j)
                   if (me==0) print*,'debug2',wrk3(i,j),wrk2(i,j),wrk1(i,j)                  
             ENDDO
@@ -441,21 +446,17 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
         END DO                               ! end of J loop
 
 ! GFS use lon avg as one scaler value for pole point
-
-        call exch(dpsi(ista_2l:iend_2u,jsta_2l:jend_2u))
-        call exch(dchi(ista_2l:iend_2u,jsta_2l:jend_2u))
-        call fullpole(psi(ista_2l:iend_2u,jsta_2l:jend_2u),psipoles)     
-        call fullpole(chi(ista_2l:iend_2u,jsta_2l:jend_2u),chipoles)     
+ 
 
         cosltemp=spval
         if(jsta== 1) cosltemp(1:im, 1)=coslpoles(1:im,1)
         if(jend==jm) cosltemp(1:im,jm)=coslpoles(1:im,2)
         psitemp=spval
-        if(jsta== 1) dpsitemp(1:im, 1)=dpsipoles(1:im,1)
-        if(jend==jm) dpsitemp(1:im,jm)=dpsipoles(1:im,2)
+        if(jsta== 1) psitemp(1:im, 1)=psipoles(1:im,1)
+        if(jend==jm) psitemp(1:im,jm)=psipoles(1:im,2)
         chitemp=spval
-        if(jsta== 1) dchitemp(1:im, 1)=chipoles(1:im,1)
-        if(jend==jm) dchitemp(1:im,jm)=chipoles(1:im,2)
+        if(jsta== 1) chitemp(1:im, 1)=chipoles(1:im,1)
+        if(jend==jm) chitemp(1:im,jm)=chipoles(1:im,2)
         
         call poleavg(IM,JM,JSTA,JEND,SMALL,cosltemp(1,jsta),SPVAL,psitemp(1,jsta))
         call poleavg(IM,JM,JSTA,JEND,SMALL,cosltemp(1,jsta),SPVAL,chitemp(1,jsta))
