@@ -47,8 +47,8 @@
 !     
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(in)    :: UP, VP
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(out) :: CHI, PSI
-      REAL, dimension(IM,2) :: GLATPOLES, COSLPOLES, UPOLES, VPOLES, DPSIPOLES, DCHIPOLES
-      REAL, dimension(IM,JSTA:JEND) :: COSLTEMP, DPSITEMP, DCHITEMP
+      REAL, dimension(IM,2) :: GLATPOLES, COSLPOLES, UPOLES, VPOLES, PSIPOLES, CHIPOLES
+      REAL, dimension(IM,JSTA:JEND) :: COSLTEMP, PSITEMP, CHITEMP
 !
 real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
       INTEGER, allocatable ::  IHE(:),IHW(:), IE(:),IW(:)
@@ -311,34 +311,7 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
           endif
         END DO                               ! end of J loop
 
-! GFS use lon avg as one scaler value for pole point
-
-        call exch(dpsi(ista_2l:iend_2u,jsta_2l:jend_2u))
-        call exch(dchi(ista_2l:iend_2u,jsta_2l:jend_2u))
-        call fullpole(dpsi(ista_2l:iend_2u,jsta_2l:jend_2u),dpsipoles)     
-        call fullpole(dchi(ista_2l:iend_2u,jsta_2l:jend_2u),dchipoles)     
-
-        cosltemp=spval
-        if(jsta== 1) cosltemp(1:im, 1)=coslpoles(1:im,1)
-        if(jend==jm) cosltemp(1:im,jm)=coslpoles(1:im,2)
-        dpsitemp=spval
-        if(jsta== 1) dpsitemp(1:im, 1)=dpsipoles(1:im,1)
-        if(jend==jm) dpsitemp(1:im,jm)=dpsipoles(1:im,2)
-        dchitemp=spval
-        if(jsta== 1) dchitemp(1:im, 1)=dchipoles(1:im,1)
-        if(jend==jm) dchitemp(1:im,jm)=dchipoles(1:im,2)
-        
-        call poleavg(IM,JM,JSTA,JEND,SMALL,cosltemp(1,jsta),SPVAL,dpsitemp(1,jsta))
-        call poleavg(IM,JM,JSTA,JEND,SMALL,cosltemp(1,jsta),SPVAL,dchitemp(1,jsta))
-
-        if(jsta== 1) dpsi(ista:iend, 1)=dpsitemp(ista:iend, 1)
-        if(jend==jm) dpsi(ista:iend,jm)=dpsitemp(ista:iend,jm)
-        if(jsta== 1) dchi(ista:iend, 1)=dchitemp(ista:iend, 1)
-        if(jend==jm) dchi(ista:iend,jm)=dchitemp(ista:iend,jm)
-    
-        deallocate (wrk1, wrk2, wrk3, cosl)
-
-!$omp  parallel do private(i,j,ip1,im1,ii,jj)
+        !$omp  parallel do private(i,j,ip1,im1,ii,jj)
         DO J=JSTA,JEND
           IF(J == 1) then                            ! Near North or South pole
             if(gdlat(ista,j) > 0.) then ! count from north to south
@@ -467,6 +440,32 @@ real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
           END IF
         END DO                               ! end of J loop
 
+! GFS use lon avg as one scaler value for pole point
+
+        call exch(dpsi(ista_2l:iend_2u,jsta_2l:jend_2u))
+        call exch(dchi(ista_2l:iend_2u,jsta_2l:jend_2u))
+        call fullpole(psi(ista_2l:iend_2u,jsta_2l:jend_2u),psipoles)     
+        call fullpole(chi(ista_2l:iend_2u,jsta_2l:jend_2u),chipoles)     
+
+        cosltemp=spval
+        if(jsta== 1) cosltemp(1:im, 1)=coslpoles(1:im,1)
+        if(jend==jm) cosltemp(1:im,jm)=coslpoles(1:im,2)
+        psitemp=spval
+        if(jsta== 1) dpsitemp(1:im, 1)=dpsipoles(1:im,1)
+        if(jend==jm) dpsitemp(1:im,jm)=dpsipoles(1:im,2)
+        chitemp=spval
+        if(jsta== 1) dchitemp(1:im, 1)=chipoles(1:im,1)
+        if(jend==jm) dchitemp(1:im,jm)=chipoles(1:im,2)
+        
+        call poleavg(IM,JM,JSTA,JEND,SMALL,cosltemp(1,jsta),SPVAL,psitemp(1,jsta))
+        call poleavg(IM,JM,JSTA,JEND,SMALL,cosltemp(1,jsta),SPVAL,chitemp(1,jsta))
+
+        if(jsta== 1) psi(ista:iend, 1)=psitemp(ista:iend, 1)
+        if(jend==jm) psi(ista:iend,jm)=psitemp(ista:iend,jm)
+        if(jsta== 1) chi(ista:iend, 1)=chitemp(ista:iend, 1)
+        if(jend==jm) chi(ista:iend,jm)=chitemp(ista:iend,jm)
+    
+        deallocate (wrk1, wrk2, wrk3, cosl)
 !     
 !     END OF ROUTINE.
 !     
