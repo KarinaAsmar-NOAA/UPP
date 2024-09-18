@@ -291,10 +291,10 @@
           endif
         END DO                               ! end of J loop
 
-!$omp  parallel do private(i,j,ip1,im1,ii,jj)
         psi(1,1) = 0
         chi(1,1) = 0
-        
+
+!$omp  parallel do private(i,j,ip1,im1,ii,jj)
         DO J=JSTA,JEND
           IF(J == 1) then                            ! Near North or South pole
             if(gdlat(ista,j) > 0.) then ! count from north to south
