@@ -312,7 +312,7 @@
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                     PSI(ip1,J) = DPSI(I,J) + PSI(im1,jj+1)
+                     PSI(I,J) = DPSI(im1,J) + PSI(i-2,jj+1)
                      CHI(ip1,J) = DCHI(I,J) + CHI(im1,jj+1)
                 enddo
               ENDIF
@@ -323,7 +323,7 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                     PSI(ip1,1) = DPSI(I,J) + PSI(im1,J+1)
+                     PSI(I,1) = DPSI(I-1,J) + PSI(i-2,J+1)
                      CHI(ip1,1) = DCHI(I,J) + CHI(im1,J+1)        
                 enddo
               ELSE                                   !pole point, compute at j=2
@@ -331,7 +331,7 @@
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                     PSI(ip1,J) = DPSI(I,J) + PSI(im1,jj+1)
+                     PSI(I,J) = DPSI(I-1,J) + PSI(i-2,jj+1)
                      CHI(ip1,J) = DCHI(I,J) + CHI(im1,jj+1)           
                 enddo
               ENDIF
@@ -344,7 +344,7 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                     PSI(ip1,J-1) = DPSI(I,J) + PSI(im1,2)
+                     PSI(I,J-1) = DPSI(I-1,J) + PSI(i-2,2)
                      CHI(ip1,J-1) = DCHI(I,J) + CHI(im1,2)       
                 enddo
               ELSE                                   !pole point,compute at jm-1
@@ -352,7 +352,7 @@
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                     PSI(ip1,jj-1) = DPSI(I,J) + PSI(im1,J)
+                     PSI(i,jj-1) = DPSI(I-1,J) + PSI(i-2,J)
                      CHI(ip1,jj-1) = DCHI(I,J) + CHI(im1,J)        
                 enddo
               ENDIF
@@ -363,7 +363,7 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                     PSI(ip1,J-1) = DPSI(I,J) + PSI(im1,2)
+                     PSI(i,J-1) = DPSI(I-1,J) + PSI(i-2,2)
                      CHI(ip1,J-1) = DCHI(I,J) + CHI(im1,2)   
                 enddo
               ELSE                                   !pole point,compute at jm-1
@@ -371,7 +371,7 @@
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                     PSI(ip1,jj-1) = DPSI(I,J) + PSI(im1,J)
+                     PSI(i,jj-1) = DPSI(I-1,J) + PSI(i-2,J)
                      CHI(ip1,jj-1) = DCHI(I,J) + CHI(im1,J)          
                 enddo
               ENDIF
@@ -380,7 +380,7 @@
             DO I=ISTA,IEND
               ip1 = ie(i)
               im1 = iw(i)
-                     PSI(ip1,J-1) = DPSI(I,J) + PSI(im1,J+1)
+                     PSI(i,J-1) = DPSI(I-1,J) + PSI(i-2,J+1)
                      CHI(ip1,J-1) = DCHI(I,J) + CHI(im1,J+1)          
             ENDDO
           END IF
