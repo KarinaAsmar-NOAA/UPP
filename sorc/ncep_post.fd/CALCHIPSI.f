@@ -293,97 +293,12 @@
           endif
         END DO                               ! end of J loop
 
-!$omp  parallel do private(i,j,ip1,im1,ii,jj)
         DO J=JSTA,JEND
-          IF(J == 1) then                            ! Near North or South pole
-            if(gdlat(ista,j) > 0.) then ! count from north to south
-              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
-                DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                  ii = i + imb2
-                  if (ii > im) ii = ii - im
-                     PSI(ip1,1) = DPSI(I,J) + PSI(im1,J+1)
-                     CHI(ip1,1) = DCHI(I,J) + CHI(im1,J+1)
-                enddo
-              ELSE                                   !pole point, compute at j=2
-                jj = 2
-                DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                     PSI(ip1,J) = DPSI(I,J) + PSI(im1,jj+1)
-                     CHI(ip1,J) = DCHI(I,J) + CHI(im1,jj+1)
-                enddo
-              ENDIF
-            else
-              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
-                DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                  ii = i + imb2
-                  if (ii > im) ii = ii - im
-                     PSI(ip1,1) = DPSI(I,J) + PSI(im1,J+1)
-                     CHI(ip1,1) = DCHI(I,J) + CHI(im1,J+1)        
-                enddo
-              ELSE                                   !pole point, compute at j=2
-                jj = 2
-                DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                     PSI(ip1,J) = DPSI(I,J) + PSI(im1,jj+1)
-                     CHI(ip1,J) = DCHI(I,J) + CHI(im1,jj+1)           
-                enddo
-              ENDIF
-            endif
-          ELSE IF(J == JM) THEN                      ! Near North or South Pole
-            if(gdlat(ista,j) < 0.) then ! count from north to south
-              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
-                DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                  ii = i + imb2
-                  if (ii > im) ii = ii - im
-                     PSI(ip1,J-1) = DPSI(I,J) + PSI(im1,2)
-                     CHI(ip1,J-1) = DCHI(I,J) + CHI(im1,2)       
-                enddo
-              ELSE                                   !pole point,compute at jm-1
-                jj = jm-1
-                DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                     PSI(ip1,jj-1) = DPSI(I,J) + PSI(im1,J)
-                     CHI(ip1,jj-1) = DCHI(I,J) + CHI(im1,J)        
-                enddo
-              ENDIF
-            else
-              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
-                DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                  ii = i + imb2
-                  if (ii > im) ii = ii - im
-                     PSI(ip1,J-1) = DPSI(I,J) + PSI(im1,2)
-                     CHI(ip1,J-1) = DCHI(I,J) + CHI(im1,2)   
-                enddo
-              ELSE                                   !pole point,compute at jm-1
-                jj = jm-1
-                DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                     PSI(ip1,jj-1) = DPSI(I,J) + PSI(im1,J)
-                     CHI(ip1,jj-1) = DCHI(I,J) + CHI(im1,J)          
-                enddo
-              ENDIF
-            endif
-          ELSE
-            DO I=ISTA,IEND
-              ip1 = ie(i)
-              im1 = iw(i)
-                     PSI(ip1,J-1) = DPSI(I,J) + PSI(im1,J+1)
-                     CHI(ip1,J-1) = DCHI(I,J) + CHI(im1,J+1)          
-            ENDDO
-          END IF
-        END DO                               ! end of J loop
+          DO I=ISTA,IEND
+            PSI(I,J) = DPSI(I,J)
+            CHI(I,J) = DCHI(I,J)
+          ENDDO
+        ENDDO
 
 ! GFS use lon avg as one scaler value for pole point
         call exch(psi(ista_2l:iend_2u,jsta_2l:jend_2u))
