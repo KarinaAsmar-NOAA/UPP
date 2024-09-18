@@ -384,6 +384,31 @@
                      CHI(ip1,J-1) = DCHI(I,J) + CHI(im1,J+1)          
             ENDDO
           END IF
+            if (npass > 0) then
+!$omp  parallel do private(i,j,tx1,tx2,tx3,tx4)
+            do i=ista,iend
+              tx1(i) = psi(i,j)
+              tx3(i) = chi(i,j)
+            enddo
+            do nn=1,npass
+              do i=ista,iend
+                tx2(i+1) = tx1(i)
+                tx4(i+1) = tx3(i)
+              enddo
+              tx2(1)    = tx2(im+1)
+              tx2(im+2) = tx2(2)
+              tx4(1)    = tx4(im+1)
+              tx4(im+2) = tx4(2)
+              do i=2,im+1
+                tx1(i-1) = 0.25 * (tx2(i-1) + tx2(i+1)) + 0.5*tx2(i)
+                tx3(i-1) = 0.25 * (tx4(i-1) + tx4(i+1)) + 0.5*tx4(i)
+              enddo
+            enddo
+            do i=ista,iend
+              psi(i,j) = tx1(i)
+              chi(i,j) = tx4(i)
+            enddo
+          endif
         END DO                               ! end of J loop
 
 
