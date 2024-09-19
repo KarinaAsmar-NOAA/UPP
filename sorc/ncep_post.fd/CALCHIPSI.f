@@ -291,9 +291,10 @@
           endif
         END DO                               ! end of J loop
 
-        !psi(1,1) = 0
-        !chi(1,1) = 0
-
+        psi(1,1) = 0.0
+        chi(1,1) = 0.0
+        psi(im,jm) = 0.0
+        psi(im,jm) = 0.0
 !$omp  parallel do private(i,j,ip1,im1,ii,jj)
         DO J=JSTA,JEND
           IF(J == 1) then                            ! Near North or South pole
