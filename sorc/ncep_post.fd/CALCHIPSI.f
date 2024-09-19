@@ -307,6 +307,7 @@
                   if (ii > im) ii = ii - im
                      PSI(II,J) = DPSI(I,J) + PSI(im1,J+1)
                      CHI(II,J) = DCHI(I,J) + CHI(im1,J+1)
+                     if (me==0) print*,'1 ..', psi(im1,J+1)
                 enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
@@ -315,6 +316,7 @@
                   im1 = iw(i)
                      PSI(ip1,J) = DPSI(I,J) + PSI(im1,jj+1)
                      CHI(ip1,J) = DCHI(I,J) + CHI(im1,jj+1)
+                  if (me==0) print*,'2 ..', psi(im1,jj+1)
                 enddo
               ENDIF
             else
@@ -326,6 +328,7 @@
                   if (ii > im) ii = ii - im
                      PSI(II,J) = -1.0*DPSI(I,J) - PSI(im1,J+1)
                      CHI(II,J) = -1.0*DCHI(I,J) - CHI(im1,J+1)        
+                     if (me==0) print*,'3 ..', psi(im1,J+1)                
                 enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
@@ -333,7 +336,8 @@
                   ip1 = ie(i)
                   im1 = iw(i)
                      PSI(ip1,J) = -1.0*DPSI(I,J) - PSI(im1,jj+1)
-                     CHI(ip1,J) = -1.0*DCHI(I,J) - CHI(im1,jj+1)           
+                     CHI(ip1,J) = -1.0*DCHI(I,J) - CHI(im1,jj+1) 
+                     if (me==0) print*,'4 ..', psi(im1,jj+1)                     
                 enddo
               ENDIF
             endif
@@ -346,7 +350,8 @@
                   ii = i + imb2
                   if (ii > im) ii = ii - im
                      PSI(ip1,J-1) = DPSI(I,J) + PSI(II,J)
-                     CHI(ip1,J-1) = DCHI(I,J) + CHI(II,J)       
+                     CHI(ip1,J-1) = DCHI(I,J) + CHI(II,J) 
+                     if (me==0) print*,'5 ..', psi(II,J)                     
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
@@ -354,7 +359,8 @@
                   ip1 = ie(i)
                   im1 = iw(i)
                      PSI(ip1,jj-1) = DPSI(I,J) + PSI(im1,J)
-                     CHI(ip1,jj-1) = DCHI(I,J) + CHI(im1,J)        
+                     CHI(ip1,jj-1) = DCHI(I,J) + CHI(im1,J)  
+                     if (me==0) print*,'6..', psi(im1,J)                     
                 enddo
               ENDIF
             else
@@ -365,7 +371,8 @@
                   ii = i + imb2
                   if (ii > im) ii = ii - im
                      PSI(II,J-1) = -1.0*DPSI(I,J) - PSI(im1,J)
-                     CHI(II,J-1) = -1.0*DCHI(I,J) - CHI(im1,J)   
+                     CHI(II,J-1) = -1.0*DCHI(I,J) - CHI(im1,J) 
+                     if (me==0) print*,'7 ..', psi(im1,J)                     
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
@@ -373,7 +380,8 @@
                   ip1 = ie(i)
                   im1 = iw(i)
                      PSI(ip1,jj-1) = -1.0*DPSI(I,J) - PSI(im1,J)
-                     CHI(ip1,jj-1) = -1.0*DCHI(I,J) - CHI(im1,J)          
+                     CHI(ip1,jj-1) = -1.0*DCHI(I,J) - CHI(im1,J) 
+                     if (me==0) print*,'8 ..', psi(im1,J)
                 enddo
               ENDIF
             endif
@@ -382,7 +390,8 @@
               ip1 = ie(i)
               im1 = iw(i)
                      PSI(ip1,J-1) = DPSI(I,J) + PSI(im1,J+1)
-                     CHI(ip1,J-1) = DCHI(I,J) + CHI(im1,J+1)          
+                     CHI(ip1,J-1) = DCHI(I,J) + CHI(im1,J+1) 
+                     if (me==0) print*,'9 ..', psi(im1,J+1)                     
             ENDDO
           END IF
             if (npass > 0) then
