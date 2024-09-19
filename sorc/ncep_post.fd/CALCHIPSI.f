@@ -178,8 +178,8 @@
                   im1 = iw(i)
                   if(VP(im1,jj+1)==SPVAL .or. VP(ip1,J)==SPVAL .or. &
                      UP(im1,jj+1)==SPVAL .or. UP(ip1,J)==SPVAL) cycle
-                  DPSI(I,J) = (0.5*((UP(im1,jj+1)+UP(ip1,J)))*wrk3(i,j) - 0.5*(VP(ip1,J)+VP(im1,jj+1))*wrk2(i,j))*wrk1(i,j)
-                  DCHI(I,J) = (-0.5*((UP(im1,jj+1)+UP(ip1,J)))*wrk2(i,j) - 0.5*(VP(ip1,J)+VP(im1,jj+1))*wrk3(i,j))*wrk1(i,j)
+                  DPSI(I,J) = (0.5*((UP(im1,jj+1)+UP(ip1,J)))*wrk3(i,jj) - 0.5*(VP(ip1,J)+VP(im1,jj+1))*wrk2(i,jj))*wrk1(i,jj)
+                  DCHI(I,J) = (-0.5*((UP(im1,jj+1)+UP(ip1,J)))*wrk2(i,jj) - 0.5*(VP(ip1,J)+VP(im1,jj+1))*wrk3(i,jj))*wrk1(i,jj)
                 enddo
               ENDIF
             else
@@ -201,8 +201,8 @@
                   im1 = iw(i)
                   if(VP(im1,jj+1)==SPVAL .or. VP(ip1,J)==SPVAL .or. &
                      UP(im1,jj+1)==SPVAL .or. UP(ip1,J)==SPVAL) cycle
-                  DPSI(I,J) = (0.5*((UP(im1,jj+1)+UP(ip1,J)))*wrk3(i,j) - 0.5*(VP(ip1,J)+VP(im1,jj+1))*wrk2(i,j))*wrk1(i,j)
-                  DCHI(I,J) = (-0.5*((UP(im1,jj+1)+UP(ip1,J)))*wrk2(i,j) - 0.5*(VP(ip1,J)+VP(im1,jj+1))*wrk3(i,j))*wrk1(i,j)                
+                  DPSI(I,J) = (0.5*((UP(im1,jj+1)+UP(ip1,J)))*wrk3(i,jj) - 0.5*(VP(ip1,J)+VP(im1,jj+1))*wrk2(i,jj))*wrk1(i,jj)
+                  DCHI(I,J) = (-0.5*((UP(im1,jj+1)+UP(ip1,J)))*wrk2(i,jj) - 0.5*(VP(ip1,J)+VP(im1,jj+1))*wrk3(i,jj))*wrk1(i,jj)                
                 enddo
               ENDIF
             endif
@@ -226,8 +226,8 @@
                   im1 = iw(i)
                   if(VP(im1,J)==SPVAL .or. VP(ip1,jj-1)==SPVAL .or. &
                      UP(im1,J)==SPVAL .or. UP(ip1,jj-1)==SPVAL) cycle
-                  DPSI(I,J) = (0.5*((UP(im1,J)+UP(ip1,jj-1)))*wrk3(i,j) - 0.5*(VP(ip1,jj-1)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
-                  DCHI(I,J) = (-0.5*((UP(im1,J)+UP(ip1,jj-1)))*wrk2(i,j) - 0.5*(VP(ip1,jj-1)+VP(im1,J))*wrk3(i,j))*wrk1(i,j)          
+                  DPSI(I,J) = (0.5*((UP(im1,J)+UP(ip1,jj-1)))*wrk3(i,jj) - 0.5*(VP(ip1,jj-1)+VP(im1,J))*wrk2(i,jj))*wrk1(i,jj)
+                  DCHI(I,J) = (-0.5*((UP(im1,J)+UP(ip1,jj-1)))*wrk2(i,jj) - 0.5*(VP(ip1,jj-1)+VP(im1,J))*wrk3(i,jj))*wrk1(i,jj)          
                 enddo
               ENDIF
             else
@@ -249,8 +249,8 @@
                   im1 = iw(i)
                   if(VP(im1,J)==SPVAL .or. VP(ip1,jj-1)==SPVAL .or. &
                      UP(im1,J)==SPVAL .or. UP(ip1,jj-1)==SPVAL) cycle
-                  DPSI(I,J) = (0.5*((UP(im1,J)+UP(ip1,jj-1)))*wrk3(i,j) - 0.5*(VP(ip1,jj-1)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
-                  DCHI(I,J) = (-0.5*((UP(im1,J)+UP(ip1,jj-1)))*wrk2(i,j) - 0.5*(VP(ip1,jj-1)+VP(im1,J))*wrk3(i,j))*wrk1(i,j)                
+                  DPSI(I,J) = (0.5*((UP(im1,J)+UP(ip1,jj-1)))*wrk3(i,jj) - 0.5*(VP(ip1,jj-1)+VP(im1,J))*wrk2(i,jj))*wrk1(i,jj)
+                  DCHI(I,J) = (-0.5*((UP(im1,J)+UP(ip1,jj-1)))*wrk2(i,jj) - 0.5*(VP(ip1,jj-1)+VP(im1,J))*wrk3(i,jj))*wrk1(i,jj)                
                 enddo
               ENDIF
             endif
