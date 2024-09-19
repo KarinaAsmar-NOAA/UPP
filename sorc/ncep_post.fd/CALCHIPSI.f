@@ -291,8 +291,8 @@
           endif
         END DO                               ! end of J loop
 
-        psi(1,1) = 0
-        chi(1,1) = 0
+        !psi(1,1) = 0
+        !chi(1,1) = 0
 
 !$omp  parallel do private(i,j,ip1,im1,ii,jj)
         DO J=JSTA,JEND
@@ -304,8 +304,8 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                     PSI(ip1,1) = DPSI(I,J) + PSI(im1,J+1)
-                     CHI(ip1,1) = DCHI(I,J) + CHI(im1,J+1)
+                     PSI(ip1,J) = DPSI(I,J) + PSI(im1,J+1)
+                     CHI(ip1,J) = DCHI(I,J) + CHI(im1,J+1)
                 enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
@@ -323,8 +323,8 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                     PSI(ip1,1) = DPSI(I,J) + PSI(im1,J+1)
-                     CHI(ip1,1) = DCHI(I,J) + CHI(im1,J+1)        
+                     PSI(ip1,J) = DPSI(I,J) + PSI(im1,J+1)
+                     CHI(ip1,J) = DCHI(I,J) + CHI(im1,J+1)        
                 enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
@@ -344,8 +344,8 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                     PSI(ip1,J-1) = DPSI(I,J) + PSI(im1,2)
-                     CHI(ip1,J-1) = DCHI(I,J) + CHI(im1,2)       
+                     PSI(ip1,J-1) = DPSI(I,J) + PSI(im1,J)
+                     CHI(ip1,J-1) = DCHI(I,J) + CHI(im1,J)       
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
@@ -363,8 +363,8 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                     PSI(ip1,J-1) = DPSI(I,J) + PSI(im1,2)
-                     CHI(ip1,J-1) = DCHI(I,J) + CHI(im1,2)   
+                     PSI(ip1,J-1) = DPSI(I,J) + PSI(im1,J)
+                     CHI(ip1,J-1) = DCHI(I,J) + CHI(im1,J)   
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
