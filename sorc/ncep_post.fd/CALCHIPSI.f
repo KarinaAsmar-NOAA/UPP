@@ -304,8 +304,8 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                     PSI(ip1,J) = DPSI(I,J) + PSI(im1,J+1)
-                     CHI(ip1,J) = DCHI(I,J) + CHI(im1,J+1)
+                     PSI(II,J) = DPSI(I,J) + PSI(im1,J+1)
+                     CHI(II,J) = DCHI(I,J) + CHI(im1,J+1)
                 enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
@@ -323,16 +323,16 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                     PSI(ip1,J) = DPSI(I,J) + PSI(im1,J+1)
-                     CHI(ip1,J) = DCHI(I,J) + CHI(im1,J+1)        
+                     PSI(II,J) = -1.0*DPSI(I,J) - PSI(im1,J+1)
+                     CHI(II,J) = -1.0*DCHI(I,J) - CHI(im1,J+1)        
                 enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                     PSI(ip1,J) = DPSI(I,J) + PSI(im1,jj+1)
-                     CHI(ip1,J) = DCHI(I,J) + CHI(im1,jj+1)           
+                     PSI(ip1,J) = -1.0*DPSI(I,J) - PSI(im1,jj+1)
+                     CHI(ip1,J) = -1.0*DCHI(I,J) - CHI(im1,jj+1)           
                 enddo
               ENDIF
             endif
@@ -344,8 +344,8 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                     PSI(ip1,J-1) = DPSI(I,J) + PSI(im1,J)
-                     CHI(ip1,J-1) = DCHI(I,J) + CHI(im1,J)       
+                     PSI(ip1,J-1) = DPSI(I,J) + PSI(II,J)
+                     CHI(ip1,J-1) = DCHI(I,J) + CHI(II,J)       
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
@@ -363,16 +363,16 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                     PSI(ip1,J-1) = DPSI(I,J) + PSI(im1,J)
-                     CHI(ip1,J-1) = DCHI(I,J) + CHI(im1,J)   
+                     PSI(II,J-1) = -1.0*DPSI(I,J) - PSI(im1,J)
+                     CHI(II,J-1) = -1.0*DCHI(I,J) - CHI(im1,J)   
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                     PSI(ip1,jj-1) = DPSI(I,J) + PSI(im1,J)
-                     CHI(ip1,jj-1) = DCHI(I,J) + CHI(im1,J)          
+                     PSI(ip1,jj-1) = -1.0*DPSI(I,J) - PSI(im1,J)
+                     CHI(ip1,jj-1) = -1.0*DCHI(I,J) - CHI(im1,J)          
                 enddo
               ENDIF
             endif
