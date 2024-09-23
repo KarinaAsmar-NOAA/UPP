@@ -77,7 +77,7 @@
 !$omp  parallel do private(i,j)
         DO J=1,JM
           DO I=1,IM
-	          IN_UWIND(I,J,L)=COL_UWIND(I,J)
+	    IN_UWIND(I,J,L)=COL_UWIND(I,J)
       	    IN_VWIND(I,J,L)=COL_VWIND(I,J)
           ENDDO
         ENDDO
@@ -90,11 +90,11 @@
       DO L=1,LSM
 !$omp  parallel do private(i,j)
         DO J=1,JM
-	        DO I=1,IM
-     	      CHI(I,J,L)= SPVAL
-	          PSI(I,J,L)= SPVAL
-     	   ENDDO
-	      ENDDO
+	  DO I=1,IM
+     	    CHI(I,J,L)= SPVAL
+	    PSI(I,J,L)= SPVAL
+     	  ENDDO
+	ENDDO
       ENDDO
 
       IF (ME==0) THEN 
@@ -116,19 +116,12 @@
 	      ! COMPUTE CHI/PSI FROM WIND VECTORS IN SPECTRAL SPACE
  	      CALL SPTRUNV(0,JCAP,IDRT,IM,						                   &
   		             JM,IDRT,IM,JM,LSM,						                   &
-	                         0,0,0,0,							                   &
-	                         0,0,0,0,							                   &
-	                   IN_UWIND(1,1,1),IN_VWIND(1,1,1),				       &
-	      	           .FALSE.,OUT_UWIND(1,1,1),OUT_VWIND(1,1,1),		 &
+	                         0,0,0,0,							           &
+	                         0,0,0,0,							           &
+	                   IN_UWIND(1,1,1),IN_VWIND(1,1,1),				       		   &
+	      	           .FALSE.,OUT_UWIND(1,1,1),OUT_VWIND(1,1,1),		 			   &
 	                   .FALSE.,DIV,ZO,						                   &
 	                   .TRUE.,CHI_OUT(1,1,1),PSI_OUT(1,1,1))
-
-	      DEALLOCATE(IN_UWIND)
-       	DEALLOCATE(IN_VWIND)
-      	DEALLOCATE(OUT_UWIND)
-	      DEALLOCATE(OUT_VWIND)
-        DEALLOCATE(DIV)
-	      DEALLOCATE(ZO)
 
       ENDIF                             ! END OF ME=0 BLOCK
 
@@ -139,12 +132,12 @@
       ALLOCATE(PSI1(im*jm))
       ALLOCATE(PSISUB(icnt(me)))
 
+!!$omp  parallel do private(i,j,l)
       DO L=1,LSM
 
          IF (ME==0) THEN
            k=0
            DO m=0,num_procs-1
-!$omp  parallel do private(i,j)
            DO J=jsxa(m),jexa(m)
            DO I=isxa(m),iexa(m)
               k=k+1
@@ -162,7 +155,6 @@
 
  
          k=0
-!$omp  parallel do private(i,j)
          DO J=JSTA,JEND
          DO I=ISTA,IEND
             k=k+1
@@ -177,9 +169,14 @@
       DEALLOCATE(CHISUB)
       DEALLOCATE(PSI1)
       DEALLOCATE(PSISUB)
+      DEALLOCATE(IN_UWIND)
+      DEALLOCATE(IN_VWIND)
+      DEALLOCATE(OUT_UWIND)
+      DEALLOCATE(OUT_VWIND)
+      DEALLOCATE(DIV)
+      DEALLOCATE(ZO)
       IF(ALLOCATED(CHI_OUT)) DEALLOCATE(CHI_OUT)
       IF(ALLOCATED(PSI_OUT)) DEALLOCATE(PSI_OUT)
-!
 !     
 !     END OF ROUTINE.
       RETURN
