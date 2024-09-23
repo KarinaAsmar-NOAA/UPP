@@ -295,6 +295,9 @@
         chi(1,1) = 0.0
         psi(im,jm) = 0.0
         psi(im,jm) = 0.0
+
+        call exch(dpsi(ista_2l:iend_2u,jsta_2l:jend_2u))
+        call exch(dchi(ista_2l:iend_2u,jsta_2l:jend_2u))
 !$omp  parallel do private(i,j,ip1,im1,ii,jj)
         DO J=JSTA,JEND
           IF(J == 1) then                            ! Near North or South pole
