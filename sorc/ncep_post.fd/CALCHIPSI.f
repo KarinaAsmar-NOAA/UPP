@@ -32,7 +32,7 @@
 !> @param[out] CHI real velocity potential (m^2/s) at P-point.
 !> @param[out] PSI real streamfunction (m^2/s) at P-point.
 !-----------------------------------------------------------------------
-      SUBROUTINE CALCHIPSI(UP,VP,CHI,PSI)
+      SUBROUTINE CALDELTAPSICHI(UP,VP,CHI,PSI)
 !
 !     INCLUDE ETA GRID DIMENSIONS.  SET/DERIVE OTHER PARAMETERS.
       use masks,        only: gdlat, gdlon
@@ -59,7 +59,7 @@
       real    tx1(im+2), tx2(im+2), tx3(im+2), tx4(im+2)
 !     
 !***************************************************************************
-!     START CALCHIPSI HERE.
+!     START CALDELTAPSICHI HERE.
 !     
 !     LOOP TO COMPUTE STREAMFUNCTION AND VELOCITY POTENTIAL FROM WINDS.
    
