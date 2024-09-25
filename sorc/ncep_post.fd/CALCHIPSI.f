@@ -32,7 +32,7 @@
 !> @param[out] CHI real velocity potential (m^2/s) at P-point.
 !> @param[out] PSI real streamfunction (m^2/s) at P-point.
 
-      SUBROUTINE CALCHIPSI(UP,VP,CHI,PSI)
+      SUBROUTINE CALCHIPSI(USPL,USPL,CHI,PSI)
 !
 !     INCLUDE ETA GRID DIMENSIONS.  SET/DERIVE OTHER PARAMETERS.
 !     
@@ -47,7 +47,7 @@
 !     DECLARE VARIABLES.
 !     
       integer :: I, J, L, IERR
-      REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(in)    :: UP, VP
+      REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(in)    :: USPL, USPL
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(out) :: CHI, PSI
 !
       integer k, m
@@ -65,7 +65,7 @@
       ALLOCATE(CHI_OUT(IM,JM))
       ALLOCATE(PSI_OUT(IM,JM))
 
-      CALL CALDELTACHISPI(UP,VP,DCHI,DPSI)
+      CALL CALDELTACHISPI(USPL,VSPL,DCHI,DPSI)
       
       CALL COLLECT_ALL(DCHI,DCHI_FULL)
       CALL COLLECT_ALL(DPSI,DPSI_FULL)
