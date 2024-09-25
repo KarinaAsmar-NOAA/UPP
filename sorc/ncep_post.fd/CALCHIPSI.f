@@ -67,11 +67,13 @@
       ALLOCATE(PSI_OUT(IM,JM))
 
       CALL CALDELTACHISPI(USPL,VSPL,DCHI,DPSI)
+
+      print*,'psi after delta',me, DPSI(ISTA:IEND,JSTA:JEND)
       
       CALL COLLECT_ALL(DCHI(ISTA:IEND,JSTA:JEND),DCHI_FULL)
       CALL COLLECT_ALL(DPSI(ISTA:IEND,JSTA:JEND),DPSI_FULL)
 
-      print*,'collect',dpsi_full(im/2,jm/2)
+      print*,'collect',me, dpsi_full(im/2,jm/2)
        
       IF (ME==0) THEN 
 
@@ -90,7 +92,7 @@
 	      ELSE  ! J NOT 1, I NOT 1 OR IM
 		PSI_OUT(I,J) = SUM(DPSI_FULL(2:I,2:J),DPSI_FULL(2:I,2:J)/=SPVAL)
   		CHI_OUT(I,J) = SUM(DCHI_FULL(2:I,2:J),DPSI_FULL(2:I,2:J)/=SPVAL)
-    		print*,'values',i,j,psi_out
+    		print*,'values',i,j,psi_out(i,j)
 	      ENDIF
      	    ENDIF
           ENDDO
@@ -98,7 +100,7 @@
 
       ENDIF                             ! END OF ME=0 BLOCK
 
-      CALL MPI_BARRIER(MPI_COMM_COMP, IERR)
+      ! CALL MPI_BARRIER(MPI_COMM_COMP, IERR)
 
       ALLOCATE(CHI1(im*jm))
       ALLOCATE(CHISUB(icnt(me)))
