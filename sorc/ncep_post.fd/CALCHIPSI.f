@@ -122,8 +122,8 @@
        DO J=JSTA,JEND
        DO I=ISTA,IEND
          k=k+1
-           CHI(I,J,L)=CHISUB(k)
-           PSI(I,J,L)=PSISUB(k)
+           CHI(I,J)=CHISUB(k)
+           PSI(I,J)=PSISUB(k)
        ENDDO
        ENDDO
   
