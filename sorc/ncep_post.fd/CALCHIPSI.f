@@ -96,15 +96,15 @@
      	  ENDDO
 	ENDDO
       ENDDO
-      
-      ALLOCATE(OUT_UWIND(IM,JM,LSM))
-      ALLOCATE(OUT_VWIND(IM,JM,LSM))
-      ALLOCATE(DIV(IM,JM,LSM))
-      ALLOCATE(ZO(IM,JM,LSM))
-      ALLOCATE(CHI_OUT(IM,JM,LSM))
-      ALLOCATE(PSI_OUT(IM,JM,LSM))
        
       IF (ME==0) THEN 
+      
+            ALLOCATE(OUT_UWIND(IM,JM,LSM))
+      	    ALLOCATE(OUT_VWIND(IM,JM,LSM))
+      	    ALLOCATE(DIV(IM,JM,LSM))
+      	    ALLOCATE(ZO(IM,JM,LSM))
+      	    ALLOCATE(CHI_OUT(IM,JM,LSM))
+      	    ALLOCATE(PSI_OUT(IM,JM,LSM))
       
         ! SET MAX WAVELENGTH FOR SPECTRAL TRUNCATION
 	      IF(IDRT == 0)THEN
@@ -147,6 +147,14 @@
            ENDDO
            ENDDO
          ENDIF
+
+  	print*,'before scatterv'
+   	print*,'dimensions',im,jm,lsm
+    	print*,'icnt',icnt
+     	print*,'idsp',idsp
+        print*,'chi1',shape(chi1)
+	print*,'chisub',shape(chisub)
+ 	print*,'icnt(me)',icnt(me)
       
          CALL MPI_SCATTERV(CHI1,icnt,idsp,MPI_REAL, &
                            CHISUB,icnt(me),MPI_REAL,0,MPI_COMM_WORLD,IERR)
