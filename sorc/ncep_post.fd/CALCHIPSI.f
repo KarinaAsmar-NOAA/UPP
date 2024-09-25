@@ -70,6 +70,8 @@
       
       CALL COLLECT_ALL(DCHI,DCHI_FULL)
       CALL COLLECT_ALL(DPSI,DPSI_FULL)
+
+      print*,'collect',dpsi_full(im/2,jm/2)
        
       IF (ME==0) THEN 
 
@@ -96,7 +98,7 @@
 
       ENDIF                             ! END OF ME=0 BLOCK
 
-      ! CALL MPI_BARRIER(MPI_COMM_COMP, IERR)
+      CALL MPI_BARRIER(MPI_COMM_COMP, IERR)
 
       ALLOCATE(CHI1(im*jm))
       ALLOCATE(CHISUB(icnt(me)))
