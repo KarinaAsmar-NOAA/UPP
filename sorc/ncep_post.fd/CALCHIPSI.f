@@ -47,8 +47,8 @@
 !     
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(in)    :: UP, VP
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(out) :: CHI, PSI
-      REAL, dimension(IM,2) :: GLATPOLES, COSLPOLES, UPOLES, VPOLES, PSIPOLES, CHIPOLES
-      REAL, dimension(IM,JSTA:JEND) :: COSLTEMP, PSITEMP, CHITEMP
+      REAL, dimension(IM,2) :: GLATPOLES, COSLPOLES, UPOLES, VPOLES, DPSIPOLES, DCHIPOLES
+      REAL, dimension(IM,JSTA:JEND) :: COSLTEMP, DPSITEMP, DCHITEMP
 !
       real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
       INTEGER, allocatable ::  IHE(:),IHW(:), IE(:),IW(:)
@@ -291,163 +291,29 @@
           endif
         END DO                               ! end of J loop
 
-        psi(1,1) = 0.0
-        chi(1,1) = 0.0
-        psi(im,jm) = 0.0
-        psi(im,jm) = 0.0
-
+! GFS use lon avg as one scaler value for pole point
         call exch(dpsi(ista_2l:iend_2u,jsta_2l:jend_2u))
         call exch(dchi(ista_2l:iend_2u,jsta_2l:jend_2u))
-!$omp  parallel do private(i,j,ip1,im1,ii,jj)
-        DO J=JSTA,JEND
-          IF(J == 1) then                            ! Near North or South pole
-            if(gdlat(ista,j) > 0.) then ! count from north to south
-              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
-                DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                  ii = i + imb2
-                  if (ii > im) ii = ii - im
-                     PSI(II,J) = DPSI(I,J) + PSI(im1,J+1)
-                     CHI(II,J) = DCHI(I,J) + CHI(im1,J+1)
-                     if (me==0) print*,'1 ..', psi(im1,J+1)
-                enddo
-              ELSE                                   !pole point, compute at j=2
-                jj = 2
-                DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                     PSI(ip1,J) = DPSI(I,J) + PSI(im1,jj+1)
-                     CHI(ip1,J) = DCHI(I,J) + CHI(im1,jj+1)
-                  if (me==0) print*,'2 ..', psi(im1,jj+1)
-                enddo
-              ENDIF
-            else
-              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
-                DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                  ii = i + imb2
-                  if (ii > im) ii = ii - im
-                     PSI(II,J) = -1.0*DPSI(I,J) - PSI(im1,J+1)
-                     CHI(II,J) = -1.0*DCHI(I,J) - CHI(im1,J+1)        
-                     if (me==0) print*,'3 ..', psi(im1,J+1)                
-                enddo
-              ELSE                                   !pole point, compute at j=2
-                jj = 2
-                DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                     PSI(ip1,J) = -1.0*DPSI(I,J) - PSI(im1,jj+1)
-                     CHI(ip1,J) = -1.0*DCHI(I,J) - CHI(im1,jj+1) 
-                     if (me==0) print*,'4 ..', psi(im1,jj+1)                     
-                enddo
-              ENDIF
-            endif
-          ELSE IF(J == JM) THEN                      ! Near North or South Pole
-            if(gdlat(ista,j) < 0.) then ! count from north to south
-              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
-                DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                  ii = i + imb2
-                  if (ii > im) ii = ii - im
-                     PSI(ip1,J-1) = DPSI(I,J) + PSI(II,J)
-                     CHI(ip1,J-1) = DCHI(I,J) + CHI(II,J) 
-                     if (me==0) print*,'5 ..', psi(II,J)                     
-                enddo
-              ELSE                                   !pole point,compute at jm-1
-                jj = jm-1
-                DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                     PSI(ip1,jj-1) = DPSI(I,J) + PSI(im1,J)
-                     CHI(ip1,jj-1) = DCHI(I,J) + CHI(im1,J)  
-                     if (me==0) print*,'6..', psi(im1,J)                     
-                enddo
-              ENDIF
-            else
-              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
-                DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                  ii = i + imb2
-                  if (ii > im) ii = ii - im
-                     PSI(II,J-1) = -1.0*DPSI(I,J) - PSI(im1,J)
-                     CHI(II,J-1) = -1.0*DCHI(I,J) - CHI(im1,J) 
-                     if (me==0) print*,'7 ..', psi(im1,J)                     
-                enddo
-              ELSE                                   !pole point,compute at jm-1
-                jj = jm-1
-                DO I=ISTA,IEND
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                     PSI(ip1,jj-1) = -1.0*DPSI(I,J) - PSI(im1,J)
-                     CHI(ip1,jj-1) = -1.0*DCHI(I,J) - CHI(im1,J) 
-                     if (me==0) print*,'8 ..', psi(im1,J)
-                enddo
-              ENDIF
-            endif
-          ELSE
-            DO I=ISTA,IEND
-              ip1 = ie(i)
-              im1 = iw(i)
-                     PSI(ip1,J-1) = DPSI(I,J) + PSI(im1,J+1)
-                     CHI(ip1,J-1) = DCHI(I,J) + CHI(im1,J+1) 
-                     if (me==0) print*,'9 ..', psi(im1,J+1)                     
-            ENDDO
-          END IF
-            if (npass > 0) then
-!$omp  parallel do private(i,j,tx1,tx2,tx3,tx4)
-            do i=ista,iend
-              tx1(i) = psi(i,j)
-              tx3(i) = chi(i,j)
-            enddo
-            do nn=1,npass
-              do i=ista,iend
-                tx2(i+1) = tx1(i)
-                tx4(i+1) = tx3(i)
-              enddo
-              tx2(1)    = tx2(im+1)
-              tx2(im+2) = tx2(2)
-              tx4(1)    = tx4(im+1)
-              tx4(im+2) = tx4(2)
-              do i=2,im+1
-                tx1(i-1) = 0.25 * (tx2(i-1) + tx2(i+1)) + 0.5*tx2(i)
-                tx3(i-1) = 0.25 * (tx4(i-1) + tx4(i+1)) + 0.5*tx4(i)
-              enddo
-            enddo
-            do i=ista,iend
-              psi(i,j) = tx1(i)
-              chi(i,j) = tx4(i)
-            enddo
-          endif
-        END DO                               ! end of J loop
-
-
-! GFS use lon avg as one scaler value for pole point
-        call exch(psi(ista_2l:iend_2u,jsta_2l:jend_2u))
-        call exch(chi(ista_2l:iend_2u,jsta_2l:jend_2u))
-        call fullpole(psi(ista_2l:iend_2u,jsta_2l:jend_2u),psipoles)     
-        call fullpole(chi(ista_2l:iend_2u,jsta_2l:jend_2u),chipoles)    
+        call fullpole(dpsi(ista_2l:iend_2u,jsta_2l:jend_2u),dpsipoles)     
+        call fullpole(dchi(ista_2l:iend_2u,jsta_2l:jend_2u),dchipoles)    
 
         cosltemp=spval
         if(jsta== 1) cosltemp(1:im, 1)=coslpoles(1:im,1)
         if(jend==jm) cosltemp(1:im,jm)=coslpoles(1:im,2)
-        psitemp=spval
-        if(jsta== 1) psitemp(1:im, 1)=psipoles(1:im,1)
-        if(jend==jm) psitemp(1:im,jm)=psipoles(1:im,2)
-        chitemp=spval
-        if(jsta== 1) chitemp(1:im, 1)=chipoles(1:im,1)
-        if(jend==jm) chitemp(1:im,jm)=chipoles(1:im,2)
+        dpsitemp=spval
+        if(jsta== 1) dpsitemp(1:im, 1)=dpsipoles(1:im,1)
+        if(jend==jm) dpsitemp(1:im,jm)=dpsipoles(1:im,2)
+        dchitemp=spval
+        if(jsta== 1) dchitemp(1:im, 1)=dchipoles(1:im,1)
+        if(jend==jm) dchitemp(1:im,jm)=dchipoles(1:im,2)
         
-        call poleavg(IM,JM,JSTA,JEND,SMALL,cosltemp(1,jsta),SPVAL,psitemp(1,jsta))
-        call poleavg(IM,JM,JSTA,JEND,SMALL,cosltemp(1,jsta),SPVAL,chitemp(1,jsta))
+        call poleavg(IM,JM,JSTA,JEND,SMALL,cosltemp(1,jsta),SPVAL,dpsitemp(1,jsta))
+        call poleavg(IM,JM,JSTA,JEND,SMALL,cosltemp(1,jsta),SPVAL,dchitemp(1,jsta))
 
-        if(jsta== 1) psi(ista:iend, 1)=psitemp(ista:iend, 1)
-        if(jend==jm) psi(ista:iend,jm)=psitemp(ista:iend,jm)
-        if(jsta== 1) chi(ista:iend, 1)=chitemp(ista:iend, 1)
-        if(jend==jm) chi(ista:iend,jm)=chitemp(ista:iend,jm)
+        if(jsta== 1) dpsi(ista:iend, 1)=dpsitemp(ista:iend, 1)
+        if(jend==jm) dpsi(ista:iend,jm)=dpsitemp(ista:iend,jm)
+        if(jsta== 1) dchi(ista:iend, 1)=dchitemp(ista:iend, 1)
+        if(jend==jm) dchi(ista:iend,jm)=dchitemp(ista:iend,jm)
     
         deallocate (wrk1, wrk2, wrk3, cosl)
 !     
