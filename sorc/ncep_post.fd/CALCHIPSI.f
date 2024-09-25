@@ -68,12 +68,12 @@
 
       CALL CALDELTACHISPI(USPL,VSPL,DCHI,DPSI)
 
-      print*,'psi after delta',me, DPSI(ISTA:IEND,JSTA:JEND)
+!      print*,'psi after delta',me, DPSI(ISTA:IEND,JSTA:JEND)
       
       CALL COLLECT_ALL(DCHI(ISTA:IEND,JSTA:JEND),DCHI_FULL)
       CALL COLLECT_ALL(DPSI(ISTA:IEND,JSTA:JEND),DPSI_FULL)
 
-      print*,'collect',me, dpsi_full(im/2,jm/2)
+ !     print*,'collect',me, dpsi_full(im/2,jm/2)
        
       IF (ME==0) THEN 
 
