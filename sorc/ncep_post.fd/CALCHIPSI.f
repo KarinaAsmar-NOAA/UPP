@@ -86,8 +86,9 @@
        	        PSI_OUT(I,J) = 0.0
 	        CHI_OUT(I,J) = 0.0
 	      ELSE  ! J NOT 1, I NOT 1 OR IM
-		PSI_OUT(I,J) = SUM(DPSI_FULL(2:I,2:J))
-  		CHI_OUT(I,J) = SUM(DCHI_FULL(2:I,2:J))
+		PSI_OUT(I,J) = SUM(DPSI_FULL(2:I,2:J),DPSI_FULL(2:I,2:J)/=SPVAL)
+  		CHI_OUT(I,J) = SUM(DCHI_FULL(2:I,2:J),DPSI_FULL(2:I,2:J)/=SPVAL)
+    		print*,'values',i,j,psi_out
 	      ENDIF
      	    ENDIF
           ENDDO
