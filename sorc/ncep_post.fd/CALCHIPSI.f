@@ -31,8 +31,120 @@
 !> @param[in] VP real V-wind component (m/s) at P-point.
 !> @param[out] CHI real velocity potential (m^2/s) at P-point.
 !> @param[out] PSI real streamfunction (m^2/s) at P-point.
+
+      SUBROUTINE CALCHIPSI(UP,VP,CHI,PSI)
+!
+!     INCLUDE ETA GRID DIMENSIONS.  SET/DERIVE OTHER PARAMETERS.
+!     
+      use ctlblk_mod, only: ISTA, IEND, JSTA, JEND, IM, JM, LSM, ME, SPVAL, MPI_COMM_COMP,&
+                            num_procs, icnt, idsp, isxa, iexa, jsxa, jexa
+!
+!- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      implicit none
+
+      include 'mpif.h'
+!
+!     DECLARE VARIABLES.
+!     
+      integer :: I, J, L, IERR
+      REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(in)    :: UP, VP
+      REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(out) :: CHI, PSI
+!
+      integer k, m
+      REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u) :: DCHI, DPSI
+      real, allocatable :: CHI1(:),CHISUB(:),PSI1(:),PSISUB(:),DCHI_FULL(:,:),DPSI_FULL(:,:),      &
+                              CHI_OUT(:,:),PSI_OUT(:,:)
+!     
+!***************************************************************************
+!     START CALCHIPSI HERE.
+!    
+!     COLLECT ALL DELTA PSI/CHI VALUES FOR ENTIRE IM,JM DOMAIN  
+
+      ALLOCATE(DCHI_FULL(IM,JM))
+      ALLOCATE(DPSI_FULL(IM,JM))
+      ALLOCATE(CHI_OUT(IM,JM))
+      ALLOCATE(PSI_OUT(IM,JM))
+
+      CALL CALDELTACHISPI(UP,VP,DCHI,DPSI)
+      
+      CALL COLLECT_ALL(DCHI,DCHI_FULL)
+      CALL COLLECT_ALL(DPSI,DPSI_FULL)
+
+! FILL CHI/PSI VALUES
+      DO J=JSTA,JEND
+	  DO I=ISTA,IEND
+     	    CHI(I,J)= SPVAL
+	    PSI(I,J)= SPVAL
+     	  ENDDO
+      ENDDO
+       
+      IF (ME==0) THEN 
+
+! INTEGRATION WITH PSI/CHI ZERO AT J=1, I=1, I=IM
+      
+        ****** THIS IS A TEST ********
+        DO J=1,JM
+          DO I=1,IM
+            CHI_OUT(I,J) = 5
+            PSI_OUT(I,J) = 5
+          ENDDO
+        ENDDO
+
+      ENDIF                             ! END OF ME=0 BLOCK
+
+      ! CALL MPI_BARRIER(MPI_COMM_COMP, IERR)
+
+      ALLOCATE(CHI1(im*jm))
+      ALLOCATE(CHISUB(icnt(me)))
+      ALLOCATE(PSI1(im*jm))
+      ALLOCATE(PSISUB(icnt(me)))
+
+!!$omp  parallel do private(i,j,l)
+      DO L=1,LSM
+
+         IF (ME==0) THEN
+           k=0
+           DO m=0,num_procs-1
+           DO J=jsxa(m),jexa(m)
+           DO I=isxa(m),iexa(m)
+              k=k+1
+              CHI1(k)=CHI_OUT(I,J,L)
+              PSI1(k)=PSI_OUT(I,J,L)
+           ENDDO
+           ENDDO
+           ENDDO
+         ENDIF
+      
+         CALL MPI_SCATTERV(CHI1,icnt,idsp,MPI_REAL, &
+                           CHISUB,icnt(me),MPI_REAL,0,MPI_COMM_WORLD,IERR)
+         CALL MPI_SCATTERV(PSI1,icnt,idsp,MPI_REAL, &
+                           PSISUB,icnt(me),MPI_REAL,0,MPI_COMM_WORLD,IERR)
+
+ 
+         k=0
+         DO J=JSTA,JEND
+         DO I=ISTA,IEND
+            k=k+1
+            CHI(I,J,L)=CHISUB(k)
+            PSI(I,J,L)=PSISUB(k)
+         ENDDO
+         ENDDO
+
+      ENDDO
+  
+      IF(ALLOCATED(CHI1)) DEALLOCATE(CHI1)
+      IF(ALLOCATED(CHISUB)) DEALLOCATE(CHISUB)
+      IF(ALLOCATED(PSI1)) DEALLOCATE(PSI1)
+      IF(ALLOCATED(PSISUB)) DEALLOCATE(PSISUB)
+      IF(ALLOCATED(CHI_OUT)) DEALLOCATE(CHI_OUT)
+      IF(ALLOCATED(PSI_OUT)) DEALLOCATE(PSI_OUT)
+!     
+!     END OF ROUTINE.
+      RETURN
+      END
+
 !-----------------------------------------------------------------------
-      SUBROUTINE CALDELTAPSICHI(UP,VP,DCHI,DPSI)
+      SUBROUTINE CALDELTACHISPI(UP,VP,DCHI,DPSI)
 !
 !     INCLUDE ETA GRID DIMENSIONS.  SET/DERIVE OTHER PARAMETERS.
       use masks,        only: gdlat, gdlon
@@ -59,7 +171,7 @@
       real    tx1(im+2), tx2(im+2), tx3(im+2), tx4(im+2)
 !     
 !***************************************************************************
-!     START CALDELTAPSICHI HERE.
+!     START CALDELTACHIPSI HERE.
 !     
 !     LOOP TO COMPUTE STREAMFUNCTION AND VELOCITY POTENTIAL FROM WINDS.
    
