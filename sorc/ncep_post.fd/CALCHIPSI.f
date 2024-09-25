@@ -32,7 +32,7 @@
 !> @param[out] CHI real velocity potential (m^2/s) at P-point.
 !> @param[out] PSI real streamfunction (m^2/s) at P-point.
 !-----------------------------------------------------------------------
-      SUBROUTINE CALDELTAPSICHI(UP,VP,CHI,PSI)
+      SUBROUTINE CALDELTAPSICHI(UP,VP,DCHI,DPSI)
 !
 !     INCLUDE ETA GRID DIMENSIONS.  SET/DERIVE OTHER PARAMETERS.
       use masks,        only: gdlat, gdlon
@@ -46,7 +46,7 @@
 !     DECLARE VARIABLES.
 !     
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(in)    :: UP, VP
-      REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(out) :: CHI, PSI
+      REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(out) :: DCHI, DPSI
       REAL, dimension(IM,2) :: GLATPOLES, COSLPOLES, UPOLES, VPOLES, DPSIPOLES, DCHIPOLES
       REAL, dimension(IM,JSTA:JEND) :: COSLTEMP, DPSITEMP, DCHITEMP
 !
