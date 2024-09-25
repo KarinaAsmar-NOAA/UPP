@@ -73,10 +73,10 @@
 
 ! FILL CHI/PSI VALUES
       DO J=1,JM
-	  DO I=1,IM
-     	    CHI(I,J)= SPVAL
-	    PSI(I,J)= SPVAL
-     	  ENDDO
+	DO I=1,IM
+     	  CHI(I,J)= SPVAL
+	  PSI(I,J)= SPVAL
+     	ENDDO
       ENDDO
        
       IF (ME==0) THEN 
@@ -273,8 +273,8 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(ip1,1)==SPVAL .or. VP(im1,J+1)==SPVAL .or. &
-                     UP(ip1,1)==SPVAL .or. UP(im1,J+1)==SPVAL) cycle
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J+1)==SPVAL .or. &
+                     UP(ip1,J)==SPVAL .or. UP(im1,J+1)==SPVAL) cycle
                   DPSI(I,J) = (0.5*((UP(im1,J+1)+UP(ip1,J)))*wrk3(i,j) - 0.5*(VP(ip1,J)+VP(im1,J+1))*wrk2(i,j))*wrk1(i,j)
                   DCHI(I,J) = (-0.5*((UP(im1,J+1)+UP(ip1,J)))*wrk2(i,j) - 0.5*(VP(ip1,J)+VP(im1,J+1))*wrk3(i,j))*wrk1(i,j)
                 enddo
