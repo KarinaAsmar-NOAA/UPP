@@ -82,7 +82,7 @@
 
 ! INTEGRATION WITH PSI/CHI ZERO AT J=1, I=1, I=IM
       
-        ****** THIS IS A TEST ********
+!!!!    ****** THIS IS A TEST ********
         DO J=1,JM
           DO I=1,IM
             CHI_OUT(I,J) = 5
@@ -99,38 +99,33 @@
       ALLOCATE(PSI1(im*jm))
       ALLOCATE(PSISUB(icnt(me)))
 
-!!$omp  parallel do private(i,j,l)
-      DO L=1,LSM
-
-         IF (ME==0) THEN
-           k=0
-           DO m=0,num_procs-1
-           DO J=jsxa(m),jexa(m)
-           DO I=isxa(m),iexa(m)
-              k=k+1
-              CHI1(k)=CHI_OUT(I,J,L)
-              PSI1(k)=PSI_OUT(I,J,L)
-           ENDDO
-           ENDDO
-           ENDDO
-         ENDIF
+      IF (ME==0) THEN
+        k=0
+        DO m=0,num_procs-1
+        DO J=jsxa(m),jexa(m)
+        DO I=isxa(m),iexa(m)
+          k=k+1
+            CHI1(k)=CHI_OUT(I,J)
+            PSI1(k)=PSI_OUT(I,J)
+        ENDDO
+        ENDDO
+	ENDDO
+      ENDIF
       
-         CALL MPI_SCATTERV(CHI1,icnt,idsp,MPI_REAL, &
+      CALL MPI_SCATTERV(CHI1,icnt,idsp,MPI_REAL, &
                            CHISUB,icnt(me),MPI_REAL,0,MPI_COMM_WORLD,IERR)
-         CALL MPI_SCATTERV(PSI1,icnt,idsp,MPI_REAL, &
+      CALL MPI_SCATTERV(PSI1,icnt,idsp,MPI_REAL, &
                            PSISUB,icnt(me),MPI_REAL,0,MPI_COMM_WORLD,IERR)
 
  
-         k=0
-         DO J=JSTA,JEND
-         DO I=ISTA,IEND
-            k=k+1
-            CHI(I,J,L)=CHISUB(k)
-            PSI(I,J,L)=PSISUB(k)
-         ENDDO
-         ENDDO
-
-      ENDDO
+       k=0
+       DO J=JSTA,JEND
+       DO I=ISTA,IEND
+         k=k+1
+           CHI(I,J,L)=CHISUB(k)
+           PSI(I,J,L)=PSISUB(k)
+       ENDDO
+       ENDDO
   
       IF(ALLOCATED(CHI1)) DEALLOCATE(CHI1)
       IF(ALLOCATED(CHISUB)) DEALLOCATE(CHISUB)
