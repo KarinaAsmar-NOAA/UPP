@@ -70,24 +70,26 @@
       
       CALL COLLECT_ALL(DCHI,DCHI_FULL)
       CALL COLLECT_ALL(DPSI,DPSI_FULL)
-
-! FILL CHI/PSI VALUES
-      DO J=1,JM
-	DO I=1,IM
-     	  CHI(I,J)= SPVAL
-	  PSI(I,J)= SPVAL
-     	ENDDO
-      ENDDO
        
       IF (ME==0) THEN 
 
-! INTEGRATION WITH PSI/CHI ZERO AT J=1, I=1, I=IM
+! INTEGRATION WITH BOUNDARY CONDITIONS: PSI/CHI ZERO AT J=1, I=1, I=IM
       
-!!!!    ****** THIS IS A TEST ********
+!!!!    ****** TESTING ********
         DO J=1,JM
           DO I=1,IM
-            CHI_OUT(I,J) = 5
-            PSI_OUT(I,J) = 5
+	    IF (J==1) THEN
+              PSI_OUT(I,J) = 0.0
+	      CHI_OUT(I,J) = 0.0
+       	    ELSE  ! J NOT 1
+       	      IF ((I==1) .OR. (I==IM)) THEN
+       	        PSI_OUT(I,J) = 0.0
+	        CHI_OUT(I,J) = 0.0
+	      ELSE  ! J NOT 1, I NOT 1 OR IM
+		PSI_OUT(I,J) = SUM(DPSI_FULL(2:I,2:J))
+  		CHI_OUT(I,J) = SUM(DCHI_FULL(2:I,2:J))
+	      ENDIF
+     	    ENDIF
           ENDDO
         ENDDO
 
