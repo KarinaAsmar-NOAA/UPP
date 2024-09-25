@@ -72,8 +72,8 @@
       CALL COLLECT_ALL(DPSI,DPSI_FULL)
 
 ! FILL CHI/PSI VALUES
-      DO J=JSTA,JEND
-	  DO I=ISTA,IEND
+      DO J=1,JM
+	  DO I=1,IM
      	    CHI(I,J)= SPVAL
 	    PSI(I,J)= SPVAL
      	  ENDDO
