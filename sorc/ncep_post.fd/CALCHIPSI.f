@@ -160,7 +160,6 @@
 !
       real,    allocatable ::  wrk1(:,:), wrk2(:,:), wrk3(:,:), cosl(:,:)
       INTEGER, allocatable ::  IHE(:),IHW(:), IE(:),IW(:)
-      REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u) :: DCHI, DPSI
 !
       integer, parameter :: npass2=2, npass3=3
       integer I,J,ip1,im1,ii,iir,iil,jj,JMT2,imb2, npass, nn, jtem
@@ -400,28 +399,28 @@
         END DO                               ! end of J loop
 
 ! GFS use lon avg as one scaler value for pole point
-        call exch(dpsi(ista_2l:iend_2u,jsta_2l:jend_2u))
-        call exch(dchi(ista_2l:iend_2u,jsta_2l:jend_2u))
-        call fullpole(dpsi(ista_2l:iend_2u,jsta_2l:jend_2u),dpsipoles)     
-        call fullpole(dchi(ista_2l:iend_2u,jsta_2l:jend_2u),dchipoles)    
+!        call exch(dpsi(ista_2l:iend_2u,jsta_2l:jend_2u))
+!        call exch(dchi(ista_2l:iend_2u,jsta_2l:jend_2u))
+!        call fullpole(dpsi(ista_2l:iend_2u,jsta_2l:jend_2u),dpsipoles)     
+!        call fullpole(dchi(ista_2l:iend_2u,jsta_2l:jend_2u),dchipoles)    
 
-        cosltemp=spval
-        if(jsta== 1) cosltemp(1:im, 1)=coslpoles(1:im,1)
-        if(jend==jm) cosltemp(1:im,jm)=coslpoles(1:im,2)
-        dpsitemp=spval
-        if(jsta== 1) dpsitemp(1:im, 1)=dpsipoles(1:im,1)
-        if(jend==jm) dpsitemp(1:im,jm)=dpsipoles(1:im,2)
-        dchitemp=spval
-        if(jsta== 1) dchitemp(1:im, 1)=dchipoles(1:im,1)
-        if(jend==jm) dchitemp(1:im,jm)=dchipoles(1:im,2)
+!        cosltemp=spval
+!        if(jsta== 1) cosltemp(1:im, 1)=coslpoles(1:im,1)
+!        if(jend==jm) cosltemp(1:im,jm)=coslpoles(1:im,2)
+!        dpsitemp=spval
+!        if(jsta== 1) dpsitemp(1:im, 1)=dpsipoles(1:im,1)
+!        if(jend==jm) dpsitemp(1:im,jm)=dpsipoles(1:im,2)
+!        dchitemp=spval
+!        if(jsta== 1) dchitemp(1:im, 1)=dchipoles(1:im,1)
+!        if(jend==jm) dchitemp(1:im,jm)=dchipoles(1:im,2)
         
-        call poleavg(IM,JM,JSTA,JEND,SMALL,cosltemp(1,jsta),SPVAL,dpsitemp(1,jsta))
-        call poleavg(IM,JM,JSTA,JEND,SMALL,cosltemp(1,jsta),SPVAL,dchitemp(1,jsta))
+!        call poleavg(IM,JM,JSTA,JEND,SMALL,cosltemp(1,jsta),SPVAL,dpsitemp(1,jsta))
+!        call poleavg(IM,JM,JSTA,JEND,SMALL,cosltemp(1,jsta),SPVAL,dchitemp(1,jsta))
 
-        if(jsta== 1) dpsi(ista:iend, 1)=dpsitemp(ista:iend, 1)
-        if(jend==jm) dpsi(ista:iend,jm)=dpsitemp(ista:iend,jm)
-        if(jsta== 1) dchi(ista:iend, 1)=dchitemp(ista:iend, 1)
-        if(jend==jm) dchi(ista:iend,jm)=dchitemp(ista:iend,jm)
+!        if(jsta== 1) dpsi(ista:iend, 1)=dpsitemp(ista:iend, 1)
+!       if(jend==jm) dpsi(ista:iend,jm)=dpsitemp(ista:iend,jm)
+!        if(jsta== 1) dchi(ista:iend, 1)=dchitemp(ista:iend, 1)
+!        if(jend==jm) dchi(ista:iend,jm)=dchitemp(ista:iend,jm)
     
         deallocate (wrk1, wrk2, wrk3, cosl)
 !     
