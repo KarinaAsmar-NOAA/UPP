@@ -52,6 +52,8 @@
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u), intent(out) :: CHI, PSI
 !
       integer k, m
+      INTEGER, allocatable ::  IHE(:),IHW(:), IE(:),IW(:)
+      integer I,J,ip1,im1,ii,iir,iil,jj,JMT2,imb2, npass, nn, jtem
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u) :: DCHI, DPSI
       real, allocatable :: CHI1(:),CHISUB(:),PSI1(:),PSISUB(:),DCHI_FULL(:,:),DPSI_FULL(:,:),      &
                               CHI_OUT(:,:),PSI_OUT(:,:)
@@ -78,8 +80,8 @@
 !!!!    ****** TESTING ********
         DO J=JSTA,JEND
           IF(J == 1) then                            ! Near North or South pole
-        !    if(gdlat(ista,j) > 0.) then ! count from north to south
-        !      IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+            if(gdlat(ista,j) > 0.) then ! count from north to south
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
                 DO I=ISTA,IEND
                  ip1 = ie(i)
                  im1 = iw(i)
