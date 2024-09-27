@@ -210,7 +210,6 @@
                      CHI_OUT(ip1,J-1) = DCHI(I,J) + CHI(im1,J+1) 
 		endif
 	    ENDDO
-          END IF
 
       ENDIF                             ! END OF ME=0 BLOCK
 
