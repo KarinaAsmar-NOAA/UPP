@@ -83,18 +83,16 @@
         allocate(iw(im),ie(im))
 
         imb2 = im/2
-!$omp  parallel do private(i)
       do i=ista,iend
         ie(i) = i+1
         iw(i) = i-1
       enddo
       
-!$omp  parallel do private(i,j,ip1,im1)
         DO J=JSTA,JEND
           do i=ista,iend
             cosl(i,j) = cos(gdlat(i,j)*dtr)
-            enddo
-	    enddo
+          enddo
+	enddo
       
 !!!!    ****** TESTING ********
         DO J=JSTA,JEND
@@ -210,6 +208,8 @@
                      CHI_OUT(ip1,J-1) = DCHI(I,J) + CHI(im1,J+1) 
 		endif
 	    ENDDO
+     	ENDIF
+      ENDDO
 
       ENDIF                             ! END OF ME=0 BLOCK
 
