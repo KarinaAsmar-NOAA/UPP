@@ -76,26 +76,120 @@
 ! INTEGRATION WITH BOUNDARY CONDITIONS: PSI/CHI ZERO AT J=1, I=1, I=IM
       
 !!!!    ****** TESTING ********
-        DO J=1,JM
-          DO I=1,IM
-	    !IF (J==1) THEN
-            !  PSI_OUT(I,J) = 0.0
-	    !  CHI_OUT(I,J) = 0.0
-       	    !ELSE  ! J NOT 1
-       	    !  IF ((I==1) .OR. (I==IM)) THEN
-       	    !    PSI_OUT(I,J) = 0.0
-	    !    CHI_OUT(I,J) = 0.0
-	    !  ELSE  ! J NOT 1, I NOT 1 OR IM
-		! PSI_OUT(I,J) = SUM(DPSI_FULL(2:I,2:J),DPSI_FULL(2:I,2:J)/=SPVAL)
-  		! CHI_OUT(I,J) = SUM(DCHI_FULL(2:I,2:J),DPSI_FULL(2:I,2:J)/=SPVAL)
-    		! print*,'values',i,j,psi_out(i,j)
-	      ! ENDIF
-     	    ! ENDIF
-
-    		PSI_OUT(I,J) = DPSI_FULL(I,J)
-      		CHI_OUT(I,J) = DCHI_FULL(I,J)
-          ENDDO
-        ENDDO
+        DO J=JSTA,JEND
+          IF(J == 1) then                            ! Near North or South pole
+        !    if(gdlat(ista,j) > 0.) then ! count from north to south
+        !      IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=ISTA,IEND
+                 ip1 = ie(i)
+                 im1 = iw(i)
+                 ii = i + imb2
+                 if (ii > im) ii = ii - im
+                     PSI_OUT(II,J) = 0.0
+                     CHI_OUT(II,J) = 0.0
+                enddo
+              ELSE                                   !pole point, compute at j=2
+                jj = 2
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                     PSI_OUT(ip1,J) = 0.0
+                     CHI_OUT(ip1,J) = 0.0
+                enddo
+              ENDIF
+            else
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                     PSI_OUT(II,J) = 0.0
+                     CHI_OUT(II,J) = 0.0       
+                enddo
+              ELSE                                   !pole point, compute at j=2
+                jj = 2
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                     PSI_OUT(ip1,J) = 0.0
+                     CHI_OUT(ip1,J) = 0.0 
+                enddo
+              ENDIF
+            endif
+          ELSE IF(J == JM) THEN                      ! Near North or South Pole
+            if(gdlat(ista,j) < 0.) then ! count from north to south
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+		    if ((ip1==1) .or. (ip1==im)) then
+                     PSI_OUT(ip1,J) = 0.0
+                     CHI_OUT(ip1,J) = 0.0 
+      		    else
+                     PSI_OUT(ip1,J-1) = DPSI(I,J) + PSI(II,J)
+                     CHI_OUT(ip1,J-1) = DCHI(I,J) + CHI(II,J) 
+                    endif                    
+                enddo
+              ELSE                                   !pole point,compute at jm-1
+                jj = jm-1
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+		  if ((ip1==1) .or. (ip1==im)) then
+    		     PSI_OUT(ip1,jj-1) = 0.0
+	   	     CHI_OUT(ip1,jj-1) = 0.0
+		   else
+                     PSI_OUT(ip1,jj-1) = DPSI(I,J) + PSI(im1,J)
+                     CHI_OUT(ip1,jj-1) = DCHI(I,J) + CHI(im1,J)  
+                   endif
+                enddo
+              ENDIF
+            else
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+		    if ((II==1) .or. (II==im)) then
+      		     PSI_OUT(II,J-1) = 0.0
+	     	     CHI_OUT(II,J-1) = 0.0
+	    	    else
+                     PSI_OUT(II,J-1) = -1.0*DPSI(I,J) - PSI(im1,J)
+                     CHI_OUT(II,J-1) = -1.0*DCHI(I,J) - CHI(im1,J) 
+		    endif
+                enddo
+              ELSE                                   !pole point,compute at jm-1
+                jj = jm-1
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+		    if ((ip1==1) .or. (ip1==im)) then
+       		     PSI_OUT(ip1,jj-1) = 0.0
+	      	     CHI_OUT(ip1,jj-1) = 0.0
+	     	    else
+                     PSI_OUT(ip1,jj-1) = -1.0*DPSI(I,J) - PSI(im1,J)
+                     CHI_OUT(ip1,jj-1) = -1.0*DCHI(I,J) - CHI(im1,J) 
+		    endif
+                enddo
+              ENDIF
+            endif
+          ELSE				! J not 1 or JM
+            DO I=ISTA,IEND
+              ip1 = ie(i)
+              im1 = iw(i)
+	        if ((ip1==1) .or. (ip1==im)) then
+	 	  PSI_OUT(ip1,J-1) = 0.0
+     	          CHI_OUT(ip1,J-1) = 0.0
+		else
+                     PSI_OUT(ip1,J-1) = DPSI(I,J) + PSI(im1,J+1)
+                     CHI_OUT(ip1,J-1) = DCHI(I,J) + CHI(im1,J+1) 
+		endif
+	    ENDDO
+          END IF
 
       ENDIF                             ! END OF ME=0 BLOCK
 
