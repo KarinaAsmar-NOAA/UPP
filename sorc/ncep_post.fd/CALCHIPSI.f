@@ -39,6 +39,8 @@
       use ctlblk_mod, only: ISTA, IEND, JSTA, JEND, IM, JM, LSM, ME, SPVAL, MPI_COMM_COMP,&
                             num_procs, icnt, idsp, isxa, iexa, jsxa, jexa, jsta_2l, jend_2u,&
 			    ista_2l,iend_2u
+      use masks,        only: gdlat, gdlon
+      use params_mod,   only: dtr, small, erad
 !
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       implicit none
