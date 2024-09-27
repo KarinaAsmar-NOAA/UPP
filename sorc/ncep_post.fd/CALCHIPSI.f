@@ -55,7 +55,7 @@
 !
       integer k, m
       INTEGER, allocatable ::  IHE(:),IHW(:), IE(:),IW(:)
-      integer I,J,ip1,im1,ii,iir,iil,jj,JMT2,imb2, npass, nn, jtem
+      integer ip1,im1,ii,iir,iil,jj,JMT2,imb2, npass, nn, jtem
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u) :: DCHI, DPSI
       real, allocatable :: CHI1(:),CHISUB(:),PSI1(:),PSISUB(:),DCHI_FULL(:,:),DPSI_FULL(:,:),      &
                               CHI_OUT(:,:),PSI_OUT(:,:)
@@ -78,6 +78,23 @@
       IF (ME==0) THEN 
 
 ! INTEGRATION WITH BOUNDARY CONDITIONS: PSI/CHI ZERO AT J=1, I=1, I=IM
+
+        allocate (cosl(ista_2l:iend_2u,jsta_2l:jend_2u))
+        allocate(iw(im),ie(im))
+
+        imb2 = im/2
+!$omp  parallel do private(i)
+      do i=ista,iend
+        ie(i) = i+1
+        iw(i) = i-1
+      enddo
+      
+!$omp  parallel do private(i,j,ip1,im1)
+        DO J=JSTA,JEND
+          do i=ista,iend
+            cosl(i,j) = cos(gdlat(i,j)*dtr)
+            enddo
+	    enddo
       
 !!!!    ****** TESTING ********
         DO J=JSTA,JEND
