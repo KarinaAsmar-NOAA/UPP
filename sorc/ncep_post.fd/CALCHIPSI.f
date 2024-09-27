@@ -83,23 +83,23 @@
         allocate(iw(im),ie(im))
 
         imb2 = im/2
-      do i=ista,iend
+      do i=1,im
         ie(i) = i+1
         iw(i) = i-1
       enddo
       
-        DO J=JSTA,JEND
-          do i=ista,iend
+        DO J=1,jm
+          do i=1,im
             cosl(i,j) = cos(gdlat(i,j)*dtr)
           enddo
 	enddo
       
 !!!!    ****** TESTING ********
-        DO J=JSTA,JEND
+        DO J=1,jm
           IF(J == 1) then                            ! Near North or South pole
             if(gdlat(ista,j) > 0.) then ! count from north to south
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
-                DO I=ISTA,IEND
+                DO I=i,im
                  ip1 = ie(i)
                  im1 = iw(i)
                  ii = i + imb2
@@ -109,7 +109,7 @@
                 enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
-                DO I=ISTA,IEND
+                DO I=i,im
                   ip1 = ie(i)
                   im1 = iw(i)
                      PSI_OUT(ip1,J) = 0.0
@@ -118,7 +118,7 @@
               ENDIF
             else
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
-                DO I=ISTA,IEND
+                DO I=i,im
                   ip1 = ie(i)
                   im1 = iw(i)
                   ii = i + imb2
@@ -128,7 +128,7 @@
                 enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
-                DO I=ISTA,IEND
+                DO I=i,im
                   ip1 = ie(i)
                   im1 = iw(i)
                      PSI_OUT(ip1,J) = 0.0
@@ -139,7 +139,7 @@
           ELSE IF(J == JM) THEN                      ! Near North or South Pole
             if(gdlat(ista,j) < 0.) then ! count from north to south
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
-                DO I=ISTA,IEND
+                DO I=i,im
                   ip1 = ie(i)
                   im1 = iw(i)
                   ii = i + imb2
@@ -154,7 +154,7 @@
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
-                DO I=ISTA,IEND
+                DO I=i,im
                   ip1 = ie(i)
                   im1 = iw(i)
 		  if ((ip1==1) .or. (ip1==im)) then
@@ -168,7 +168,7 @@
               ENDIF
             else
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
-                DO I=ISTA,IEND
+                DO I=i,im
                   ip1 = ie(i)
                   im1 = iw(i)
                   ii = i + imb2
@@ -183,7 +183,7 @@
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
-                DO I=ISTA,IEND
+                DO I=i,im
                   ip1 = ie(i)
                   im1 = iw(i)
 		    if ((ip1==1) .or. (ip1==im)) then
@@ -197,7 +197,7 @@
               ENDIF
             endif
           ELSE				! J not 1 or JM
-            DO I=ISTA,IEND
+            DO I=i,im
               ip1 = ie(i)
               im1 = iw(i)
 	        if ((ip1==1) .or. (ip1==im)) then
