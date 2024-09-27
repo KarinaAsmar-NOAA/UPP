@@ -148,8 +148,8 @@
                      PSI_OUT(ip1,J) = 0.0
                      CHI_OUT(ip1,J) = 0.0 
       		    else
-                     PSI_OUT(ip1,J-1) = DPSI(I,J) + PSI(II,J)
-                     CHI_OUT(ip1,J-1) = DCHI(I,J) + CHI(II,J) 
+                     PSI_OUT(ip1,J-1) = DPSI_FULL(I,J) + PSI(II,J)
+                     CHI_OUT(ip1,J-1) = DCHI_FULL(I,J) + CHI(II,J) 
                     endif                    
                 enddo
               ELSE                                   !pole point,compute at jm-1
@@ -161,8 +161,8 @@
     		     PSI_OUT(ip1,jj-1) = 0.0
 	   	     CHI_OUT(ip1,jj-1) = 0.0
 		   else
-                     PSI_OUT(ip1,jj-1) = DPSI(I,J) + PSI(im1,J)
-                     CHI_OUT(ip1,jj-1) = DCHI(I,J) + CHI(im1,J)  
+                     PSI_OUT(ip1,jj-1) = DPSI_FULL(I,J) + PSI(im1,J)
+                     CHI_OUT(ip1,jj-1) = DCHI_FULL(I,J) + CHI(im1,J)  
                    endif
                 enddo
               ENDIF
@@ -177,8 +177,8 @@
       		     PSI_OUT(II,J-1) = 0.0
 	     	     CHI_OUT(II,J-1) = 0.0
 	    	    else
-                     PSI_OUT(II,J-1) = -1.0*DPSI(I,J) - PSI(im1,J)
-                     CHI_OUT(II,J-1) = -1.0*DCHI(I,J) - CHI(im1,J) 
+                     PSI_OUT(II,J-1) = -1.0*DPSI_FULL(I,J) - PSI(im1,J)
+                     CHI_OUT(II,J-1) = -1.0*DCHI_FULL(I,J) - CHI(im1,J) 
 		    endif
                 enddo
               ELSE                                   !pole point,compute at jm-1
@@ -190,8 +190,8 @@
        		     PSI_OUT(ip1,jj-1) = 0.0
 	      	     CHI_OUT(ip1,jj-1) = 0.0
 	     	    else
-                     PSI_OUT(ip1,jj-1) = -1.0*DPSI(I,J) - PSI(im1,J)
-                     CHI_OUT(ip1,jj-1) = -1.0*DCHI(I,J) - CHI(im1,J) 
+                     PSI_OUT(ip1,jj-1) = -1.0*DPSI_FULL(I,J) - PSI(im1,J)
+                     CHI_OUT(ip1,jj-1) = -1.0*DCHI_FULL(I,J) - CHI(im1,J) 
 		    endif
                 enddo
               ENDIF
@@ -204,8 +204,8 @@
 	 	  PSI_OUT(ip1,J-1) = 0.0
      	          CHI_OUT(ip1,J-1) = 0.0
 		else
-                     PSI_OUT(ip1,J-1) = DPSI(I,J) + PSI(im1,J+1)
-                     CHI_OUT(ip1,J-1) = DCHI(I,J) + CHI(im1,J+1) 
+                     PSI_OUT(ip1,J-1) = DPSI_FULL(I,J) + PSI(im1,J+1)
+                     CHI_OUT(ip1,J-1) = DCHI_FULL(I,J) + CHI(im1,J+1) 
 		endif
 	    ENDDO
      	ENDIF
