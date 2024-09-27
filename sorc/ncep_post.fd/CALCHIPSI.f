@@ -215,6 +215,8 @@
 
       ! CALL MPI_BARRIER(MPI_COMM_COMP, IERR)
 
+      print*,'psi out',psi_out(im/2,jm/2),sum(psi_out,psi_out/=spval)/size(psi_out)
+
       ALLOCATE(CHI1(im*jm))
       ALLOCATE(CHISUB(icnt(me)))
       ALLOCATE(PSI1(im*jm))
