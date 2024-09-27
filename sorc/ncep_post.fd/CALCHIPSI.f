@@ -206,6 +206,8 @@
 		else
                      PSI_OUT(ip1,J-1) = DPSI_FULL(I,J) + PSI(im1,J+1)
                      CHI_OUT(ip1,J-1) = DCHI_FULL(I,J) + CHI(im1,J+1) 
+		     print*,'dpsi full',i,j,dpsi_full(i,j)
+       		     print*,'psi ip1',i,j,psi_out(ip1,j-1)
 		endif
 	    ENDDO
      	ENDIF
