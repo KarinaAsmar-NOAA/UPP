@@ -80,19 +80,19 @@
 	! SET BOUNDARY CONDITIONS 0 AT ALL J=1
 	DO I=1,IM
  	  PSI_OUT(I,1) = 0.0
-          PSI_OUT(I,2) = DPSI_FULL(I,2)
+          PSI_OUT(I,2) = DPSI_FULL(I-1,3)
     	  CHI_OUT(I,1) = 0.0
-       	  CHI_OUT(I,2) = DCHI_FULL(I,2)
+       	  CHI_OUT(I,2) = DCHI_FULL(I-1,3)
  	ENDDO
   
 	! SET BOUNDARY CONDITION 0 AT I=1 AND I=IM 
   	DO J=1,JM
    	  PSI_OUT(1,J) = 0.0
       	  PSI_OUT(IM,J) = 0.0
-	  PSI_OUT(2,J) = DPSI_FULL(2,J)
+	  PSI_OUT(2,J) = DPSI_FULL(1,J+1)
 	  CHI_OUT(1,J) = 0.0
   	  CHI_OUT(IM,J) = 0.0
-     	  CHI_OUT(2,J) = DCHI_FULL(2,J)
+     	  CHI_OUT(2,J) = DCHI_FULL(1,J+1)
    	ENDDO
     
 	DO J=3,JM
