@@ -77,11 +77,13 @@
        
       IF (ME==0) THEN 
 
+	! SET BOUNDARY CONDITIONS 0 AT ALL J=1
 	DO I=1,IM
- 	  PSI_OUT(1,I) = 0.0
-    	  CHI_OUT(1,I) = 0.0
+ 	  PSI_OUT(I,1) = 0.0
+    	  CHI_OUT(I,1) = 0.0
  	ENDDO
-
+  
+	! SET BOUNDARY CONDITION 0 AT I=1 AND I=IM 
   	DO J=1,JM
    	  PSI_OUT(1,J) = 0.0
       	  PSI_OUT(IM,J) = 0.0
