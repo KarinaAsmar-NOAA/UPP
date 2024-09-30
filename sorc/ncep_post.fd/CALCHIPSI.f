@@ -78,11 +78,21 @@
       IF (ME==0) THEN 
 
 	DO J=1,JM
- 	DO I=1,IM
-  	PSI_OUT(I,J)=DPSI_FULL(I,J)
-   	CHI_OUT(I,J)=DCHI_FULL(I,J)
-    	enddo
-     	enddo
+ 	  DO I=1,IM
+ 	  IF (J==1) THEN
+    	    PSI_OUT(I,J) = 0.0
+	    CHI_OUT(I,J) = 0.0
+    	  ELSE
+       	    IF (I==1) .OR. (I==IM) THEN
+	      PSI_OUT(I,J) = 0.0
+       	      CHI_OUT(I,J) = 0.0
+	    ELSE
+     	      PSI_OUT(I+1,J-1) = DPSI_FULL(I,J) + PSI_OUT(I-1,J+1)
+	      CHI_OUT(I+1,J-1) = DCHI_FULL(I,J) + CHI_OUT(I-1,J+1)
+     	    ENDIF
+          ENDIF
+	  ENDDO
+ 	ENDDO
 
       ENDIF                             ! END OF ME=0 BLOCK
 
