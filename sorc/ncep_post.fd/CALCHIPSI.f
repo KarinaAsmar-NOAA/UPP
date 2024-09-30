@@ -83,7 +83,7 @@
     	    PSI_OUT(I,J) = 0.0
 	    CHI_OUT(I,J) = 0.0
     	  ELSE
-       	    IF (I==1) .OR. (I==IM) THEN
+       	    IF ((I==1) .OR. (I==IM)) THEN
 	      PSI_OUT(I,J) = 0.0
        	      CHI_OUT(I,J) = 0.0
 	    ELSE
