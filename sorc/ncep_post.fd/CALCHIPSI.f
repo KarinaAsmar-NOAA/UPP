@@ -95,18 +95,14 @@
      	  CHI_OUT(2,J) = DCHI_FULL(2,J)
    	ENDDO
     
-	DO J=2,JM
- 	  DO I=2,IM-2
-     	      PSI_OUT(I+1,J-1) = DPSI_FULL(I,J) + PSI_OUT(I-1,J+1)
-	      CHI_OUT(I+1,J-1) = DCHI_FULL(I,J) + CHI_OUT(I-1,J+1)
+	DO J=3,JM
+ 	  DO I=3,IM-2
+     	      PSI_OUT(I,J) = DPSI_FULL(I-1,J+1) + PSI_OUT(I-2,J+2)
+	      CHI_OUT(I,J) = DCHI_FULL(I-1,J+1) + CHI_OUT(I-2,J+2)
 	  ENDDO
  	ENDDO
 
       ENDIF                             ! END OF ME=0 BLOCK
-
-      ! CALL MPI_BARRIER(MPI_COMM_COMP, IERR)
-
-      print*,'psi out',psi_out(im/2,jm/2),sum(psi_out,psi_out/=spval)/size(psi_out)
 
       ALLOCATE(CHI1(im*jm))
       ALLOCATE(CHISUB(icnt(me)))
