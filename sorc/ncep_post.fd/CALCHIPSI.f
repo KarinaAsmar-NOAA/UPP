@@ -85,11 +85,13 @@
   	DO J=1,JM
    	  PSI_OUT(1,J) = 0.0
       	  PSI_OUT(IM,J) = 0.0
+	  CHI_OUT(1,J) = 0.0
+  	  CHI_OUT(IM,J) = 0.0
    	ENDDO
     
 	DO J=2,JM
  	  DO I=2,IM-1
-     		print*,'i,j loop',i,j,PSI_OUT(I-1,J-1)
+     		print*,'i,j loop',i,j,PSI_OUT(I-1,J+1)
      	      PSI_OUT(I+1,J-1) = DPSI_FULL(I,J) + PSI_OUT(I-1,J+1)
 	      CHI_OUT(I+1,J-1) = DCHI_FULL(I,J) + CHI_OUT(I-1,J+1)
 	  ENDDO
