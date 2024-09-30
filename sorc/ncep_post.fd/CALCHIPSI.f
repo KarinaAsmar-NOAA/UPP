@@ -77,21 +77,19 @@
        
       IF (ME==0) THEN 
 
-	DO J=1,JM
- 	  DO I=1,IM
- 	  IF (J==1) THEN
-    	    PSI_OUT(I,J) = 0.0
-	    CHI_OUT(I,J) = 0.0
-    	  ELSE
-       	    IF ((I==1) .OR. (I==IM)) THEN
-	      PSI_OUT(I,J) = 0.0
-       	      CHI_OUT(I,J) = 0.0
-	    ELSE
+	DO I=1,IM
+ 	  PSI_OUT(1,I) = 0.0
+    	  CHI_OUT(1,I) = 0.0
+ 	ENDDO
+
+  	PSI_OUT(2,1) = 0.0
+   	PSI_OUT(2,IM) = 0.0
+    
+	DO J=2,JM
+ 	  DO I=2,IM
      		print*,'i,j loop',i,j,PSI_OUT(I-1,J-1)
      	      PSI_OUT(I+1,J+1) = DPSI_FULL(I,J) + PSI_OUT(I-1,J-1)
 	      CHI_OUT(I+1,J+1) = DCHI_FULL(I,J) + CHI_OUT(I-1,J-1)
-     	    ENDIF
-          ENDIF
 	  ENDDO
  	ENDDO
 
