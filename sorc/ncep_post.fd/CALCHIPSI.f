@@ -96,6 +96,7 @@
       
 !!!!    ****** TESTING ********
         DO J=1,jm
+	print*,'looping j', j
           IF(J == 1) then                            ! Near North or South pole
             if(gdlat(ista,j) > 0.) then ! count from north to south
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
@@ -197,6 +198,7 @@
               ENDIF
             endif
           ELSE				! J not 1 or JM
+	  print*,'j not 1 or jm', j
             DO I=i,im
               ip1 = ie(i)
               im1 = iw(i)
