@@ -200,8 +200,10 @@
           ELSE				! J not 1 or JM
 	  print*,'j not 1 or jm', j
             DO I=i,im
+	    print*,'i at mid j',i
               ip1 = ie(i)
               im1 = iw(i)
+	      print*,'ip1 im1',ip1,im1
 	      	    print*,'j middle',i,j,ip1,im1
 	        if ((ip1==1) .or. (ip1==im)) then
 	 	  PSI_OUT(ip1,J-1) = 0.0
