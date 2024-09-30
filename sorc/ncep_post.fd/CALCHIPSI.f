@@ -87,8 +87,9 @@
 	      PSI_OUT(I,J) = 0.0
        	      CHI_OUT(I,J) = 0.0
 	    ELSE
-     	      PSI_OUT(I+1,J-1) = DPSI_FULL(I,J) + PSI_OUT(I-1,J+1)
-	      CHI_OUT(I+1,J-1) = DCHI_FULL(I,J) + CHI_OUT(I-1,J+1)
+     		print*,'i,j loop',i,j,PSI_OUT(I-1,J-1)
+     	      PSI_OUT(I+1,J+1) = DPSI_FULL(I,J) + PSI_OUT(I-1,J-1)
+	      CHI_OUT(I+1,J+1) = DCHI_FULL(I,J) + CHI_OUT(I-1,J-1)
      	    ENDIF
           ENDIF
 	  ENDDO
