@@ -97,8 +97,8 @@
     
 	DO J=3,JM
  	  DO I=3,IM-2
-     	      PSI_OUT(I,J) = DPSI_FULL(I-1,J-1) + PSI_OUT(I-2,J-2)
-	      CHI_OUT(I,J) = DCHI_FULL(I-1,J-1) + CHI_OUT(I-2,J-2)
+     	      PSI_OUT(I,J) = DPSI_FULL(I-1,J+1) + PSI_OUT(I-2,J+2)
+	      CHI_OUT(I,J) = DCHI_FULL(I-1,J+1) + CHI_OUT(I-2,J+2)
 	  ENDDO
  	ENDDO
 
