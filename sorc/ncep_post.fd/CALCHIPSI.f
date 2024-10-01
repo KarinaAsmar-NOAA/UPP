@@ -77,40 +77,26 @@
        
       IF (ME==0) THEN 
 
-	! SET BOUNDARY CONDITIONS 0 AT ALL J=1
-	DO I=1,IM
- 	  PSI_OUT(I,1) = 0.0
-    	  CHI_OUT(I,1) = 0.0
- 	ENDDO
-
-    	! SET BOUNDARY CONDITIONS AT J=JM-1 AND J=JM
-   	DO I=2,IM-1
-    	  PSI_OUT(I,JM-1) = DPSI_FULL(I-1,JM)
-    	  PSI_OUT(I,JM) = DPSI_FULL(I,JM)
-          CHI_OUT(I,JM-1) = DCHI_FULL(I-1,JM)
-	  CHI_OUT(I,JM) = DCHI_FULL(I-1,JM)
+      	DO J=1,JM
+        DO I=1,IM
+	  IF ((I==IM) .OR. (I==1) .OR. (J==1)) THEN
+   	    PSI_OUT(I,J) = 0.0
+	    CHI_OUT(I,J) = 0.0
+   	  ELSE IF (J==JM) THEN
+      	    PSI_OUT(I,J) = DPSI_FULL(I,JM)
+	    CHI_OUT(I,J) = DCHI_FULL(I,JM)
+      	  ELSE IF (J==JM-1) THEN
+	    PSI_OUT(I,J) = DPSI_FULL(I-1,JM)
+     	    CHI_OUT(I,J) = DCHI_FULL(I-1,JM)
+	  ELSE IF (I==2) THEN
+   	    PSI_OUT(I,J) = DPSI_FULL(1,J+1)
+	    CHI_OUT(I,J) = DCHI_FULL(1,J+1)
+     	  ELSE 
+	    PSI_OUT(I,J) = DPSI_FULL(I-1,J+1) + PSI_OUT(I-2,J+2)
+     	    CHI_OUT(I,J) = DCHI_FULL(I-1,J+1) + CHI_OUT(I-2,J+2)
+          ENDIF
+	ENDDO
         ENDDO
-  
-	! SET BOUNDARY CONDITION 0 AT I=1 AND I=IM 
-  	DO J=1,JM
-   	  PSI_OUT(1,J) = 0.0
-      	  PSI_OUT(IM,J) = 0.0
-	  CHI_OUT(1,J) = 0.0
-  	  CHI_OUT(IM,J) = 0.0
-   	ENDDO
-
-        ! SET BOUNDARY CONDITIONS AT I=2 
-	DO J=2,JM-1
- 	  PSI_OUT(2,J) = DPSI_FULL(1,J+1)
-    	  CHI_OUT(2,J) = DCHI_FULL(1,J+1)
- 	ENDDO
-    
-	DO J=2,JM-2
- 	  DO I=3,IM-2
-     	      PSI_OUT(I,J) = DPSI_FULL(I-1,J+1) + PSI_OUT(I-2,J+2)
-	      CHI_OUT(I,J) = DCHI_FULL(I-1,J+1) + CHI_OUT(I-2,J+2)
-	  ENDDO
- 	ENDDO
 
       ENDIF                             ! END OF ME=0 BLOCK
 
