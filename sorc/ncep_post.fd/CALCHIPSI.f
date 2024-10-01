@@ -87,6 +87,8 @@
    	DO I=3,IM-2
     	  PSI_OUT(I,JM-1) = DPSI_FULL(I-1,JM)
     	  PSI_OUT(I,JM) = DPSI_FULL(I,JM)
+          CHI_OUT(I,JM-1) = DCHI_FULL(I-1,JM)
+	  CHI_OUT(I,JM) = DCHI_FULL(I-1,JM)
         ENDDO
   
 	! SET BOUNDARY CONDITION 0 AT I=1 AND I=IM 
