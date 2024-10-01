@@ -105,7 +105,7 @@
     	  CHI_OUT(2,J) = DCHI_FULL(1,J+1)
  	ENDDO
     
-	DO J=JM-2,2
+	DO J=2,JM-2
  	  DO I=3,IM-2
      	      PSI_OUT(I,J) = DPSI_FULL(I-1,J+1) + PSI_OUT(I-2,J+2)
 	      CHI_OUT(I,J) = DCHI_FULL(I-1,J+1) + CHI_OUT(I-2,J+2)
