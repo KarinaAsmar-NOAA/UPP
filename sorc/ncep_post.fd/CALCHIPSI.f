@@ -83,11 +83,11 @@
    	    PSI_OUT(I,J) = 0.0
 	    CHI_OUT(I,J) = 0.0
    	  ELSE IF (J==JM) THEN
-      	    PSI_OUT(I,J) = DPSI_FULL(I,JM)
-	    CHI_OUT(I,J) = DCHI_FULL(I,JM)
+      	    PSI_OUT(I+1,J-1) = DPSI_FULL(I,J) + PSI_OUT(I-1,2)
+	    CHI_OUT(I+1,J-1) = DCHI_FULL(I,J) + PSI_OUT(I-1,2)
       	  ELSE IF (J==JM-1) THEN
-	    PSI_OUT(I,J) = DPSI_FULL(I-1,JM)
-     	    CHI_OUT(I,J) = DCHI_FULL(I-1,JM)
+	    PSI_OUT(I+1,J-1) = DPSI_FULL(I,J)
+     	    CHI_OUT(I+1,J-1) = DCHI_FULL(I,J)
 	  ELSE IF (I==2) THEN
    	    PSI_OUT(I,J) = DPSI_FULL(1,J+1)
 	    CHI_OUT(I,J) = DCHI_FULL(1,J+1)
