@@ -92,8 +92,8 @@
    	    PSI_OUT(I,J) = DPSI_FULL(1,J+1)
 	    CHI_OUT(I,J) = DCHI_FULL(1,J+1)
      	  ELSE 
-	    PSI_OUT(I,J) = DPSI_FULL(I-1,J+1) + PSI_OUT(I-2,J+2)
-     	    CHI_OUT(I,J) = DCHI_FULL(I-1,J+1) + CHI_OUT(I-2,J+2)
+	    PSI_OUT(I+1,J+1) = DPSI_FULL(I,J) + PSI_OUT(I-1,J-1)
+     	    CHI_OUT(I+1,J+1) = DCHI_FULL(I,J) + CHI_OUT(I-1,J-1)
           ENDIF
 	ENDDO
         ENDDO
