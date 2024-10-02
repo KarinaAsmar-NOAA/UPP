@@ -79,8 +79,14 @@
 
       	DO J=1,JM
         DO I=1,IM
-	  PSI_OUT(I,J)=DPSI_FULL(I,J)
-   	  CHI_OUT(I,J)=DCHI_FULL(I,J)
+	   CHI_OUT(I,J)=DCHI_FULL(I,J)
+	  IF ((J==1) .OR. (I==1) .OR. (I==IM)) THEN
+   	    PSI_OUT(I,J) = 0.0
+	  ELSE IF ((J==2) .OR. (I==2)) THEN
+   	    PSI_OUT(I,J) = DPSI_FULL(I-1,J-1)
+	  ELSE 
+   	    PSI_OUT(I,J) = DPSI_FULL(I-1,J-1) + PSI_OUT(I-2,J-2)
+   	  ENDIF
 	ENDDO
         ENDDO
 
