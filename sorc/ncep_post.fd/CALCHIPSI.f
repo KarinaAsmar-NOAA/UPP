@@ -77,26 +77,163 @@
        
       IF (ME==0) THEN 
 
-      	DO J=1,JM
-        DO I=1,IM
-	  IF ((I==IM) .OR. (I==1) .OR. (J==1)) THEN
-   	    PSI_OUT(I,J) = 0.0
-	    CHI_OUT(I,J) = 0.0
-   	  ELSE IF (J==JM) THEN
-      	    PSI_OUT(I+1,J-1) = DPSI_FULL(I,J) + PSI_OUT(I-1,2)
-	    CHI_OUT(I+1,J-1) = DCHI_FULL(I,J) + PSI_OUT(I-1,2)
-      	  ELSE IF (J==JM-1) THEN
-	    PSI_OUT(I+1,J-1) = DPSI_FULL(I,J)
-     	    CHI_OUT(I+1,J-1) = DCHI_FULL(I,J)
-	  ELSE IF (I==2) THEN
-   	    PSI_OUT(I,J) = DPSI_FULL(1,J+1)
-	    CHI_OUT(I,J) = DCHI_FULL(1,J+1)
-     	  ELSE 
-	    PSI_OUT(I+1,J-1) = DPSI_FULL(I,J) + PSI_OUT(I-1,J+1)
-     	    CHI_OUT(I+1,J-1) = DCHI_FULL(I,J) + CHI_OUT(I-1,J+1)
-          ENDIF
-	ENDDO
-        ENDDO
+DO J=JSTA,JEND
+          do i=ista,iend
+            ip1 = ie(i)
+            im1 = iw(i)
+            cosl(i,j) = cos(gdlat(i,j)*dtr)
+            IF(cosl(i,j) >= SMALL) then
+              wrk1(i,j) = ERAD*cosl(i,j)
+            else
+              wrk1(i,j) = 0.
+            end if    
+            if(i == im .or. i == 1) then
+              wrk2(i,j) = (360.+GDLON(ip1,J)-GDLON(im1,J))*DTR !1/dlam
+            else
+              wrk2(i,j) = (GDLON(ip1,J)-GDLON(im1,J))*DTR      !1/dlam
+            end if
+          enddo
+        enddo
+        CALL EXCH(cosl)
+
+        call fullpole( cosl(ista_2l:iend_2u,jsta_2l:jend_2u),coslpoles)
+        call fullpole(gdlat(ista_2l:iend_2u,jsta_2l:jend_2u),glatpoles)
+
+!$omp  parallel do private(i,j,ii)
+        DO J=JSTA,JEND
+          if (j == 1) then
+           if(gdlat(ista,j) > 0.) then ! count from north to south
+              do i=ista,iend
+                ii = i + imb2
+                if (ii > im) ii = ii - im
+                wrk3(i,j) = (180.-GDLAT(i,J+1)-GLATPOLES(ii,1))*DTR !1/dphi
+              enddo
+            else ! count from south to north
+              do i=ista,iend
+                ii = i + imb2
+                if (ii > im) ii = ii - im
+                wrk3(i,j) = (180.+GDLAT(i,J+1)+GLATPOLES(ii,1))*DTR !1/dphi
+!
+              enddo
+            end if      
+          elseif (j == JM) then
+            if(gdlat(ista,j) < 0.) then ! count from north to south
+              do i=ista,iend
+                ii = i + imb2
+                if (ii > im) ii = ii - im
+                wrk3(i,j) = (180.+GDLAT(i,J-1)+GLATPOLES(ii,2))*DTR
+              enddo
+            else ! count from south to north
+              do i=ista,iend
+                ii = i + imb2
+                if (ii > im) ii = ii - im
+                wrk3(i,j) = (180.-GDLAT(i,J-1)-GLATPOLES(ii,2))*DTR
+              enddo
+            end if  
+          else
+            do i=ista,iend
+              wrk3(i,j) = (GDLAT(I,J-1)-GDLAT(I,J+1))*DTR !1/dphi
+            enddo
+          endif
+        enddo  
+
+        npass = 0
+
+        jtem = jm / 18 + 1
+      
+        call fullpole(UP(ista_2l:iend_2u,jsta_2l:jend_2u),upoles)
+        call fullpole(VP(ista_2l:iend_2u,jsta_2l:jend_2u),vpoles)
+
+!$omp  parallel do private(i,j,ip1,im1,ii,jj,tx1,tx2)
+        DO J=1,JM
+          IF(J == 1) then                            ! Near North or South pole
+            if(gdlat(ista,j) > 0.) then ! count from north to south
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=ISTA,IEND
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  PSI(I,J) = 0.0 
+                  CHI(I,J) = 0.0
+                enddo
+              ELSE                                   !pole point, compute at j=2
+                jj = 2
+                DO I=1,IM
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  PSI(ip1,jj+1) = DPSI(I,J) + PSI(im1,jj)
+                  CHI(ip1,jj+1) = DCHI(I,J) + CHI(im1,jj)
+                enddo
+              ENDIF
+            else
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=1,IM
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  PSI(ip1,J+1) = DPSI(I,J) 
+                  CHI(ip1,J+1) = DCHI(I,J)    
+                enddo
+              ELSE                                   !pole point, compute at j=2
+                jj = 2
+                DO I=1,IM
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  PSI(ip1,jj+1) = DPSI(I,J) + PSI(im1,jj)             
+                enddo
+              ENDIF
+            endif
+          ELSE IF(J == JM) THEN                      ! Near North or South Pole
+            if(gdlat(ista,j) < 0.) then ! count from north to south
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=1,IM
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  PSI(ip1,2) = DPSI(I,J) + PSI(im1,J-1) 
+                  CHI(ip1,2) = DCHI(I,J) + CHI(im1,J-1)                
+                enddo
+              ELSE                                   !pole point,compute at jm-1
+                jj = jm-1
+                DO I=1,IM
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  PSI(ip1,jj) = DPSI(I,J) + PSI(im1,jj-1)
+                  CHI(ip1,jj) = DCHI(I,J) + CHI(im1,jj-1)      
+                enddo
+              ENDIF
+            else
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=1,IM
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  PSI(ip1,2) = DPSI(I,J) + PSI(im1,J-1)
+                  CHI(ip1,2) = DCHI(I,J) + CHI(im1,J-1)             
+                enddo
+              ELSE                                   !pole point,compute at jm-1
+                jj = jm-1
+                DO I=1,IM
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  PSI(ip1,jj) = DPSI(I,J) + PSI(im1,jj-1)
+                  CHI(ip1,jj) = DPSI(I,J) + CHI(im1,jj-1)              
+                enddo
+              ENDIF
+            endif
+          ELSE
+            DO I=1,IM
+              ip1 = ie(i)
+              im1 = iw(i)
+              PSI(ip1,J-1) = DPSI(I,J) + PSI(im1,J+1)
+              CHI(ip1,J+1) = DCHI(I,J) + CHI(im1,J+1)                 
+            ENDDO
+          END IF
+	  ENDDO
 
       ENDIF                             ! END OF ME=0 BLOCK
 
