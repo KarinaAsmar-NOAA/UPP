@@ -77,7 +77,7 @@
        
       IF (ME==0) THEN 
 
-        allocate cosl(im,jm)
+        allocate(cosl(im,jm))
         allocate(iw(im),ie(im))
 
         imb2 = im/2
