@@ -97,7 +97,7 @@
           IF(J == 1) then                            ! Near North or South pole
    	    DO I=2,IM-1
                 psi_out(I,J) = 0.0 
-                CHI(I,J) = 0.0
+                chi_out(I,J) = 0.0
 	    ENDDO
           ELSE IF(J == JM) THEN                      ! Near North or South Pole
             if(gdlat(ista,j) < 0.) then ! count from north to south
@@ -108,7 +108,7 @@
                   ii = i + imb2
                   if (ii > im) ii = ii - im
                   psi_out(ip1,j) = dpsi_full(I,J) + psi_out(im1,J-1) 
-                  CHI(ip1,j) = DCHI(I,J) + CHI(im1,J-1)                
+                  chi_out(ip1,j) = dchi_full(I,J) + chi_out(im1,J-1)                
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
@@ -116,7 +116,7 @@
                   ip1 = ie(i)
                   im1 = iw(i)
                   psi_out(ip1,jj) = dpsi_full(I,J) + psi_out(im1,jj-1)
-                  CHI(ip1,jj) = DCHI(I,J) + CHI(im1,jj-1)      
+                  chi_out(ip1,jj) = dchi_full(I,J) + chi_out(im1,jj-1)      
                 enddo
               ENDIF
             else
@@ -127,7 +127,7 @@
                   ii = i + imb2
                   if (ii > im) ii = ii - im
                   psi_out(ip1,j) = dpsi_full(I,J) + psi_out(im1,J-1)
-                  CHI(ip1,j) = DCHI(I,J) + CHI(im1,J-1)             
+                  chi_out(ip1,j) = dchi_full(I,J) + chi_out(im1,J-1)             
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
@@ -135,7 +135,7 @@
                   ip1 = ie(i)
                   im1 = iw(i)
                   psi_out(ip1,jj) = dpsi_full(I,J) + psi_out(im1,jj-1)
-                  CHI(ip1,jj) = DPSI(I,J) + CHI(im1,jj-1)              
+                  chi_out(ip1,jj) = dchi_full(I,J) + chi_out(im1,jj-1)              
                 enddo
               ENDIF
             endif
@@ -144,7 +144,7 @@
               ip1 = ie(i)
               im1 = iw(i)
               psi_out(ip1,J-1) = dpsi_full(I,J) + psi_out(im1,J+1)
-              CHI(ip1,J+1) = DCHI(I,J) + CHI(im1,J+1)                 
+              chi_out(ip1,J+1) = dchi_full(I,J) + chi_out(im1,J+1)                 
             ENDDO
           END IF
 	  ENDDO
