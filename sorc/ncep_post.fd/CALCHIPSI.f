@@ -107,7 +107,7 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  psi_out(i+!,j) = dpsi_full(I,J) + psi_out(i-1,J-1) 
+                  psi_out(i+1,j) = dpsi_full(I,J) + psi_out(i-1,J-1) 
                   chi_out(i+1,j) = dchi_full(I,J) + chi_out(im1,J-1)                
                 enddo
               ELSE                                   !pole point,compute at jm-1
