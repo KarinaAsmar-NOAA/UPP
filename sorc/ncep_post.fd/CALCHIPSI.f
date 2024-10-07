@@ -107,7 +107,7 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  psi_out(ip1,j) = DPSI(I,J) + psi_out(im1,J-1) 
+                  psi_out(ip1,j) = dpsi_full(I,J) + psi_out(im1,J-1) 
                   CHI(ip1,j) = DCHI(I,J) + CHI(im1,J-1)                
                 enddo
               ELSE                                   !pole point,compute at jm-1
@@ -115,7 +115,7 @@
                 DO I=2,IM-1
                   ip1 = ie(i)
                   im1 = iw(i)
-                  psi_out(ip1,jj) = DPSI(I,J) + psi_out(im1,jj-1)
+                  psi_out(ip1,jj) = dpsi_full(I,J) + psi_out(im1,jj-1)
                   CHI(ip1,jj) = DCHI(I,J) + CHI(im1,jj-1)      
                 enddo
               ENDIF
@@ -126,7 +126,7 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  psi_out(ip1,j) = DPSI(I,J) + psi_out(im1,J-1)
+                  psi_out(ip1,j) = dpsi_full(I,J) + psi_out(im1,J-1)
                   CHI(ip1,j) = DCHI(I,J) + CHI(im1,J-1)             
                 enddo
               ELSE                                   !pole point,compute at jm-1
@@ -134,7 +134,7 @@
                 DO I=2,IM-1
                   ip1 = ie(i)
                   im1 = iw(i)
-                  psi_out(ip1,jj) = DPSI(I,J) + psi_out(im1,jj-1)
+                  psi_out(ip1,jj) = dpsi_full(I,J) + psi_out(im1,jj-1)
                   CHI(ip1,jj) = DPSI(I,J) + CHI(im1,jj-1)              
                 enddo
               ENDIF
@@ -143,7 +143,7 @@
                 DO I=2,IM-1
               ip1 = ie(i)
               im1 = iw(i)
-              psi_out(ip1,J+1) = DPSI(I,J) + psi_out(im1,J-1)
+              psi_out(ip1,J+1) = dpsi_full(I,J) + psi_out(im1,J-1)
               CHI(ip1,J+1) = DCHI(I,J) + CHI(im1,J+1)                 
             ENDDO
           END IF
