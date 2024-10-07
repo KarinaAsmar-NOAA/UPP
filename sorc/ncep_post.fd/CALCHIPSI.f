@@ -103,8 +103,8 @@
             if(gdlat(ista,j) < 0.) then ! count from north to south
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
                 DO I=2,IM-1
-		  print*,'check here1',i
-    		  print*,'line2',i+1,ip1
+		 ! print*,'check here1',i
+    		 ! print*,'line2',i+1,ip1
                   ip1 = ie(i)
                   im1 = iw(i)
                   ii = i + imb2
@@ -115,8 +115,8 @@
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
                 DO I=2,IM-1
-		  print*,'check here2',i
-    		  print*,'line2',i+1,ip1
+		  !print*,'check here2',i
+    		  !print*,'line2',i+1,ip1
                   ip1 = ie(i)
                   im1 = iw(i)
                   psi_out(ip1,jj) = dpsi_full(I,J) + psi_out(im1,jj-1)
@@ -126,8 +126,8 @@
             else
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
                 DO I=2,IM-1
-		  print*,'check here3',i
-    		  print*,'line2',i+1,ip1
+		!  print*,'check here3',i
+    		!  print*,'line2',i+1,ip1
                   ip1 = ie(i)
                   im1 = iw(i)
                   ii = i + imb2
@@ -138,8 +138,8 @@
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
                 DO I=2,IM-1
-		  print*,'check here4',i
-    		  print*,'line2',i+1,ip1
+		 ! print*,'check here4',i
+    		 ! print*,'line2',i+1,ip1
                   ip1 = ie(i)
                   im1 = iw(i)
                   psi_out(ip1,jj) = dpsi_full(I,J) + psi_out(im1,jj-1)
@@ -149,8 +149,8 @@
             endif
           ELSE
             DO I=2,IM-1
-		  print*,'check here5',i
-    		  print*,'line2',i+1,ip1
+		!  print*,'check here5',i
+    		!  print*,'line2',i+1,ip1
               ip1 = ie(i)
               im1 = iw(i)
               psi_out(ip1,J-1) = dpsi_full(I,J) + psi_out(im1,J+1)
