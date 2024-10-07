@@ -102,7 +102,7 @@
           ELSE IF(J == JM) THEN                      ! Near North or South Pole
             if(gdlat(ista,j) < 0.) then ! count from north to south
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
-                DO I=1,IM
+                DO I=2,IM-1
                   ip1 = ie(i)
                   im1 = iw(i)
                   ii = i + imb2
@@ -112,7 +112,7 @@
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
-                DO I=1,IM
+                DO I=2,IM-1
                   ip1 = ie(i)
                   im1 = iw(i)
                   psi_out(ip1,jj) = DPSI(I,J) + psi_out(im1,jj-1)
@@ -121,7 +121,7 @@
               ENDIF
             else
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
-                DO I=1,IM
+                DO I=2,IM-1
                   ip1 = ie(i)
                   im1 = iw(i)
                   ii = i + imb2
@@ -131,7 +131,7 @@
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
-                DO I=1,IM
+                DO I=2,IM-1
                   ip1 = ie(i)
                   im1 = iw(i)
                   psi_out(ip1,jj) = DPSI(I,J) + psi_out(im1,jj-1)
@@ -140,7 +140,7 @@
               ENDIF
             endif
           ELSE
-            DO I=1,IM
+                DO I=2,IM-1
               ip1 = ie(i)
               im1 = iw(i)
               psi_out(ip1,J-1) = DPSI(I,J) + psi_out(im1,J+1)
