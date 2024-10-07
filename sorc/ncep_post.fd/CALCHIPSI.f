@@ -77,26 +77,77 @@
        
       IF (ME==0) THEN 
 
-      	DO J=1,JM
-        DO I=1,IM
-	  IF ((I==IM) .OR. (I==1) .OR. (J==1)) THEN
-   	    PSI_OUT(I,J) = 0.0
-	    CHI_OUT(I,J) = 0.0
-   	  ELSE IF (J==JM) THEN
-      	    PSI_OUT(I,J) = DPSI_FULL(I,JM)
-	    CHI_OUT(I,J) = DCHI_FULL(I,JM)
-      	  ELSE IF (J==JM-1) THEN
-	    PSI_OUT(I,J) = DPSI_FULL(I-1,JM)
-     	    CHI_OUT(I,J) = DCHI_FULL(I-1,JM)
-	  ELSE IF (I==2) THEN
-   	    PSI_OUT(I,J) = DPSI_FULL(1,J+1)
-	    CHI_OUT(I,J) = DCHI_FULL(1,J+1)
-     	  ELSE 
-	    PSI_OUT(I,J) = DPSI_FULL(I-1,J+1) + PSI_OUT(I-2,J+2)
-     	    CHI_OUT(I,J) = DCHI_FULL(I-1,J+1) + CHI_OUT(I-2,J+2)
-          ENDIF
-	ENDDO
-        ENDDO
+        allocate(cosl(im,jm))
+        allocate(iw(im),ie(im))
+
+        imb2 = im/2
+        do i=1,im
+          ie(i) = i+1
+          iw(i) = i-1
+        enddo
+
+	do j=1,jm
+ 	    psi_out(1,j) = 0.0
+     	    chi_out(1,j) = 0.0
+	    psi_out(im,j) = 0.0
+     	    chi_out(im,j) = 0.0
+ 	enddo
+  
+        DO J=1,JM
+          IF(J == 1) then                            ! Near North or South pole
+   	    DO I=2,IM-1
+                psi_out(I,J) = 0.0 
+                chi_out(I,J) = 0.0
+	    ENDDO
+          ELSE IF(J == JM) THEN                      ! Near North or South Pole
+            if(gdlat(ista,j) < 0.) then ! count from north to south
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=2,IM-1
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  psi_out(ip1,j) = dpsi_full(I,J) + psi_out(im1,J-1) 
+                  chi_out(ip1,j) = dchi_full(I,J) + chi_out(im1,J-1)                
+                enddo
+              ELSE                                   !pole point,compute at jm-1
+                jj = jm-1
+                DO I=2,IM-1
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  psi_out(ip1,jj) = dpsi_full(I,J) + psi_out(im1,jj-1)
+                  chi_out(ip1,jj) = dchi_full(I,J) + chi_out(im1,jj-1)      
+                enddo
+              ENDIF
+            else
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=2,IM-1
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  psi_out(ip1,j) = dpsi_full(I,J) + psi_out(im1,J-1)
+                  chi_out(ip1,j) = dchi_full(I,J) + chi_out(im1,J-1)             
+                enddo
+              ELSE                                   !pole point,compute at jm-1
+                jj = jm-1
+                DO I=2,IM-1
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  psi_out(ip1,jj) = dpsi_full(I,J) + psi_out(im1,jj-1)
+                  chi_out(ip1,jj) = dchi_full(I,J) + chi_out(im1,jj-1)              
+                enddo
+              ENDIF
+            endif
+          ELSE
+            DO I=2,IM-1
+              ip1 = ie(i)
+              im1 = iw(i)
+              psi_out(ip1,J-1) = dpsi_full(I,J) + psi_out(im1,J+1)
+              chi_out(ip1,J-1) = dchi_full(I,J) + chi_out(im1,J-1)                 
+            ENDDO
+          END IF
+	  ENDDO
 
       ENDIF                             ! END OF ME=0 BLOCK
 
@@ -278,21 +329,25 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(ip1,J)==SPVAL .or. VP(im1,J+1)==SPVAL .or. &
-                     UP(ip1,J)==SPVAL .or. UP(im1,J+1)==SPVAL) cycle
-                  DPSI(I,J) = (0.5*((UP(im1,J+1)+UP(ip1,J)))*wrk3(i,j) - 0.5*(VP(ip1,J)+VP(im1,J+1))*wrk2(i,j))*wrk1(i,j)
-                  DCHI(I,J) = (-0.5*((UP(im1,J+1)+UP(ip1,J)))*wrk2(i,j) - 0.5*(VP(ip1,J)+VP(im1,J+1))*wrk3(i,j))*wrk1(i,j)
-                enddo
+                  if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
+                     UP(I,J)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
+                  DPSI(I,J) = (0.5*((UP(I,J+1)*COSL(I,J+1)+upoles(I,1)*coslpoles(I,1)))*wrk3(i,j) &
+		  & - 0.5*(VP(ip1,J)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
+                  DPSI(I,J) = (-0.5*((VP(I,J+1)*COSL(I,J+1)+vpoles(I,1)*coslpoles(I,1)))*wrk3(i,j) &
+		  & - 0.5*(UP(ip1,J)+UP(im1,J))*wrk2(i,j))*wrk1(i,j)        
+    		enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VP(im1,jj+1)==SPVAL .or. VP(ip1,J)==SPVAL .or. &
-                     UP(im1,jj+1)==SPVAL .or. UP(ip1,J)==SPVAL) cycle
-                  DPSI(I,J) = (0.5*((UP(im1,jj+1)+UP(ip1,J)))*wrk3(i,jj) - 0.5*(VP(ip1,J)+VP(im1,jj+1))*wrk2(i,jj))*wrk1(i,jj)
-                  DCHI(I,J) = (-0.5*((UP(im1,jj+1)+UP(ip1,J)))*wrk2(i,jj) - 0.5*(VP(ip1,J)+VP(im1,jj+1))*wrk3(i,jj))*wrk1(i,jj)
-                enddo
+                  if(VP(im1,jj)==SPVAL .or. VP(ip1,jj)==SPVAL .or. &
+                     UP(I,jj+1)==SPVAL .or. UP(I,J)==SPVAL) cycle
+                  DPSI(I,J) = (0.5*((UP(I,jj+1)*COSL(I,jj+1)+UP(I,J)*COSL(I,J)))*wrk3(i,jj) &
+		  & - 0.5*(VP(ip1,jj)+VP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)
+                  DCHI(I,J) = (-0.5*((VP(I,jj+1)*COSL(I,jj+1)+VP(I,J)*COSL(I,J)))*wrk3(i,jj) &
+		  & - 0.5*(UP(ip1,jj)+UP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)            
+ 		   enddo
               ENDIF
             else
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
@@ -301,21 +356,25 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(im1,J+1)==SPVAL .or. VP(ip1,J)==SPVAL .or. &
-                     UP(im1,1+1)==SPVAL .or. UP(ip1,J)==SPVAL) cycle
-                  DPSI(I,J) = (0.5*((UP(im1,J+1)+UP(ip1,J)))*wrk3(i,j) - 0.5*(VP(ip1,J)+VP(im1,J+1))*wrk2(i,j))*wrk1(i,j)
-                  DCHI(I,J) = (-0.5*((UP(im1,J+1)+UP(ip1,J)))*wrk2(i,j) - 0.5*(VP(ip1,J)+VP(im1,J+1))*wrk3(i,j))*wrk1(i,j)              
-                enddo
+                  if(VP(im1,J)==SPVAL .or. VP(ip1,J)==SPVAL .or. &
+                     UP(I,1+1)==SPVAL .or. UP(I,J)==SPVAL) cycle
+                  DPSI(I,J) = (0.5*((UP(I,J+1)*COSL(I,J+1)+upoles(I,1)*coslpoles(I,1)))*wrk3(i,j) &
+		  & - 0.5*(VP(ip1,J)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
+                  DCHI(I,J) = (-0.5*((VP(I,J+1)*COSL(I,J+1)+vpoles(I,1)*coslpoles(I,1)))*wrk3(i,j) &
+		  & - 0.5*(UP(ip1,J)+UP(im1,J))*wrk2(i,j))*wrk1(i,j)     
+    		enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VP(im1,jj+1)==SPVAL .or. VP(ip1,J)==SPVAL .or. &
-                     UP(im1,jj+1)==SPVAL .or. UP(ip1,J)==SPVAL) cycle
-                  DPSI(I,J) = (0.5*((UP(im1,jj+1)+UP(ip1,J)))*wrk3(i,jj) - 0.5*(VP(ip1,J)+VP(im1,jj+1))*wrk2(i,jj))*wrk1(i,jj)
-                  DCHI(I,J) = (-0.5*((UP(im1,jj+1)+UP(ip1,J)))*wrk2(i,jj) - 0.5*(VP(ip1,J)+VP(im1,jj+1))*wrk3(i,jj))*wrk1(i,jj)                
-                enddo
+                  if(VP(im1,jj)==SPVAL .or. VP(ip1,jj)==SPVAL .or. &
+                     UP(I,jj+1)==SPVAL .or. UP(I,J)==SPVAL) cycle
+                  DPSI(I,J) = (0.5*((UP(I,jj+1)*COSL(I,jj+1)+UP(I,J)*COSL(I,J)))*wrk3(i,jj) &
+		  & - 0.5*(VP(ip1,jj)+VP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)
+                  DCHI(I,J) = (-0.5*((VP(I,jj+1)*COSL(I,jj+1)+VP(I,J)*COSL(I,J)))*wrk3(i,jj) &
+		  & - 0.5*(UP(ip1,jj)+UP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)          
+    		enddo
               ENDIF
             endif
           ELSE IF(J == JM) THEN                      ! Near North or South Pole
@@ -326,21 +385,25 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(im1,J)==SPVAL .or. VP(ip1,J-1)==SPVAL .or. &
-                     UP(im1,J)==SPVAL .or. UP(ip1,J-1)==SPVAL) cycle
-                  DPSI(I,J) = (0.5*((UP(im1,J)+UP(ip1,J-1)))*wrk3(i,j) - 0.5*(VP(ip1,J-1)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
-                  DCHI(I,J) = (-0.5*((UP(im1,J)+UP(ip1,J-1)))*wrk2(i,j) - 0.5*(VP(ip1,J-1)+VP(im1,J))*wrk3(i,j))*wrk1(i,j)                
-                enddo
+                  if(VP(im1,J)==SPVAL .or. VP(ip1,J)==SPVAL .or. &
+                     UP(I,J)==SPVAL .or. UP(I,J-1)==SPVAL) cycle
+                  DPSI(I,J) = (0.5*((upoles(I,2)*coslpoles(I,2)+UP(I,J-1)*COSL(I,J-1)))*wrk3(i,j)&
+		  & - 0.5*(VP(ip1,J)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
+                  DCHI(I,J) = (-0.5*((vpoles(I,2)*coslpoles(I,2)+VP(I,J-1)*COSL(I,J-1)))*wrk3(i,j)&
+		  & - 0.5*(UP(ip1,J)+UP(im1,J))*wrk2(i,j))*wrk1(i,j)             
+    		enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VP(im1,J)==SPVAL .or. VP(ip1,jj-1)==SPVAL .or. &
-                     UP(im1,J)==SPVAL .or. UP(ip1,jj-1)==SPVAL) cycle
-                  DPSI(I,J) = (0.5*((UP(im1,J)+UP(ip1,jj-1)))*wrk3(i,jj) - 0.5*(VP(ip1,jj-1)+VP(im1,J))*wrk2(i,jj))*wrk1(i,jj)
-                  DCHI(I,J) = (-0.5*((UP(im1,J)+UP(ip1,jj-1)))*wrk2(i,jj) - 0.5*(VP(ip1,jj-1)+VP(im1,J))*wrk3(i,jj))*wrk1(i,jj)          
-                enddo
+                  if(VP(im1,jj)==SPVAL .or. VP(ip1,jj)==SPVAL .or. &
+                     UP(I,J)==SPVAL .or. UP(I,jj-1)==SPVAL) cycle
+                  DPSI(I,J) = (0.5*((UP(I,J)*COSL(I,J)+UP(I,jj-1)*COSL(I,jj-1)))*wrk3(i,jj) &
+		  & - 0.5*(VP(ip1,jj)+VP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)
+                  DCHI(I,J) = (-0.5*((VP(I,J)*COSL(I,J)+VP(I,jj-1)*COSL(I,jj-1)))*wrk3(i,jj) &
+		  & - 0.5*(UP(ip1,jj)+UP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)         
+    		enddo
               ENDIF
             else
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
@@ -349,32 +412,38 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  if(VP(im1,J)==SPVAL .or. VP(ip1,J-1)==SPVAL .or. &
-                     UP(im1,J)==SPVAL .or. UPOLES(ip1,J-1)==SPVAL) cycle
-                  DPSI(I,J) = (0.5*((UP(im1,J)+UP(ip1,J-1)))*wrk3(i,j) - 0.5*(VP(ip1,J-1)+VP(im1,2))*wrk2(i,j))*wrk1(i,j)
-                  DCHI(I,J) = (-0.5*((UP(im1,J)+UP(ip1,J-1)))*wrk2(i,j) - 0.5*(VP(ip1,J-1)+VP(im1,2))*wrk3(i,j))*wrk1(i,j)              
-                enddo
+                  if(VP(im1,J)==SPVAL .or. VP(ip1,J)==SPVAL .or. &
+                     UP(I,J)==SPVAL .or. UPOLES(I,J-1)==SPVAL) cycle
+                  DPSI(I,J) = (0.5*((upoles(I,2)*coslpoles(I,2)+UP(I,J-1)*COSL(I,J-1)))*wrk3(i,j) &
+		  & - 0.5*(VP(ip1,J)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
+                  DCHI(I,J) = (-0.5*((vpoles(I,2)*coslpoles(I,2)+VP(I,J-1)*COSL(I,J-1)))*wrk3(i,j) &
+		  & - 0.5*(UP(ip1,J)+UP(im1,J))*wrk2(i,j))*wrk1(i,j)             
+    		enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
                 DO I=ISTA,IEND
                   ip1 = ie(i)
                   im1 = iw(i)
-                  if(VP(im1,J)==SPVAL .or. VP(ip1,jj-1)==SPVAL .or. &
-                     UP(im1,J)==SPVAL .or. UP(ip1,jj-1)==SPVAL) cycle
-                  DPSI(I,J) = (0.5*((UP(im1,J)+UP(ip1,jj-1)))*wrk3(i,jj) - 0.5*(VP(ip1,jj-1)+VP(im1,J))*wrk2(i,jj))*wrk1(i,jj)
-                  DCHI(I,J) = (-0.5*((UP(im1,J)+UP(ip1,jj-1)))*wrk2(i,jj) - 0.5*(VP(ip1,jj-1)+VP(im1,J))*wrk3(i,jj))*wrk1(i,jj)                
-                enddo
+                  if(VP(im1,jj)==SPVAL .or. VP(ip1,jj)==SPVAL .or. &
+                     UP(I,J)==SPVAL .or. UP(I,jj-1)==SPVAL) cycle
+                  DPSI(I,J) = (0.5*((UP(I,J)*COSL(I,J)+UP(I,jj-1)*COSL(I,jj-1)))*wrk3(i,jj) &
+		  & - 0.5*(VP(ip1,jj)+VP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)
+                  DCHI(I,J) = (-0.5*((VP(I,J)*COSL(I,J)+VP(I,jj-1)*COSL(I,jj-1)))*wrk3(i,jj) &
+		  & - 0.5*(UP(ip1,jj)+UP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)                
+    		enddo
               ENDIF
             endif
           ELSE
             DO I=ISTA,IEND
               ip1 = ie(i)
               im1 = iw(i)
-              if(VP(im1,J+1)==SPVAL .or. VP(ip1,J-1)==SPVAL .or. &
-                 UP(im1,J+1)==SPVAL .or. UP(ip1,J-1)==SPVAL) cycle
-                  DPSI(I,J) = (0.5*((UP(im1,J+1)+UP(ip1,J-1)))*wrk3(i,j) - 0.5*(VP(ip1,J+1)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
-                  DCHI(I,J) = (-0.5*((UP(im1,J+1)+UP(ip1,J-1)))*wrk2(i,j) - 0.5*(VP(ip1,J+1)+VP(im1,J))*wrk3(i,j))*wrk1(i,j)                   
-            ENDDO
+              if(VP(im1,J)==SPVAL .or. VP(ip1,J)==SPVAL .or. &
+                 UP(I,J+1)==SPVAL .or. UP(I,J-1)==SPVAL) cycle
+                  DPSI(I,J) = (0.5*(UP(I,J+1)*COSL(J,J+1)+UP(I,J-1)*COSL(I,J-1))*wrk3(i,j) &
+		  & - 0.5*(VP(ip1,J)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
+                  DCHI(I,J) = (-0.5*(VP(I,J+1)*COSL(J,J+1)+VP(I,J-1)*COSL(I,J-1))*wrk3(i,j) &
+		  & - 0.5*(UP(ip1,J)+UP(im1,J))*wrk2(i,j))*wrk1(i,j)         
+    		ENDDO
           END IF
           if (npass > 0) then
 !$omp  parallel do private(i,j,tx1,tx2,tx3,tx4)
