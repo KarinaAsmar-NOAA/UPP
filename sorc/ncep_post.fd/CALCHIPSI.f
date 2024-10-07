@@ -90,7 +90,7 @@
           IF(J == 1) then                            ! Near North or South pole
             if(gdlat(ista,j) > 0.) then ! count from north to south
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
-                DO I=ISTA,IEND
+                DO I=1,IM
                   ip1 = ie(i)
                   im1 = iw(i)
                   ii = i + imb2
