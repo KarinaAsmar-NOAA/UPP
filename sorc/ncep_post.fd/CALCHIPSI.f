@@ -95,7 +95,7 @@
   
         DO J=1,JM
           IF(J == 1) then                            ! Near North or South pole
-   	    DO I=1,IM
+   	    DO I=2,IM-1
                 psi_out(I,J) = 0.0 
                 CHI(I,J) = 0.0
 	    ENDDO
@@ -143,7 +143,7 @@
                 DO I=2,IM-1
               ip1 = ie(i)
               im1 = iw(i)
-              psi_out(ip1,J-1) = DPSI(I,J) + psi_out(im1,J+1)
+              psi_out(ip1,J+1) = DPSI(I,J) + psi_out(im1,J-1)
               CHI(ip1,J+1) = DCHI(I,J) + CHI(im1,J+1)                 
             ENDDO
           END IF
