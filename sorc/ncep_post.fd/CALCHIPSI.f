@@ -333,8 +333,9 @@
                      UP(I,J)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
                   DPSI(I,J) = (0.5*((UP(I,J+1)*COSL(I,J+1)+upoles(I,1)*coslpoles(I,1)))*wrk3(i,j) &
 		  & - 0.5*(VP(ip1,J)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
-                  DCHI(I,J) = (-0.5*((UP(I,J+1)+UP(I,J)))*wrk2(i,j) - 0.5*(VP(ip1,J)+VP(im1,J+1))*wrk3(i,j))*wrk1(i,j)
-                enddo
+                  DPSI(I,J) = (-0.5*((VP(I,J+1)*COSL(I,J+1)+vpoles(I,1)*coslpoles(I,1)))*wrk3(i,j) &
+		  & - 0.5*(UP(ip1,J)+UP(im1,J))*wrk2(i,j))*wrk1(i,j)        
+    		enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
                 DO I=ISTA,IEND
@@ -345,7 +346,8 @@
                   DPSI(I,J) = (0.5*((UP(I,jj+1)*COSL(I,jj+1)+UP(I,J)*COSL(I,J)))*wrk3(i,jj) &
 		  & - 0.5*(VP(ip1,jj)+VP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)
                   DCHI(I,J) = (-0.5*((VP(I,jj+1)*COSL(I,jj+1)+VP(I,J)*COSL(I,J)))*wrk3(i,jj) &
-		  & - 0.5*(UP(ip1,jj)+UP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)                enddo
+		  & - 0.5*(UP(ip1,jj)+UP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)            
+ 		   enddo
               ENDIF
             else
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
@@ -359,7 +361,8 @@
                   DPSI(I,J) = (0.5*((UP(I,J+1)*COSL(I,J+1)+upoles(I,1)*coslpoles(I,1)))*wrk3(i,j) &
 		  & - 0.5*(VP(ip1,J)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
                   DCHI(I,J) = (-0.5*((VP(I,J+1)*COSL(I,J+1)+vpoles(I,1)*coslpoles(I,1)))*wrk3(i,j) &
-		  & - 0.5*(UP(ip1,J)+UP(im1,J))*wrk2(i,j))*wrk1(i,j)                enddo
+		  & - 0.5*(UP(ip1,J)+UP(im1,J))*wrk2(i,j))*wrk1(i,j)     
+    		enddo
               ELSE                                   !pole point, compute at j=2
                 jj = 2
                 DO I=ISTA,IEND
@@ -370,7 +373,8 @@
                   DPSI(I,J) = (0.5*((UP(I,jj+1)*COSL(I,jj+1)+UP(I,J)*COSL(I,J)))*wrk3(i,jj) &
 		  & - 0.5*(VP(ip1,jj)+VP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)
                   DCHI(I,J) = (-0.5*((VP(I,jj+1)*COSL(I,jj+1)+VP(I,J)*COSL(I,J)))*wrk3(i,jj) &
-		  & - 0.5*(UP(ip1,jj)+UP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)                enddo
+		  & - 0.5*(UP(ip1,jj)+UP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)          
+    		enddo
               ENDIF
             endif
           ELSE IF(J == JM) THEN                      ! Near North or South Pole
@@ -386,7 +390,8 @@
                   DPSI(I,J) = (0.5*((upoles(I,2)*coslpoles(I,2)+UP(I,J-1)*COSL(I,J-1)))*wrk3(i,j)&
 		  & - 0.5*(VP(ip1,J)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
                   DCHI(I,J) = (-0.5*((vpoles(I,2)*coslpoles(I,2)+VP(I,J-1)*COSL(I,J-1)))*wrk3(i,j)&
-		  & - 0.5*(UP(ip1,J)+UP(im1,J))*wrk2(i,j))*wrk1(i,j)                enddo
+		  & - 0.5*(UP(ip1,J)+UP(im1,J))*wrk2(i,j))*wrk1(i,j)             
+    		enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
                 DO I=ISTA,IEND
@@ -397,7 +402,8 @@
                   DPSI(I,J) = (0.5*((UP(I,J)*COSL(I,J)+UP(I,jj-1)*COSL(I,jj-1)))*wrk3(i,jj) &
 		  & - 0.5*(VP(ip1,jj)+VP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)
                   DCHI(I,J) = (-0.5*((VP(I,J)*COSL(I,J)+VP(I,jj-1)*COSL(I,jj-1)))*wrk3(i,jj) &
-		  & - 0.5*(UP(ip1,jj)+UP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)                enddo
+		  & - 0.5*(UP(ip1,jj)+UP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)         
+    		enddo
               ENDIF
             else
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
@@ -411,7 +417,8 @@
                   DPSI(I,J) = (0.5*((upoles(I,2)*coslpoles(I,2)+UP(I,J-1)*COSL(I,J-1)))*wrk3(i,j) &
 		  & - 0.5*(VP(ip1,J)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
                   DCHI(I,J) = (-0.5*((vpoles(I,2)*coslpoles(I,2)+VP(I,J-1)*COSL(I,J-1)))*wrk3(i,j) &
-		  & - 0.5*(UP(ip1,J)+UP(im1,J))*wrk2(i,j))*wrk1(i,j)                enddo
+		  & - 0.5*(UP(ip1,J)+UP(im1,J))*wrk2(i,j))*wrk1(i,j)             
+    		enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
                 DO I=ISTA,IEND
@@ -422,7 +429,8 @@
                   DPSI(I,J) = (0.5*((UP(I,J)*COSL(I,J)+UP(I,jj-1)*COSL(I,jj-1)))*wrk3(i,jj) &
 		  & - 0.5*(VP(ip1,jj)+VP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)
                   DCHI(I,J) = (-0.5*((VP(I,J)*COSL(I,J)+VP(I,jj-1)*COSL(I,jj-1)))*wrk3(i,jj) &
-		  & - 0.5*(UP(ip1,jj)+UP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)                enddo
+		  & - 0.5*(UP(ip1,jj)+UP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)                
+    		enddo
               ENDIF
             endif
           ELSE
@@ -434,7 +442,8 @@
                   DPSI(I,J) = (0.5*(UP(I,J+1)*COSL(J,J+1)+UP(I,J-1)*COSL(I,J-1))*wrk3(i,j) &
 		  & - 0.5*(VP(ip1,J)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
                   DCHI(I,J) = (-0.5*(VP(I,J+1)*COSL(J,J+1)+VP(I,J-1)*COSL(I,J-1))*wrk3(i,j) &
-		  & - 0.5*(UP(ip1,J)+UP(im1,J))*wrk2(i,j))*wrk1(i,j)            ENDDO
+		  & - 0.5*(UP(ip1,J)+UP(im1,J))*wrk2(i,j))*wrk1(i,j)         
+    		ENDDO
           END IF
           if (npass > 0) then
 !$omp  parallel do private(i,j,tx1,tx2,tx3,tx4)
