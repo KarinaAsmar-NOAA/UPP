@@ -140,10 +140,10 @@
               ENDIF
             endif
           ELSE
-                DO I=2,IM-1
+            DO I=2,IM-1
               ip1 = ie(i)
               im1 = iw(i)
-              psi_out(ip1,J+1) = dpsi_full(I,J) + psi_out(im1,J-1)
+              psi_out(ip1,J-1) = dpsi_full(I,J) + psi_out(im1,J+1)
               CHI(ip1,J+1) = DCHI(I,J) + CHI(im1,J+1)                 
             ENDDO
           END IF
