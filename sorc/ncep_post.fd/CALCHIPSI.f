@@ -86,46 +86,19 @@
           iw(i) = i-1
         enddo
 
+	do j=1,jm
+ 	    psi_out(1,j) = 0.0
+     	    chi_out(1,j) = 0.0
+	    psi_out(im,j) = 0.0
+     	    chi_out(im,j) = 0.0
+ 	enddo
+  
         DO J=1,JM
           IF(J == 1) then                            ! Near North or South pole
-            if(gdlat(ista,j) > 0.) then ! count from north to south
-              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
-                DO I=1,IM
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                  ii = i + imb2
-                  if (ii > im) ii = ii - im
-                  PSI(I,J) = 0.0 
-                  CHI(I,J) = 0.0
-                enddo
-              ELSE                                   !pole point, compute at j=2
-                jj = 2
-                DO I=1,IM
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                  PSI(ip1,jj+1) = DPSI(I,J) + PSI(im1,jj)
-                  CHI(ip1,jj+1) = DCHI(I,J) + CHI(im1,jj)
-                enddo
-              ENDIF
-            else
-              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
-                DO I=1,IM
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                  ii = i + imb2
-                  if (ii > im) ii = ii - im
-                  PSI(ip1,J+1) = DPSI(I,J) 
-                  CHI(ip1,J+1) = DCHI(I,J)    
-                enddo
-              ELSE                                   !pole point, compute at j=2
-                jj = 2
-                DO I=1,IM
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                  PSI(ip1,jj+1) = DPSI(I,J) + PSI(im1,jj)             
-                enddo
-              ENDIF
-            endif
+   	    DO I=1,IM
+                psi_out(I,J) = 0.0 
+                CHI(I,J) = 0.0
+	    ENDDO
           ELSE IF(J == JM) THEN                      ! Near North or South Pole
             if(gdlat(ista,j) < 0.) then ! count from north to south
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
@@ -134,15 +107,15 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  PSI(ip1,2) = DPSI(I,J) + PSI(im1,J-1) 
-                  CHI(ip1,2) = DCHI(I,J) + CHI(im1,J-1)                
+                  psi_out(ip1,j) = DPSI(I,J) + psi_out(im1,J-1) 
+                  CHI(ip1,j) = DCHI(I,J) + CHI(im1,J-1)                
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
                 DO I=1,IM
                   ip1 = ie(i)
                   im1 = iw(i)
-                  PSI(ip1,jj) = DPSI(I,J) + PSI(im1,jj-1)
+                  psi_out(ip1,jj) = DPSI(I,J) + psi_out(im1,jj-1)
                   CHI(ip1,jj) = DCHI(I,J) + CHI(im1,jj-1)      
                 enddo
               ENDIF
@@ -153,15 +126,15 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  PSI(ip1,2) = DPSI(I,J) + PSI(im1,J-1)
-                  CHI(ip1,2) = DCHI(I,J) + CHI(im1,J-1)             
+                  psi_out(ip1,j) = DPSI(I,J) + psi_out(im1,J-1)
+                  CHI(ip1,j) = DCHI(I,J) + CHI(im1,J-1)             
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
                 DO I=1,IM
                   ip1 = ie(i)
                   im1 = iw(i)
-                  PSI(ip1,jj) = DPSI(I,J) + PSI(im1,jj-1)
+                  psi_out(ip1,jj) = DPSI(I,J) + psi_out(im1,jj-1)
                   CHI(ip1,jj) = DPSI(I,J) + CHI(im1,jj-1)              
                 enddo
               ENDIF
@@ -170,7 +143,7 @@
             DO I=1,IM
               ip1 = ie(i)
               im1 = iw(i)
-              PSI(ip1,J-1) = DPSI(I,J) + PSI(im1,J+1)
+              psi_out(ip1,J-1) = DPSI(I,J) + psi_out(im1,J+1)
               CHI(ip1,J+1) = DCHI(I,J) + CHI(im1,J+1)                 
             ENDDO
           END IF
