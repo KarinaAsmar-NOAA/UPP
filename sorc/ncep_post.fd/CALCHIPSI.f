@@ -132,6 +132,8 @@
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
                 DO I=2,IM-1
+		  print*,'check here',i
+    		  print*,'line2',i+1,ip1
                   ip1 = ie(i)
                   im1 = iw(i)
                   psi_out(ip1,jj) = dpsi_full(I,J) + psi_out(im1,jj-1)
