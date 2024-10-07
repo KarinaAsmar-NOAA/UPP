@@ -153,7 +153,7 @@
     		!  print*,'line2',i+1,ip1
               ip1 = ie(i)
               im1 = iw(i)
-              psi_out(ip1,J-1) = dpsi_full(I,J) + psi_out(im1,J+1)
+              psi_out(ip1,J+1) = dpsi_full(I,J) + psi_out(im1,J-1)
               chi_out(ip1,J-1) = dchi_full(I,J) + chi_out(im1,J+1)                 
             ENDDO
           END IF
