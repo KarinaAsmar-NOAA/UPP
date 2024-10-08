@@ -107,7 +107,7 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  psi_out(ip1,j-1) = dpsi_full(I,J) - psi_out(im1,2) 
+                  psi_out(ip1,j-1) = dpsi_full(I,J) + psi_out(im1,2) 
                   chi_out(ip1,j-1) = dchi_full(I,J) + chi_out(im1,2)                
                 enddo
               ELSE                                   !pole point,compute at jm-1
@@ -126,16 +126,16 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  psi_out(ip1,j-1) = -dpsi_full(I,J) + psi_out(im1,2)
-                  chi_out(ip1,j-1) = -dchi_full(I,J) + chi_out(im1,2)             
+                  psi_out(ip1,j-1) = dpsi_full(I,J) + psi_out(im1,2)
+                  chi_out(ip1,j-1) = dchi_full(I,J) + chi_out(im1,2)             
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
                 DO I=2,IM-1
                   ip1 = ie(i)
                   im1 = iw(i)
-                  psi_out(ip1,j) = dpsi_full(I,J) - psi_out(im1,jj-1)
-                  chi_out(ip1,j) = dchi_full(I,J) - chi_out(im1,jj-1)              
+                  psi_out(ip1,j) = dpsi_full(I,J) + psi_out(im1,jj-1)
+                  chi_out(ip1,j) = dchi_full(I,J) + chi_out(im1,jj-1)              
                 enddo
               ENDIF
             endif
