@@ -107,8 +107,8 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  psi_out(ip1,j) = dpsi_full(I,J) + psi_out(im1,J-1) 
-                  chi_out(ip1,j) = dchi_full(I,J) + chi_out(im1,J-1)                
+                  psi_out(ip1,j-1) = dpsi_full(I,J) - psi_out(im1,2) 
+                  chi_out(ip1,j-1) = dchi_full(I,J) + chi_out(im1,2)                
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
@@ -126,16 +126,16 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  psi_out(ip1,j) = dpsi_full(I,J) + psi_out(im1,J-1)
-                  chi_out(ip1,j) = dchi_full(I,J) + chi_out(im1,J-1)             
+                  psi_out(ip1,j-1) = -dpsi_full(I,J) + psi_out(im1,2)
+                  chi_out(ip1,j-1) = -dchi_full(I,J) + chi_out(im1,2)             
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
                 DO I=2,IM-1
                   ip1 = ie(i)
                   im1 = iw(i)
-                  psi_out(ip1,jj) = dpsi_full(I,J) + psi_out(im1,jj-1)
-                  chi_out(ip1,jj) = dchi_full(I,J) + chi_out(im1,jj-1)              
+                  psi_out(ip1,j) = dpsi_full(I,J) - psi_out(im1,jj-1)
+                  chi_out(ip1,j) = dchi_full(I,J) - chi_out(im1,jj-1)              
                 enddo
               ENDIF
             endif
@@ -331,11 +331,11 @@
                   if (ii > im) ii = ii - im
                   if(VP(ip1,J)==SPVAL .or. VP(im1,J)==SPVAL .or. &
                      upoles(II,1)==SPVAL .or. UP(I,J+1)==SPVAL) cycle
-                  DPSI(I,J) = (0.5*((-UP(I,J+1)*COSL(I,J+1)+upoles(II,1)*coslpoles(II,1)))*wrk3(i,j) &
+                  DPSI(I,J) = (0.5*((UP(I,J+1)*COSL(I,J+1)-upoles(II,1)*coslpoles(II,1)))*wrk3(i,j) &
 		  & - 0.5*(VP(ip1,J)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
                   if(UP(ip1,J)==SPVAL .or. UP(im1,J)==SPVAL .or. &
                      vpoles(II,1)==SPVAL .or. VP(I,J+1)==SPVAL) cycle
-                  DCHI(I,J) = (-0.5*((-VP(I,J+1)*COSL(I,J+1)+vpoles(II,1)*coslpoles(II,1)))*wrk3(i,j) &
+                  DCHI(I,J) = (-0.5*((VP(I,J+1)*COSL(I,J+1)-vpoles(II,1)*coslpoles(II,1)))*wrk3(i,j) &
 		  & - 0.5*(UP(ip1,J)+UP(im1,J))*wrk2(i,j))*wrk1(i,j)        
     		enddo
               ELSE                                   !pole point, compute at j=2
@@ -362,11 +362,11 @@
                   if (ii > im) ii = ii - im
                   if(VP(im1,J)==SPVAL .or. VP(ip1,J)==SPVAL .or. &
                      UP(I,J+1)==SPVAL .or. upoles(II,1)==SPVAL) cycle
-                  DPSI(I,J) = (0.5*((UP(I,J+1)*COSL(I,J+1)-upoles(II,1)*coslpoles(II,1)))*wrk3(i,j) &
+                  DPSI(I,J) = (0.5*((-UP(I,J+1)*COSL(I,J+1)+upoles(II,1)*coslpoles(II,1)))*wrk3(i,j) &
 		  & - 0.5*(VP(ip1,J)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
                   if(UP(im1,J)==SPVAL .or. UP(ip1,J)==SPVAL .or. &
                      VP(I,J+1)==SPVAL .or. vpoles(II,1)==SPVAL) cycle
-                  DCHI(I,J) = (-0.5*((VP(I,J+1)*COSL(I,J+1)-vpoles(II,1)*coslpoles(II,1)))*wrk3(i,j) &
+                  DCHI(I,J) = (-0.5*((-VP(I,J+1)*COSL(I,J+1)+vpoles(II,1)*coslpoles(II,1)))*wrk3(i,j) &
 		  & - 0.5*(UP(ip1,J)+UP(im1,J))*wrk2(i,j))*wrk1(i,j)     
     		enddo
               ELSE                                   !pole point, compute at j=2
@@ -376,11 +376,11 @@
                   im1 = iw(i)
                   if(VP(im1,jj)==SPVAL .or. VP(ip1,jj)==SPVAL .or. &
                      UP(I,jj+1)==SPVAL .or. UP(I,J)==SPVAL) cycle
-                  DPSI(I,J) = (0.5*((UP(I,jj+1)*COSL(I,jj+1)+UP(I,J)*COSL(I,J)))*wrk3(i,jj) &
+                  DPSI(I,J) = (0.5*((UP(I,jj+1)*COSL(I,jj+1)-UP(I,J)*COSL(I,J)))*wrk3(i,jj) &
 		  & - 0.5*(VP(ip1,jj)+VP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)
                   if(UP(im1,jj)==SPVAL .or. UP(ip1,jj)==SPVAL .or. &
                      VP(I,jj+1)==SPVAL .or. VP(I,J)==SPVAL) cycle
-                  DCHI(I,J) = (-0.5*((VP(I,jj+1)*COSL(I,jj+1)+VP(I,J)*COSL(I,J)))*wrk3(i,jj) &
+                  DCHI(I,J) = (-0.5*((VP(I,jj+1)*COSL(I,jj+1)-VP(I,J)*COSL(I,J)))*wrk3(i,jj) &
 		  & - 0.5*(UP(ip1,jj)+UP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)          
     		enddo
               ENDIF
@@ -426,11 +426,11 @@
                   if (ii > im) ii = ii - im
                   if(VP(im1,J)==SPVAL .or. VP(ip1,J)==SPVAL .or. &
                      UP(I,J-1)==SPVAL .or. upoles(II,2)==SPVAL) cycle
-                  DPSI(I,J) = (0.5*((upoles(II,2)*coslpoles(II,2)-UP(I,J-1)*COSL(I,J-1)))*wrk3(i,j) &
+                  DPSI(I,J) = (0.5*((-upoles(II,2)*coslpoles(II,2)-UP(I,J-1)*COSL(I,J-1)))*wrk3(i,j) &
 		  & - 0.5*(VP(ip1,J)+VP(im1,J))*wrk2(i,j))*wrk1(i,j)
                   if(UP(im1,J)==SPVAL .or. UP(ip1,J)==SPVAL .or. &
                      VP(I,J-1)==SPVAL .or. vpoles(II,2)==SPVAL) cycle
-                  DCHI(I,J) = (-0.5*((vpoles(II,2)*coslpoles(II,2)-VP(I,J-1)*COSL(I,J-1)))*wrk3(i,j) &
+                  DCHI(I,J) = (-0.5*((-vpoles(II,2)*coslpoles(II,2)-VP(I,J-1)*COSL(I,J-1)))*wrk3(i,j) &
 		  & - 0.5*(UP(ip1,J)+UP(im1,J))*wrk2(i,j))*wrk1(i,j)             
     		enddo
               ELSE                                   !pole point,compute at jm-1
@@ -440,11 +440,11 @@
                   im1 = iw(i)
                   if(VP(im1,jj)==SPVAL .or. VP(ip1,jj)==SPVAL .or. &
                      UP(I,J)==SPVAL .or. UP(I,jj-1)==SPVAL) cycle
-                  DPSI(I,J) = (0.5*((UP(I,J)*COSL(I,J)+UP(I,jj-1)*COSL(I,jj-1)))*wrk3(i,jj) &
+                  DPSI(I,J) = (0.5*((UP(I,J)*COSL(I,J)-UP(I,jj-1)*COSL(I,jj-1)))*wrk3(i,jj) &
 		  & - 0.5*(VP(ip1,jj)+VP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)
                   if(UP(im1,jj)==SPVAL .or. UP(ip1,jj)==SPVAL .or. &
                      VP(I,J)==SPVAL .or. VP(I,jj-1)==SPVAL) cycle
-                  DCHI(I,J) = (-0.5*((VP(I,J)*COSL(I,J)+VP(I,jj-1)*COSL(I,jj-1)))*wrk3(i,jj) &
+                  DCHI(I,J) = (-0.5*((VP(I,J)*COSL(I,J)-VP(I,jj-1)*COSL(I,jj-1)))*wrk3(i,jj) &
 		  & - 0.5*(UP(ip1,jj)+UP(im1,jj))*wrk2(i,jj))*wrk1(i,jj)                
     		enddo
               ENDIF
