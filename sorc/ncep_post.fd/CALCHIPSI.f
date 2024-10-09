@@ -57,6 +57,7 @@
       INTEGER, allocatable ::  IHE(:),IHW(:), IE(:),IW(:)
       integer ip1,im1,ii,iir,iil,jj,JMT2,imb2, npass, nn, jtem
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u) :: DCHI, DPSI
+      REAL, dimension(IM,2) :: DPSIFULLPOLES, DCHIFULLPOLES
       real, allocatable :: CHI1(:),CHISUB(:),PSI1(:),PSISUB(:),DCHI_FULL(:,:),DPSI_FULL(:,:),      &
                               CHI_OUT(:,:),PSI_OUT(:,:),cosl(:,:)
 !     
@@ -86,8 +87,8 @@
           iw(i) = i-1
         enddo
 
-        call fullpole(DPSI_FULL,dpsipoles)
-        call fullpole(DCHI_FULL,dchipoles)
+        call fullpole(DPSI_FULL,dpsifullpoles)
+        call fullpole(DCHI_FULL,dchifullpoles)
 
 	do j=1,jm
  	    psi_out(1,j) = 0.0
@@ -110,8 +111,8 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  psi_out(ip1,j-1) = dpsi_full(I,J) - dpsipoles(ii,2) 
-                  chi_out(ip1,j-1) = dchi_full(I,J) - dchipoles(ii,2)                
+                  psi_out(ip1,j-1) = dpsi_full(I,J) - dpsifullpoles(ii,2) 
+                  chi_out(ip1,j-1) = dchi_full(I,J) - dchifullpoles(ii,2)                
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
@@ -129,8 +130,8 @@
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  psi_out(ip1,j-1) = -dpsi_full(I,J) - dpsipoles(ii,2)
-                  chi_out(ip1,j-1) = -dchi_full(I,J) - dchipoles(ii,2)             
+                  psi_out(ip1,j-1) = -dpsi_full(I,J) - dpsifullpoles(ii,2)
+                  chi_out(ip1,j-1) = -dchi_full(I,J) - dchifullpoles(ii,2)             
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
