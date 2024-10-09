@@ -57,7 +57,6 @@
       INTEGER, allocatable ::  IHE(:),IHW(:), IE(:),IW(:)
       integer ip1,im1,ii,iir,iil,jj,JMT2,imb2, npass, nn, jtem
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u) :: DCHI, DPSI
-      REAL, dimension(IM,2) :: DPSIFULLPOLES, DCHIFULLPOLES
       real, allocatable :: CHI1(:),CHISUB(:),PSI1(:),PSISUB(:),DCHI_FULL(:,:),DPSI_FULL(:,:),      &
                               CHI_OUT(:,:),PSI_OUT(:,:),cosl(:,:)
 !     
@@ -87,9 +86,6 @@
           iw(i) = i-1
         enddo
 
-        call fullpole(DPSI_FULL,dpsifullpoles)
-        call fullpole(DCHI_FULL,dchifullpoles)
-
 	do j=1,jm
  	    psi_out(1,j) = 0.0
      	    chi_out(1,j) = 0.0
@@ -106,13 +102,32 @@
           ELSE IF(J == JM) THEN                      ! Near North or South Pole
             if(gdlat(ista,j) < 0.) then ! count from north to south
               IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
-                DO I=3,IM
+                DO I=2,IM-1
                   ip1 = ie(i)
                   im1 = iw(i)
                   ii = i + imb2
                   if (ii > im) ii = ii - im
-                  psi_out(ip1,j-1) = dpsi_full(I,J) - dpsifullpoles(ii,2) 
-                  chi_out(ip1,j-1) = dchi_full(I,J) - dchifullpoles(ii,2)                
+                  psi_out(ip1,j-1) = dpsi_full(I,J) + psi_out(im1,2) 
+                  chi_out(ip1,j-1) = dchi_full(I,J) + chi_out(im1,2)                
+                enddo
+              ELSE                                   !pole point,compute at jm-1
+                jj = jm-1
+                DO I=2,IM-1
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  psi_out(ip1,jj) = dpsi_full(I,J) + psi_out(im1,jj-1)
+                  chi_out(ip1,jj) = dchi_full(I,J) + chi_out(im1,jj-1)      
+                enddo
+              ENDIF
+            else
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=2,IM-1
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  psi_out(ip1,j-1) = dpsi_full(I,J) + psi_out(im1,2)
+                  chi_out(ip1,j-1) = dchi_full(I,J) + chi_out(im1,2)             
                 enddo
               ELSE                                   !pole point,compute at jm-1
                 jj = jm-1
@@ -120,26 +135,7 @@
                   ip1 = ie(i)
                   im1 = iw(i)
                   psi_out(ip1,j) = dpsi_full(I,J) + psi_out(im1,jj-1)
-                  chi_out(ip1,j) = dchi_full(I,J) + chi_out(im1,jj-1)      
-                enddo
-              ENDIF
-            else
-              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
-                DO I=3,IM
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                  ii = i + imb2
-                  if (ii > im) ii = ii - im
-                  psi_out(ip1,j-1) = -dpsi_full(I,J) - dpsifullpoles(ii,2)
-                  chi_out(ip1,j-1) = -dchi_full(I,J) - dchifullpoles(ii,2)             
-                enddo
-              ELSE                                   !pole point,compute at jm-1
-                jj = jm-1
-                DO I=2,IM-1
-                  ip1 = ie(i)
-                  im1 = iw(i)
-                  psi_out(ip1,jj-1) = -dpsi_full(I,J) + psi_out(im1,j)
-                  chi_out(ip1,jj-1) = -dchi_full(I,J) + chi_out(im1,j)              
+                  chi_out(ip1,j) = dchi_full(I,J) + chi_out(im1,jj-1)              
                 enddo
               ENDIF
             endif
