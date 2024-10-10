@@ -108,6 +108,7 @@
 	      	  psi_out(ip1,j+1)=dpsi_full(i,j)+psi_out(im1,j-1)
 	  	  chi_out(ip1,j+1)=dchi_full(i,j)+chi_out(im1,j-1)
 	  ENDDO
+   	  ENDDO
 
       ENDIF                             ! END OF ME=0 BLOCK
 
