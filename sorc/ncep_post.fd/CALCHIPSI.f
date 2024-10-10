@@ -86,30 +86,68 @@
           iw(i) = i-1
         enddo
 
-	! BOUNDARY CONDITIONS 0 AT JM=1, I=1 AND I=IM
-        DO J=1,JM
-	    psi_out(1,j) = 0.0
+	do j=1,jm
+ 	    psi_out(1,j) = 0.0
      	    chi_out(1,j) = 0.0
 	    psi_out(im,j) = 0.0
      	    chi_out(im,j) = 0.0
-	ENDDO
-
-   	DO I=1,IM
-    	    psi_out(1,i) = 0.0
-	    chi_out(1,i) = 0.0
-    	ENDDO
-
-     	DO J=1,JM
+ 	enddo
+  
+        DO J=1,JM
+          IF(J == 1) then                            ! Near North or South pole
    	    DO I=2,IM-1
-		if (j==1) then
-  		  psi_out(ip1,2)=dpsi_full(i,j)
-      		  chi_out(ip1,2)=dchi_full(i,j)
-      		else
-	      	  psi_out(ip1,j+1)=dpsi_full(i,j)+psi_out(im1,j-1)
-	  	  chi_out(ip1,j+1)=dchi_full(i,j)+chi_out(im1,j-1)
-      		endif
+                psi_out(I,J) = 0.0 
+                chi_out(I,J) = 0.0
+	    ENDDO
+          ELSE IF(J == JM) THEN                      ! Near North or South Pole
+            if(gdlat(ista,j) < 0.) then ! count from north to south
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=2,IM-1
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  psi_out(ip1,j-1) = dpsi_full(I,J) + psi_out(im1,2) 
+                  chi_out(ip1,j-1) = dchi_full(I,J) + chi_out(im1,2)                
+                enddo
+              ELSE                                   !pole point,compute at jm-1
+                jj = jm-1
+                DO I=2,IM-1
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  psi_out(ip1,jj) = dpsi_full(I,J) + psi_out(im1,jj-1)
+                  chi_out(ip1,jj) = dchi_full(I,J) + chi_out(im1,jj-1)      
+                enddo
+              ENDIF
+            else
+              IF(cosl(ista,j) >= SMALL) THEN            !not a pole point
+                DO I=2,IM-1
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  ii = i + imb2
+                  if (ii > im) ii = ii - im
+                  psi_out(ip1,j-1) = dpsi_full(I,J) + psi_out(im1,2)
+                  chi_out(ip1,j-1) = dchi_full(I,J) + chi_out(im1,2)             
+                enddo
+              ELSE                                   !pole point,compute at jm-1
+                jj = jm-1
+                DO I=2,IM-1
+                  ip1 = ie(i)
+                  im1 = iw(i)
+                  psi_out(ip1,j) = dpsi_full(I,J) + psi_out(im1,jj-1)
+                  chi_out(ip1,j) = dchi_full(I,J) + chi_out(im1,jj-1)              
+                enddo
+              ENDIF
+            endif
+          ELSE
+            DO I=2,IM-1
+              ip1 = ie(i)
+              im1 = iw(i)
+              psi_out(ip1,J+1) = dpsi_full(I,J) + psi_out(im1,J-1)
+              chi_out(ip1,J+1) = dchi_full(I,J) + chi_out(im1,J-1)                 
+            ENDDO
+          END IF
 	  ENDDO
-   	  ENDDO
 
       ENDIF                             ! END OF ME=0 BLOCK
 
