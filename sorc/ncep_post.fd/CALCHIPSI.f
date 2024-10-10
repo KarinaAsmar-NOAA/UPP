@@ -143,8 +143,8 @@
             DO I=2,IM-1
               ip1 = ie(i)
               im1 = iw(i)
-              psi_out(ip1,J+1) = dpsi_full(I,J) + psi_out(im1,J-1)
-              chi_out(ip1,J+1) = dchi_full(I,J) + chi_out(im1,J-1)                 
+              psi_out(ip1,J-1) = dpsi_full(I,J) + psi_out(im1,J+1)
+              chi_out(ip1,J-1) = dchi_full(I,J) + chi_out(im1,J+1)                 
             ENDDO
           END IF
 	  ENDDO
@@ -307,7 +307,7 @@
             end if  
           else
             do i=ista,iend
-              wrk3(i,j) = (GDLAT(I,J+1)-GDLAT(I,J-1))*DTR !1/dphi
+              wrk3(i,j) = (GDLAT(I,J-1)-GDLAT(I,J+1))*DTR !1/dphi
             enddo
           endif
         enddo  
