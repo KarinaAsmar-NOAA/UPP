@@ -53,20 +53,44 @@
 !     
       integer :: JCAP, I, J, L, IERR
       REAL, dimension(ISTA:IEND,JSTA:JEND,LSM), intent(in) :: UISO, VISO
+<<<<<<< HEAD
 
       real, dimension(IM,JM,LSM) :: IN_UWIND, IN_VWIND, OUT_UWIND, OUT_VWIND, DIV, ZO, CHI_OUT, PSI_OUT, CHI, PSI
       real, dimension(IM,JM) :: COL_UWIND, COL_VWIND
 
       integer k, m
       real, allocatable :: CHI1(:), CHISUB(:), PSI1(:), PSISUB(:)
+=======
+      REAL, dimension(IM,JM,LSM), intent(out) ::  CHI, PSI
+
+      integer k, m
+      real, allocatable :: CHI1(:),CHISUB(:),PSI1(:),PSISUB(:),COL_UWIND(:,:),COL_VWIND(:,:),  		&
+      			   IN_UWIND(:,:,:),IN_VWIND(:,:,:),OUT_UWIND(:,:,:),OUT_VWIND(:,:,:), 		&
+	    		   DIV(:,:,:),ZO(:,:,:),CHI_OUT(:,:,:),PSI_OUT(:,:,:)
+      
+>>>>>>> 4eff90b6135e310e9e2642e225afa22ef34a1107
 !     
 !***************************************************************************
 !     START CALCHIPSI HERE.
 !    
+<<<<<<< HEAD
 !     SAVE ALL P LEVELS OF U/V WINDS AT GLOBAL GRID   
       DO L=1,LSM
         CALL COLLECT_ALL(UISO(ISTA:IEND,JSTA:JEND,L),COL_UWIND)
         CALL COLLECT_ALL(VISO(ISTA:IEND,JSTA:JEND,L),COL_VWIND)
+=======
+!     SAVE ALL P LEVELS OF U/V WINDS AT GLOBAL GRID  
+
+      ALLOCATE(COL_UWIND(IM,JM))
+      ALLOCATE(COL_VWIND(IM,JM))
+      ALLOCATE(IN_UWIND(IM,JM,LSM))
+      ALLOCATE(IN_VWIND(IM,JM,LSM))
+
+      DO L=1,LSM
+        CALL COLLECT_ALL(UISO(ISTA:IEND,JSTA:JEND,L),COL_UWIND)
+        CALL COLLECT_ALL(VISO(ISTA:IEND,JSTA:JEND,L),COL_VWIND)
+!$omp  parallel do private(i,j)
+>>>>>>> 4eff90b6135e310e9e2642e225afa22ef34a1107
         DO J=1,JM
           DO I=1,IM
 	    IN_UWIND(I,J,L)=COL_UWIND(I,J)
@@ -75,9 +99,19 @@
         ENDDO
       ENDDO
 
+<<<<<<< HEAD
 ! FILL CHI/PSI VALUES
       DO L=1,LSM
         DO J=1,JM
+=======
+      DEALLOCATE(COL_UWIND)
+      DEALLOCATE(COL_VWIND)
+
+! FILL CHI/PSI VALUES
+      DO L=1,LSM
+!$omp  parallel do private(i,j)
+      DO J=1,JM
+>>>>>>> 4eff90b6135e310e9e2642e225afa22ef34a1107
 	  DO I=1,IM
      	    CHI(I,J,L)= SPVAL
 	    PSI(I,J,L)= SPVAL
@@ -86,6 +120,16 @@
       ENDDO
 
       IF (ME==0) THEN 
+<<<<<<< HEAD
+=======
+
+	      ALLOCATE(OUT_UWIND(IM,JM,LSM))
+	      ALLOCATE(OUT_VWIND(IM,JM,LSM))
+	      ALLOCATE(DIV(IM,JM,LSM))
+	      ALLOCATE(ZO(IM,JM,LSM))
+	      ALLOCATE(CHI_OUT(IM,JM,LSM))
+	      ALLOCATE(PSI_OUT(IM,JM,LSM))
+>>>>>>> 4eff90b6135e310e9e2642e225afa22ef34a1107
       
         ! SET MAX WAVELENGTH FOR SPECTRAL TRUNCATION
 	      IF(IDRT == 0)THEN
@@ -104,6 +148,16 @@
 	                   .FALSE.,DIV,ZO,						             &
 	                   .TRUE.,CHI_OUT(1,1,1),PSI_OUT(1,1,1))
 
+<<<<<<< HEAD
+=======
+	      DEALLOCATE(IN_UWIND)
+       	      DEALLOCATE(IN_VWIND)
+      	      DEALLOCATE(OUT_UWIND)
+	      DEALLOCATE(OUT_VWIND)
+              DEALLOCATE(DIV)
+	      DEALLOCATE(ZO)
+
+>>>>>>> 4eff90b6135e310e9e2642e225afa22ef34a1107
       ENDIF                             ! END OF ME=0 BLOCK
 
       CALL MPI_BARRIER(MPI_COMM_COMP, IERR)
@@ -118,6 +172,10 @@
          IF (ME==0) THEN
            k=0
            DO m=0,num_procs-1
+<<<<<<< HEAD
+=======
+!$omp  parallel do private(i,j)
+>>>>>>> 4eff90b6135e310e9e2642e225afa22ef34a1107
            DO J=jsxa(m),jexa(m)
            DO I=isxa(m),iexa(m)
               k=k+1
@@ -132,7 +190,14 @@
                            CHISUB,icnt(me),MPI_REAL,0,MPI_COMM_WORLD,IERR)
          CALL MPI_SCATTERV(PSI1,icnt,idsp,MPI_REAL, &
                            PSISUB,icnt(me),MPI_REAL,0,MPI_COMM_WORLD,IERR)
+<<<<<<< HEAD
          k=0
+=======
+
+ 
+         k=0
+!$omp  parallel do private(i,j)
+>>>>>>> 4eff90b6135e310e9e2642e225afa22ef34a1107
          DO J=JSTA,JEND
          DO I=ISTA,IEND
             k=k+1
@@ -147,6 +212,11 @@
       DEALLOCATE(CHISUB)
       DEALLOCATE(PSI1)
       DEALLOCATE(PSISUB)
+<<<<<<< HEAD
+=======
+      IF(ALLOCATED(CHI_OUT)) DEALLOCATE(CHI_OUT)
+      IF(ALLOCATED(PSI_OUT)) DEALLOCATE(PSI_OUT)
+>>>>>>> 4eff90b6135e310e9e2642e225afa22ef34a1107
 !
 !     
 !     END OF ROUTINE.

@@ -1779,6 +1779,10 @@
 ! *** K. ASMAR - SAVE ALL P-LEVELS OF U/V WINDS FOR VELOCITY POTENTIAL AND STREAMFUNCTION
 !
       IF (IGET(1021)>0 .OR. IGET(1022)>0) THEN
+<<<<<<< HEAD
+=======
+!$omp parallel do private(i,j)
+>>>>>>> 4eff90b6135e310e9e2642e225afa22ef34a1107
       	DO J=JSTA,JEND
           DO I=ISTA,IEND
 	    USLP(I,J,LP)=USL(I,J)
