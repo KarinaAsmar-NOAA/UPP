@@ -57,8 +57,7 @@
       INTEGER, allocatable ::  IHE(:),IHW(:), IE(:),IW(:)
       integer ip1,im1,ii,iir,iil,jj,JMT2,imb2, npass, nn, jtem
       REAL, dimension(ista_2l:iend_2u,jsta_2l:jend_2u) :: DCHI, DPSI
-      real, allocatable :: CHI1(:),CHISUB(:),PSI1(:),PSISUB(:),dchi(:,:),dpsi(:,:),      &
-                           cosl(:,:)
+      real, allocatable :: CHI1(:),CHISUB(:),PSI1(:),PSISUB(:),cosl(:,:)
 !     
 !***************************************************************************
 !     START CALCHIPSI HERE.
