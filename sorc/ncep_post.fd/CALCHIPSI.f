@@ -53,12 +53,6 @@
 !     
       integer :: JCAP, I, J, L, IERR
       REAL, dimension(ISTA:IEND,JSTA:JEND,LSM), intent(in) :: UISO, VISO
-
-      real, dimension(IM,JM,LSM) :: IN_UWIND, IN_VWIND, OUT_UWIND, OUT_VWIND, DIV, ZO, CHI_OUT, PSI_OUT, CHI, PSI
-      real, dimension(IM,JM) :: COL_UWIND, COL_VWIND
-
-      integer k, m
-      real, allocatable :: CHI1(:), CHISUB(:), PSI1(:), PSISUB(:)
       REAL, dimension(IM,JM,LSM), intent(out) ::  CHI, PSI
 
       integer k, m
@@ -69,9 +63,9 @@
 !     
 !***************************************************************************
 !     START CALCHIPSI HERE.
-
+!    
 !     SAVE ALL P LEVELS OF U/V WINDS AT GLOBAL GRID  
-!
+
       ALLOCATE(COL_UWIND(IM,JM))
       ALLOCATE(COL_VWIND(IM,JM))
       ALLOCATE(IN_UWIND(IM,JM,LSM))
@@ -88,6 +82,9 @@
           ENDDO
         ENDDO
       ENDDO
+
+      DEALLOCATE(COL_UWIND)
+      DEALLOCATE(COL_VWIND)
 
 ! FILL CHI/PSI VALUES
       DO L=1,LSM
@@ -162,6 +159,8 @@
                            CHISUB,icnt(me),MPI_REAL,0,MPI_COMM_WORLD,IERR)
          CALL MPI_SCATTERV(PSI1,icnt,idsp,MPI_REAL, &
                            PSISUB,icnt(me),MPI_REAL,0,MPI_COMM_WORLD,IERR)
+
+ 
          k=0
 !$omp  parallel do private(i,j)
          DO J=JSTA,JEND
@@ -178,7 +177,6 @@
       DEALLOCATE(CHISUB)
       DEALLOCATE(PSI1)
       DEALLOCATE(PSISUB)
-
       IF(ALLOCATED(CHI_OUT)) DEALLOCATE(CHI_OUT)
       IF(ALLOCATED(PSI_OUT)) DEALLOCATE(PSI_OUT)
 !
