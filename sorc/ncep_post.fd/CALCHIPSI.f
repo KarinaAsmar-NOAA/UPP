@@ -136,7 +136,7 @@
               ENDIF
             endif
           ELSE
-            DO I=2,IM-1
+            DO I=ISTA,IEND
               ip1 = ie(i)
               im1 = iw(i)
               psi(ip1,J-1) = dpsi(I,J) + psi(im1,J+1)
