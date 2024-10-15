@@ -69,6 +69,8 @@
       
       CALL EXCH(DCHI(ISTA_2L,JSTA_2L))
       CALL EXCH(DPSI(ISTA_2L,JSTA_2L))
+      CALL EXCH(CHI(ISTA_2L,JSTA_2L))
+      CALL EXCH(PSI(ISTA_2L,JSTA_2L))
        
       allocate(cosl(ista_2l:iend_2u,jsta_2l:jend_2u))
       allocate(iw(im),ie(im))
