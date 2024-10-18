@@ -58,6 +58,7 @@
 !> 2024-06-25 | Wen Meng      | Add capability to read fhzero as either an integer or float
 !> 2024-08-26 | Karina Asmar  | Add temporal u/v, speed max wind components at 10m agl
 !> 2024-09-23 | Karina Asmar  | Read in and store idrt in gridspec_mod
+!> 2024-10-11 | Sam Trahan    | Fixed an incorrect array length in read_netcdf_3d_para
 !>
 !> @author Hui-Ya Chuang @date 2016-03-04
 !----------------------------------------------------------------------
@@ -4050,7 +4051,7 @@
       implicit none
       INCLUDE "mpif.h"
 
-      character(len=20),intent(in) :: varname
+      character(len=*),intent(in) :: varname
       real,intent(in)    :: spval
       integer,intent(in) :: ncid,im,jm,lm,jsta_2l,jend_2u,jsta,jend
       integer,intent(in) :: ista_2l,iend_2u,ista,iend
