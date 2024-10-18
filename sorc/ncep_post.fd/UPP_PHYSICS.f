@@ -4950,6 +4950,8 @@
          ENDIF  
       ENDDO
       ENDDO
+      !if(me==66) print*,me,' STRM ',jj,rtmp,rerr,rerr/rtmp
+      !if(rerr/rtmp <= 0.01) exit
       ENDDO
       !print*,me,' STRM ',jj,rerr
 
@@ -4969,6 +4971,13 @@
       ENDDO
       ENDDO
       !print*,me,' VPOT ',jj,rerr
+
+      DO J=JSTA,JEND
+      DO I=ISTA,IEND
+      psi(i,j)=ABSV(I,J)-F(I,J)
+      chi(i,j)=DIV(I,J)
+      ENDDO
+      ENDDO
 
       deallocate (wrk1, wrk2, wrk3, cosl, iw, ie)
 !     
