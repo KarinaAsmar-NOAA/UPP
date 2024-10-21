@@ -24,7 +24,7 @@
 !> Date       | Programmer   | Comments
 !> -----------|--------------|---------
 !> 2024-07-17 | Karina Asmar | Initial   
-!> 2024-07-25 | Jesse Meng   | Fixes for mpi processes 
+!> 2024-07-25 | Jesse Meng   | Add MPI scatterv
 !>
 !> @author Karina Asmar EMC/VPPPG @date 2024-07-17
 !-----------------------------------------------------------------------
